@@ -1,0 +1,3466 @@
+# -*- eval: (org-sort-tree-mode); lexical-binding: t; -*-
+#+title: Emacs Configuration
+#+property: header-args:emacs-lisp :shebang ";; -*- lexical-binding: t; -*-" :comments noweb :tangle no :noweb-ref config
+#+sort_tree: O a
+
+Idempotent check
+
+TODO: every new X program opens fullscreen inside Xephyr
+    Window Manager for inside Xephyr can be openbox (like Fedora's SELinux sandobx -X is)
+    Later TODO: make Xehpyr WM be a version of https://dwm.suckless.org with only the monocle layout and stripped-down modifier keys.
+
+#+name: Configure custom build
+#+begin_src bash :tangle "rebuild.sh" :noweb-ref configure-build
+./configure --with-x-toolkit=gtk3 --without-dbus --without-gconf --without-gsettings --without-mailutils --without-pop --with-cairo --with-modules --with-xwidgets --enable-gcc-warnings --disable-build-details CFLAGS='-O3 -Wno-error' GZIP_PROG=''
+#+end_src
+
+Early Init
+#+name: Disable package.el
+#+begin_src emacs-lisp :tangle "early-init.el" :noweb-ref early-init-file
+(setq package-enable-at-startup nil)
+#+end_src
+
+#+name: Time init
+#+begin_src emacs-lisp :tangle "init.el" :noweb-ref init-file
+(defvar my/init-start nil
+  "")
+(setq my/init-start (current-time))
+(defun my/time-since-init ()
+  ""
+  (message "Init took %.3f seconds" (float-time (time-since my/init-start))))
+(add-hook 'after-init-hook #'my/time-since-init t)
+#+end_src
+
+#+name: Disable GC during init
+#+begin_src emacs-lisp :tangle "init.el" :noweb-ref init-file
+(setq gc-cons-threshold 402653184
+      gc-cons-percentage 0.6)
+(defun my/reset-gc-thresholds ()
+  ""
+  (setq gc-cons-threshold 16777216
+        gc-cons-percentage 0.1))
+(add-hook 'after-init-hook #'my/reset-gc-thresholds)
+#+end_src
+
+#+name: Disable magic files during init
+#+begin_src emacs-lisp :tangle "init.el" :noweb-ref init-file
+;; Init should not use magic files, disable them temporarily for performance.
+(defvar my/default-file-name-handler-alist file-name-handler-alist
+  "")
+(setq file-name-handler-alist nil)
+(defun my/reset-file-name-handler-alist ()
+  ""
+  (setq file-name-handler-alist my/default-file-name-handler-alist))
+(add-hook 'after-init-hook #'my/reset-file-name-handler-alist)
+#+end_src
+
+#+name: Configure straight.el
+#+begin_src emacs-lisp :noweb no-export :tangle "init.el" :noweb-ref init-file
+(eval-and-compile
+  <<straight.el-config>>
+  )
+#+end_src
+
+#+name: Bootstrap straight.el
+#+begin_src emacs-lisp :noweb no-export :tangle "init.el" :noweb-ref init-file
+(eval-and-compile
+  <<straight.el-bootstrap>>
+  )
+#+end_src
+
+#+name: Register, clone, build, and activate all packages and dependencies
+#+begin_src emacs-lisp :noweb no-export :tangle "init.el" :noweb-ref init-file
+(straight-begin-transaction)
+(straight-mark-transaction-as-init)
+<<package>>
+(straight-finalize-transaction)
+#+end_src
+
+#+name: Define personal customizations group
+#+begin_src emacs-lisp :tangle "init.el" :noweb-ref init-file
+(defgroup my nil
+  ""
+  :group 'emacs)
+#+end_src
+
+One-write and transactional
+#+name: Apply configuration
+#+begin_src emacs-lisp :noweb no-export :tangle "init.el" :noweb-ref init-file
+<<config>>
+#+end_src
+
+* Adaptive Wrap
+#+begin_src emacs-lisp :noweb-ref package
+(straight-use-package 'adaptive-wrap)
+#+end_src
+** Behavior
+*** Enable
+#+begin_src emacs-lisp
+(declare-function adaptive-wrap-prefix-mode "adaptive-wrap" (&optional arg))
+#+end_src
+**** With Visual Line Mode
+#+begin_src emacs-lisp
+(defun my/adaptive-wrap-on-visual-line-mode ()
+  (adaptive-wrap-prefix-mode (if visual-line-mode 1 -1)))
+(add-hook 'visual-line-mode-hook #'my/adaptive-wrap-on-visual-line-mode)
+#+end_src
+* Aggressive Indent
+#+begin_src emacs-lisp :noweb-ref package
+(straight-use-package 'aggressive-indent)
+#+end_src
+** Behavior
+*** Enable
+**** Global
+#+begin_src emacs-lisp
+(declare-function global-aggressive-indent-mode "aggressive-indent" (&optional arg))
+(add-hook 'after-init-hook #'global-aggressive-indent-mode)
+#+end_src
+*** TODO FIXME BUG!! in aggressive-indent-mode. Change defvar-local to defvar aggressive-indent--idle-timer in aggressive-indent.el
+#+begin_src emacs-lisp
+(add-hook 'org-babel-post-tangle-hook (lambda ()
+                                        (cancel-function-timers 'aggressive-indent--indent-if-changed)))
+#+end_src
+* All The Icons
+#+begin_src emacs-lisp :noweb-ref package
+(straight-use-package 'all-the-icons)
+#+end_src
+* Anzu
+#+begin_src emacs-lisp :noweb-ref package
+(straight-use-package 'anzu)
+#+end_src
+** Appearance
+*** Faces
+**** Match Groups
+***** 1
+#+begin_src emacs-lisp
+(custom-set-faces (eval-when-compile
+                    (create-face-spec 'anzu-match-1 '(:foreground green :inherit anzu-replace-highlight))))
+#+end_src
+***** 2
+#+begin_src emacs-lisp
+(custom-set-faces (eval-when-compile
+                    (create-face-spec 'anzu-match-2 '(:foreground yellow :inherit anzu-replace-highlight))))
+#+end_src
+***** 3
+#+begin_src emacs-lisp
+(custom-set-faces (eval-when-compile
+                    (create-face-spec 'anzu-match-3 '(:foreground cyan :inherit anzu-replace-highlight))))
+#+end_src
+**** Mode Line
+***** Match
+#+begin_src emacs-lisp
+(custom-set-faces (eval-when-compile
+                    (create-face-spec 'anzu-mode-line '(:foreground violet))))
+#+end_src
+***** No Match
+#+begin_src emacs-lisp
+(custom-set-faces (eval-when-compile
+                    (create-face-spec 'anzu-mode-line-no-match '(:foreground red))))
+#+end_src
+**** Replace To
+#+begin_src emacs-lisp
+(custom-set-faces (eval-when-compile
+                    (create-face-spec 'anzu-replace-to '(:foreground yellow))))
+#+end_src
+** Behavior
+*** Do not automatically add Anzu to mode line
+#+begin_src emacs-lisp
+(defvar anzu-cons-mode-line-p)
+(setq anzu-cons-mode-line-p nil)
+#+end_src
+*** Replace Query Replace                                          :keyboard:
+#+begin_src emacs-lisp
+(declare-function anzu-query-replace "anzu" (arg))
+(global-set-key (kbd "M-%") #'anzu-query-replace)
+(declare-function anzu-query-replace-regexp "anzu" (arg))
+(global-set-key (kbd "C-M-%") #'anzu-query-replace-regexp)
+#+end_src
+** TODO Use markers because it screws up when ~agressive-indent-mode~ changes indentation in the middle of query-replacing
+* AUCTeX
+#+begin_src emacs-lisp :noweb-ref package
+(straight-use-package 'auctex)
+#+end_src
+** Appearance
+*** TeX Font Setup
+The default ~font-latex-setup~ only highlights known keywords, while the Emacs-built-in-based ~tex-font-setup~ highlights all control sequences TeX would recognize.
+#+begin_src emacs-lisp
+(defvar TeX-install-font-lock)
+(declare-function tex-font-setup "tex-font" ())
+(setq TeX-install-font-lock #'tex-font-setup)
+#+end_src
+** Behavior
+*** Keybindings                                                    :keyboard:
+**** LaTeX
+#+begin_src emacs-lisp
+(defvar LaTeX-mode-map)
+#+end_src
+***** C-j
+#+begin_src emacs-lisp
+(with-eval-after-load 'latex
+  (define-key LaTeX-mode-map (kbd "C-j") nil))
+#+end_src
+* Auto Dim Other Buffers
+#+begin_src emacs-lisp :noweb-ref package
+(straight-use-package 'auto-dim-other-buffers)
+#+end_src
+** Appearance
+*** Diminish
+#+begin_src emacs-lisp
+(diminish-hook 'auto-dim-other-buffers-mode)
+#+end_src
+*** Faces                                                              :face:
+#+begin_src emacs-lisp
+(custom-set-faces (eval-when-compile
+                    (create-face-spec 'auto-dim-other-buffers-face
+                                      '(:background base02))))
+#+end_src
+** Behavior
+*** Enable
+#+begin_src emacs-lisp
+(declare-function auto-dim-other-buffers-mode "auto-dim-other-buffers" (&optional arg))
+#+end_src
+**** Global
+#+begin_src emacs-lisp
+(add-hook 'after-init-hook #'auto-dim-other-buffers-mode)
+#+end_src
+* Avy
+#+begin_src emacs-lisp :noweb-ref package
+(straight-use-package 'avy)
+#+end_src
+** Appearance
+*** Faces                                                              :face:
+**** Lead
+#+begin_src emacs-lisp
+(custom-set-faces (eval-when-compile
+                    (create-face-spec 'avy-lead-face
+                                      '(:foreground base03 :background red :weight medium :slant normal))))
+#+end_src
+***** 0
+#+begin_src emacs-lisp
+(custom-set-faces (eval-when-compile
+                    (create-face-spec 'avy-lead-face-0
+                                      '(:background blue :inherit avy-lead-face))))
+#+end_src
+***** 1
+#+begin_src emacs-lisp
+(custom-set-faces (eval-when-compile
+                    (create-face-spec 'avy-lead-face-1
+                                      '(:background magenta :inherit avy-lead-face))))
+#+end_src
+***** 2
+#+begin_src emacs-lisp
+(custom-set-faces (eval-when-compile
+                    (create-face-spec 'avy-lead-face-2
+                                      '(:background violet :inherit avy-lead-face))))
+#+end_src
+** Behavior
+*** Goto Character                                                 :keyboard:
+#+begin_src emacs-lisp
+(declare-function avy-goto-char "avy" (char &optional arg))
+(global-set-key (kbd "C-j") #'avy-goto-char)
+#+end_src
+*** TODO Goto Link
+* Blink Cursor
+** Behavior
+*** Disable
+#+begin_src emacs-lisp
+(blink-cursor-mode -1)
+#+end_src
+* Buffer Face
+** Appearance
+*** Diminish
+#+begin_src emacs-lisp
+(diminish-hook 'buffer-face-mode)
+#+end_src
+* Calculator
+** Behavior
+*** Launch On Calculator Key                                       :keyboard:
+#+begin_src emacs-lisp
+(global-set-key (kbd "<XF86Calculator>") #'calculator)
+#+end_src
+* Color Theme Solarized
+| Color   | Meaning                                |
+|---------+----------------------------------------|
+| base03  | Background                             |
+| base02  | Background highlights                  |
+| base01  | Comments/secondary content             |
+| base00  |                                        |
+| base0   | body text/default code/primary content |
+| base1   | optional emphasized content            |
+| base2   |                                        |
+| base3   |                                        |
+| yellow  | Yellow                                 |
+| orange  | Orange                                 |
+| red     | Red                                    |
+| magenta | Magenta                                |
+| violet  | Violet                                 |
+| blue    | Blue                                   |
+| cyan    | Cyan                                   |
+| green   | Green                                  |
+#+begin_src emacs-lisp :noweb-ref package
+(eval-and-compile
+  (straight-use-package 'color-theme-solarized))
+(eval-when-compile
+  (require 'solarized-definitions))
+#+end_src
+** Appearance
+*** Enable
+#+begin_src emacs-lisp
+(load-theme 'solarized t)
+#+end_src
+** TODO Make a ~create-face-spec~-like macro
+** TODO Process ~:overline~ and ~:distant-foreground~ in ~create-face-spec~ too
+* Company
+#+begin_src emacs-lisp :noweb-ref package
+(straight-use-package 'company)
+#+end_src
+** Appearance
+*** Diminish
+#+begin_src emacs-lisp
+(diminish-hook 'company-mode)
+#+end_src
+*** Faces                                                              :face:
+**** Preview
+#+begin_src emacs-lisp
+(custom-set-faces (eval-when-compile
+                    (create-face-spec 'company-preview
+                                      '(:foreground base01 :background base02 :inherit underline))))
+#+end_src
+***** Common
+#+begin_src emacs-lisp
+(custom-set-faces (eval-when-compile
+                    (create-face-spec 'company-preview-common
+                                      '(:foreground base0 :inherit company-preview))))
+#+end_src
+*** Preview
+#+begin_src emacs-lisp
+(defvar company-frontends)
+(declare-function company-preview-frontend "company" (command))
+(defun my/company-enable-preview-frontend ()
+  "Add `company-preview-frontend' to the list of enabled Company frontends."
+  (add-to-list 'company-frontends #'company-preview-frontend))
+(add-hook 'company-mode-hook #'my/company-enable-preview-frontend)
+#+end_src
+*** Show Numbers
+#+begin_src emacs-lisp
+(defvar company-show-numbers)
+(setq company-show-numbers t)
+#+end_src
+**** Function
+#+begin_src emacs-lisp
+(defvar company-show-numbers-function)
+(defun my/company-show-numbers-function (numbered)
+  (concat
+   ;; Adjusting for the extra space the `keyboard' face takes up:
+   (propertize "  "
+  	     'display '(space :width (12)))
+   (propertize (format "M-%d" (mod numbered 10))
+  	     'face 'keyboard)))
+(setq company-show-numbers-function #'my/company-show-numbers-function)
+#+end_src
+** Behavior
+*** Enable
+#+begin_src emacs-lisp
+(declare-function company-mode "company" (&optional arg))
+#+end_src
+**** In Minibuffer
+#+begin_src emacs-lisp :noweb-ref wip
+(add-hook 'minibuffer-setup-hook #'company-mode)
+#+end_src
+**** Programming Modes
+#+begin_src emacs-lisp
+(add-hook 'prog-mode-hook #'company-mode)
+#+end_src
+*** Idle Delay
+#+begin_src emacs-lisp
+(defvar company-idle-delay)
+(setq company-idle-delay 0.25)
+#+end_src
+*** Minimum Prefix Length
+#+begin_src emacs-lisp
+(defvar company-minimum-prefix-length)
+(setq company-minimum-prefix-length 2)
+#+end_src
+*** No Return Completion                                           :keyboard:
+#+begin_src emacs-lisp
+(defvar company-active-map)
+(with-eval-after-load 'company
+  (define-key company-active-map (kbd "RET")      nil)
+  (define-key company-active-map (kbd "<return>") nil))
+#+end_src
+*** Tab Completion                                                 :keyboard:
+#+begin_src emacs-lisp
+(defvar company-active-map)
+(declare-function company-complete "company" ())
+(with-eval-after-load 'company
+  (define-key company-active-map (kbd "TAB")   #'company-complete)
+  (define-key company-active-map (kbd "<tab>") #'company-complete))
+#+end_src
+*** Wrap
+#+begin_src emacs-lisp
+(defvar company-selection-wrap-around)
+(setq company-selection-wrap-around t)
+#+end_src
+* Company Posframe
+Very fast, much faster than company-box
+#+begin_src emacs-lisp
+(straight-use-package 'company-posframe)
+#+end_src
+I like tumashu's ~posframe~ library
+TODO LOOK at https://github.com/tumashu/company-posframe/issues/1#issuecomment-438998796 to fix integration with ~company-quickhelp~
+** Appearance
+*** Diminish
+#+begin_src emacs-lisp
+(diminish-hook 'company-posframe-mode)
+#+end_src
+** Behavior
+*** Enable
+#+begin_src emacs-lisp
+(declare-function company-posframe-mode "company-posframe" (&optional arg))
+#+end_src
+**** Global
+#+begin_src emacs-lisp
+(declare-function posframe-workable-p "posframe" ())
+(autoload 'posframe-workable-p "posframe")
+(when (posframe-workable-p)
+  (add-hook 'after-init-hook #'company-posframe-mode))
+#+end_src
+**** Server After Make Frame
+#+begin_src emacs-lisp
+(add-hook 'server-after-make-frame-hook #'company-posframe-mode)
+#+end_src
+*** Hide If Window Changed
+#+begin_src emacs-lisp :noweb-ref wip
+(defvar my/company-posframe-window nil
+  "Window containing company-posframe if it is showing.")
+
+(defun my/company-posframe-set-window ()
+  ""
+  (setq my/company-posframe-window (selected-window)))
+(advice-add #'company-posframe-show :after #'my/company-posframe-set-window)
+
+(defun my/company-posframe-hide-if-changed (oldfun)
+  ""
+  (when (not (eq my/company-posframe-window (selected-window)))
+    (prog1
+      (funcall oldfun)
+      (setq my/company-posframe-window nil))))
+(advice-add #'company-posframe-hide :around #'my/company-posframe-hide-if-changed)
+#+end_src
+* Counsel
+#+begin_src emacs-lisp :noweb-ref package
+(straight-use-package 'counsel)
+#+end_src
+** Appearance
+*** Diminish
+Remove “counsel” lighter from from mode-line, since .
+#+begin_src emacs-lisp
+(diminish-hook 'counsel-mode)
+#+end_src
+*** Faces                                                          :keyboard:
+**** Outline
+#+begin_src emacs-lisp
+(custom-set-faces (eval-when-compile
+  		  (create-face-spec 'counsel-outline-default
+  				    '(:height 130))))
+#+end_src
+***** 1
+#+begin_src emacs-lisp
+(custom-set-faces (eval-when-compile
+  		  (create-face-spec 'counsel-outline-1
+  				    '(:inherit (counsel-outline-default org-level-1)))))
+#+end_src
+***** 2
+#+begin_src emacs-lisp
+(custom-set-faces (eval-when-compile
+  		  (create-face-spec 'counsel-outline-2
+  				    '(:inherit (counsel-outline-default org-level-2)))))
+#+end_src
+***** 3
+#+begin_src emacs-lisp
+(custom-set-faces (eval-when-compile
+  		  (create-face-spec 'counsel-outline-3
+  				    '(:inherit (counsel-outline-default org-level-3)))))
+#+end_src
+***** 4
+#+begin_src emacs-lisp
+(custom-set-faces (eval-when-compile
+  		  (create-face-spec 'counsel-outline-4
+  				    '(:inherit (counsel-outline-default org-level-4)))))
+#+end_src
+***** 5
+#+begin_src emacs-lisp
+(custom-set-faces (eval-when-compile
+  		  (create-face-spec 'counsel-outline-5
+  				    '(:inherit (counsel-outline-default org-level-5)))))
+#+end_src
+***** 6
+#+begin_src emacs-lisp
+(custom-set-faces (eval-when-compile
+  		  (create-face-spec 'counsel-outline-6
+  				    '(:inherit (counsel-outline-default org-level-6)))))
+#+end_src
+***** 7
+#+begin_src emacs-lisp
+(custom-set-faces (eval-when-compile
+  		  (create-face-spec 'counsel-outline-7
+  				    '(:inherit (counsel-outline-default org-level-7)))))
+#+end_src
+***** 8
+#+begin_src emacs-lisp
+(custom-set-faces (eval-when-compile
+  		  (create-face-spec 'counsel-outline-8
+  				    '(:inherit (counsel-outline-default org-level-8)))))
+#+end_src
+*** Outline
+**** Face Style
+#+begin_src emacs-lisp
+(defvar counsel-outline-face-style)
+(setq counsel-outline-face-style 'org)
+#+end_src
+** Behavior
+*** Enable
+#+begin_src emacs-lisp
+(declare-function counsel-mode "counsel" (&optional arg))
+#+end_src
+**** Global
+#+begin_src emacs-lisp
+(add-hook 'after-init-hook #'counsel-mode)
+#+end_src
+*** Find File
+**** Hide Dotfiles
+#+begin_src emacs-lisp
+(defvar counsel-find-file-ignore-regexp)
+(setq counsel-find-file-ignore-regexp "\\`\\.")
+#+end_src
+*** Keybindings                                                    :keyboard:
+**** Outline
+#+begin_src emacs-lisp
+(declare-function counsel-outline "counsel" ())
+(global-set-key (kbd "C-c j") #'counsel-outline)
+#+end_src
+*** Org
+**** Headline Display Todo
+#+begin_src emacs-lisp
+(defvar counsel-org-headline-display-todo)
+(setq counsel-org-headline-display-todo t)
+#+end_src
+*** TODO Bind ~counsel-linux-app~                                  :keyboard:
+* Demigod
+#+begin_src emacs-lisp :noweb-ref package
+(straight-use-package `(demigod
+                        :local-repo ,(expand-file-name "local/demigod-mode" user-emacs-directory)))
+#+end_src
+** Appearance
+*** Diminish
+#+begin_src emacs-lisp
+(diminish-hook 'demigod-mode)
+#+end_src
+*** Faces                                                              :face:
+**** Key
+#+begin_src emacs-lisp
+(custom-set-faces (eval-when-compile
+                    (create-face-spec 'demigod-key
+  				    '(:inherit keyboard))))
+#+end_src
+** Behavior
+*** Enable
+#+begin_src emacs-lisp
+(declare-function demigod-mode "demigod-mode" (&optional arg))
+#+end_src
+**** Global
+#+begin_src emacs-lisp
+(add-hook 'after-init-hook #'demigod-mode)
+#+end_src
+** TODO Fix Git history
+** TODO MELPA
+** TODO Upload to GitHub + personally hosted GitLab
+* Diminish
+#+begin_src emacs-lisp :noweb-ref package
+(straight-use-package 'diminish)
+#+end_src
+* Diminish Hook
+#+begin_src emacs-lisp :noweb-ref package
+(straight-use-package `(diminish-hook
+                        :local-repo ,(expand-file-name "local/diminish-hook" user-emacs-directory)))
+(declare-function diminish-hook "diminish-hook" (mode &optional to-what))
+#+end_src
+* Dired
+** Behavior
+*** Do-What-I-Mean Target
+Try to guess a default target directory: if there is a Dired buffer displayed in the next window, use its current directory, instead of this Dired buffer’s current directory.
+#+begin_src emacs-lisp
+(defvar dired-dwim-target)
+(setq dired-dwim-target t)
+#+end_src
+*** Launch On Explorer Key                                         :keyboard:
+#+begin_src emacs-lisp
+(global-set-key (kbd "<XF86Explorer>") #'dired)
+#+end_src
+* ElDoc
+** Appearance
+*** Diminish
+#+begin_src emacs-lisp
+(diminish-hook 'eldoc-mode)
+#+end_src
+*** Faces                                                              :face:
+**** Highlight Function Argument Face
+#+begin_src emacs-lisp
+(custom-set-faces (eval-when-compile
+		    (create-face-spec 'eldoc-highlight-function-argument
+				      '(:inherit (bold fixed-pitch)))))
+#+end_src
+* Emacs
+** Appearance
+*** Client Fancy Startup Screen
+Show the same default “fancy startup screen” that non-server Emacs shows on startup in ~emacsclient~ frames as well.
+#+begin_src emacs-lisp
+(add-hook 'server-after-make-frame-hook #'fancy-startup-screen 'append)
+#+end_src
+*** Faces
+**** Default
+#+begin_src emacs-lisp
+(custom-set-faces '(default ((t :height 105 :family "DejaVu Sans Mono"))))
+#+end_src
+**** Fixed Pitch
+#+begin_src emacs-lisp
+(custom-set-faces '(fixed-pitch ((t :height 105 :family "DejaVu Sans Mono"))))
+#+end_src
+**** Fringe
+#+begin_src emacs-lisp
+(custom-set-faces (eval-when-compile
+                    (create-face-spec 'fringe
+                                      '(:foreground base01 :background base03))))
+#+end_src
+**** Header Line
+#+begin_src emacs-lisp
+(custom-set-faces '(header-line ((t :inherit variable-pitch))))
+#+end_src
+**** Link
+#+begin_src emacs-lisp
+(custom-set-faces '(link ((t :inherit variable-pitch))))
+#+end_src
+***** Visited
+#+begin_src emacs-lisp
+(custom-set-faces '(link-visited ((t :inherit variable-pitch))))
+#+end_src
+**** Variable Pitch
+#+begin_src emacs-lisp
+(custom-set-faces '(variable-pitch ((t :height 110 :family "DejaVu Sans"))))
+#+end_src
+**** Warning
+#+begin_src emacs-lisp
+(custom-set-faces (eval-when-compile
+                    (create-face-spec 'warning
+                                      '(:foreground orange :inherit variable-pitch))))
+#+end_src
+*** Stretch Cursor
+#+begin_src emacs-lisp
+(setq x-stretch-cursor t)
+#+end_src
+*** Underline Minimum Offset
+#+begin_src emacs-lisp
+(setq underline-minimum-offset 3)
+#+end_src
+** Behavior
+*** Ask Final Newline
+#+begin_src emacs-lisp
+(setq require-final-newline 'ask)
+#+end_src
+*** Auto Save Files
+**** Directory
+#+begin_src emacs-lisp
+(defvar my/auto-save-file-directory (getenv "AUTO_SAVE_FILE_DIRECTORY")
+  "")
+#+end_src
+***** Transform
+#+begin_src emacs-lisp
+(setq auto-save-file-name-transforms `((".*" ,my/auto-save-file-directory t)))
+#+end_src
+*** Backup Files
+**** By Copying
+Copy so any symlinks remain with the original file.
+#+begin_src emacs-lisp
+(setq backup-by-copying t)
+#+end_src
+**** Directory
+#+begin_src emacs-lisp
+(defvar my/backup-file-directory (getenv "BACKUP_FILE_DIRECTORY")
+  "")
+#+end_src
+***** Transform
+#+begin_src emacs-lisp
+(setq backup-directory-alist `(("." . ,my/backup-file-directory)))
+#+end_src
+*** Enable All Commands
+#+begin_src emacs-lisp
+(setq disabled-command-function nil)
+#+end_src
+*** Kill Current Buffer By Default                                 :keyboard:
+
+instead of ~kill-buffer~ (the default), which prompts
+
+#+begin_src emacs-lisp
+(global-set-key [remap kill-buffer] #'kill-current-buffer)
+#+end_src
+*** Load Prefer Newer
+straight.el-config so it it set before any package loading whatsoever
+#+begin_src emacs-lisp :noweb-ref straight.el-config
+(setq load-prefer-newer t)
+#+end_src
+*** Prompt Before Killing Modified Buffer
+#+begin_src emacs-lisp
+(defun my/prompt-before-killing-buffer ()
+  ""
+  (when (and buffer-file-name
+             (buffer-modified-p)
+             (yes-or-no-p (format "Save %s before killing buffer? " buffer-file-name)))
+    (save-buffer))
+  t)
+(add-hook 'kill-buffer-query-functions #'my/prompt-before-killing-buffer)
+#+end_src
+*** Suggesting Keybindings
+Keep the suggested keybinding visible for 5 seconds. (The default 2 seconds is too short for me to read through some of the suggestions).
+#+begin_src emacs-lisp
+(setq suggest-key-bindings 5)
+#+end_src
+*** TODO Read File Name Function
+#+begin_src emacs-lisp
+(defvar read-file-name-function)
+#+end_src
+* Eshell
+** Appearance
+*** Prompt
+#+begin_src emacs-lisp
+(defvar eshell-prompt-function)
+(defun my/eshell-prompt ()
+  ""
+  (let ((current-face 'my/mode-line/buffer-directory)
+      new-face
+      elements
+      (directory (my/mode-line/buffer-directory default-directory)))
+    (add-face-text-property 0 (length directory) '(:underline nil) nil directory)
+    (push directory elements)
+    (setq new-face 'default)
+    (push (propertize "$"
+  		    'display (powerline-arrow-left current-face new-face))
+  	elements)
+    (push " " elements)
+    (setq current-face new-face)
+    (setq elements (nreverse elements))
+    (powerline-render elements)))
+(setq eshell-prompt-function #'my/eshell-prompt)
+#+end_src
+** Behavior
+*** No History File
+Don't save eshell history to a file.
+#+begin_src emacs-lisp
+(defvar eshell-history-file-name)
+(setq eshell-history-file-name "") ;; `nil' would tell Eshell to use the HISTFILE environment variable.
+#+end_src
+*** Visual Commands
+#+begin_src emacs-lisp
+(defvar eshell-visual-commands)
+(setq eshell-visual-commands nil)
+#+end_src
+**** Aptitude
+#+begin_src emacs-lisp
+(add-to-list 'eshell-visual-commands "aptitude")
+#+end_src
+**** Htop
+#+begin_src emacs-lisp
+(add-to-list 'eshell-visual-commands "htop")
+#+end_src
+* Extended Faces                                                       :face:
+#+begin_src emacs-lisp :noweb-ref package
+(defgroup extended-faces nil
+  ""
+  :version "27.0.50"
+  :group 'faces)
+
+(defface prose
+  '((t :inherit variable-pitch))
+  ""
+  :group 'extended-faces)
+
+(defface title
+  '((t :inherit (bold variable-pitch)))
+  ""
+  :group 'extended-faces)
+
+(defface heading-1
+  '((t :inherit variable-pitch))
+  ""
+  :group 'extended-faces)
+
+(defface heading-2
+  '((t :height 0.95
+       :inherit heading-1))
+  ""
+  :group 'extended-faces)
+
+(defface heading-3
+  '((t :height 0.95
+       :inherit heading-2))
+  ""
+  :group 'extended-faces)
+
+(defface heading-4
+  '((t :height 0.9
+       :inherit heading-3))
+  ""
+  :group 'extended-faces)
+
+(defface heading-5
+  '((t :inherit heading-4))
+  ""
+  :group 'extended-faces)
+
+(defface heading-6
+  '((t :inherit heading-5))
+  ""
+  :group 'extended-faces)
+
+(defface heading-7
+  '((t :inherit heading-6))
+  ""
+  :group 'extended-faces)
+
+(defface heading-8
+  '((t :inherit heading-7))
+  ""
+  :group 'extended-faces)
+
+(defface embedded-code
+  '((t :inherit fixed-width))
+  ""
+  :group 'extended-faces)
+
+(defface keyboard
+  '((t))
+  ""
+  :group 'extended-faces)
+
+(defun my/prose-mode (&optional arg)
+  ""
+  (interactive (list (or current-prefix-arg 'toggle)))
+
+  (buffer-face-mode-invoke 'prose arg
+                           (called-interactively-p 'interactive)))
+(autoload 'buffer-face-mode-invoke "face-remap")
+#+end_src
+** Appearance
+*** Faces
+**** Embedded Code
+#+begin_src emacs-lisp
+(custom-set-faces (eval-when-compile
+                    (create-face-spec 'embedded-code
+                                      '(:inherit (fixed-pitch highlight)))))
+#+end_src
+**** Headings
+***** 1
+#+begin_src emacs-lisp
+(custom-set-faces (eval-when-compile
+                    (create-face-spec 'heading-1
+                                      '(:foreground blue :height 180 :inherit (bold prose)))))
+#+end_src
+***** 2
+#+begin_src emacs-lisp
+(custom-set-faces (eval-when-compile
+                    (create-face-spec 'heading-2
+                                      '(:foreground green :height 170 :family "Liberation Sans" :inherit (heading-1)))))
+#+end_src
+***** 3
+#+begin_src emacs-lisp
+(custom-set-faces (eval-when-compile
+                    (create-face-spec 'heading-3
+                                      '(:foreground cyan :height 0.9 :weight normal :inherit (italic heading-2)))))
+#+end_src
+***** 4
+#+begin_src emacs-lisp
+(custom-set-faces (eval-when-compile
+                    (create-face-spec 'heading-4
+                                      '(:foreground yellow :height 0.95 :slant normal :inherit heading-3))))
+#+end_src
+***** 5
+#+begin_src emacs-lisp
+(custom-set-faces (eval-when-compile
+                    (create-face-spec 'heading-5
+                                      '(:foreground base1 :height 130 :inherit (variable-pitch heading-4)))))
+#+end_src
+**** Keyboard
+#+begin_src emacs-lisp
+(custom-set-faces (eval-when-compile
+                    (create-face-spec 'keyboard
+  				    '(:foreground base1 :height 0.9 :box (:line-width 2 :style released-button) :inherit (variable-pitch highlight)))))
+#+end_src
+**** Prose
+#+begin_src emacs-lisp
+(custom-set-faces '(prose ((t :height 110 :family "DejaVu Serif"))))
+#+end_src
+**** Title
+#+begin_src emacs-lisp
+(custom-set-faces (eval-when-compile
+                    (create-face-spec 'title
+                                      '(:foreground base1 :height 300 :inherit (bold prose)))))
+#+end_src
+** Behavior
+*** Integration
+**** Help
+#+begin_src emacs-lisp
+(add-hook 'help-mode-hook #'my/prose-mode)
+#+end_src
+***** Argument Name
+#+begin_src emacs-lisp
+(custom-set-faces '(help-argument-name ((t :inherit embedded-code))))
+#+end_src
+**** Info
+#+begin_src emacs-lisp
+(add-hook 'Info-mode-hook #'my/prose-mode)
+#+end_src
+***** Quoted
+#+begin_src emacs-lisp
+(custom-set-faces '(Info-quoted ((t :inherit embedded-code))))
+#+end_src
+***** Titles
+****** 1
+#+begin_src emacs-lisp
+(custom-set-faces '(info-title-1 ((t :inherit heading-1))))
+#+end_src
+****** 2
+#+begin_src emacs-lisp
+(custom-set-faces '(info-title-2 ((t :inherit heading-2))))
+#+end_src
+****** 3
+#+begin_src emacs-lisp
+(custom-set-faces '(info-title-3 ((t :inherit heading-3))))
+#+end_src
+****** 4
+#+begin_src emacs-lisp
+(custom-set-faces '(info-title-4 ((t :inherit heading-4))))
+#+end_src
+**** Org
+***** Code
+#+begin_src emacs-lisp
+(custom-set-faces '(org-code ((t :inherit embedded-code))))
+#+end_src
+***** Headings
+****** 1
+#+begin_src emacs-lisp
+(custom-set-faces '(org-level-1 ((t :inherit heading-1))))
+#+end_src
+****** 2
+#+begin_src emacs-lisp
+(custom-set-faces '(org-level-2 ((t :inherit heading-2))))
+#+end_src
+****** 3
+#+begin_src emacs-lisp
+(custom-set-faces '(org-level-3 ((t :inherit heading-3))))
+#+end_src
+****** 4
+#+begin_src emacs-lisp
+(custom-set-faces '(org-level-4 ((t :inherit heading-4))))
+#+end_src
+****** 5
+#+begin_src emacs-lisp
+(custom-set-faces '(org-level-5 ((t :inherit heading-5))))
+#+end_src
+****** 6
+#+begin_src emacs-lisp
+(custom-set-faces '(org-level-6 ((t :inherit heading-6))))
+#+end_src
+****** 7
+#+begin_src emacs-lisp
+(custom-set-faces '(org-level-7 ((t :inherit heading-7))))
+#+end_src
+****** 8
+#+begin_src emacs-lisp
+(custom-set-faces '(org-level-8 ((t :inherit heading-8))))
+#+end_src
+***** Title
+#+begin_src emacs-lisp
+(custom-set-faces (eval-when-compile
+                    (create-face-spec 'org-document-title
+                                      '(:foreground base1 :inherit title))))
+#+end_src
+**** Outline
+***** 1
+#+begin_src emacs-lisp
+(custom-set-faces '(outline-1 ((t :foreground nil :inherit heading-1))))
+#+end_src
+***** 2
+#+begin_src emacs-lisp
+(custom-set-faces '(outline-2 ((t :foreground nil :inherit heading-2))))
+#+end_src
+***** 3
+#+begin_src emacs-lisp
+(custom-set-faces '(outline-3 ((t :foreground nil :inherit heading-3))))
+#+end_src
+***** 4
+#+begin_src emacs-lisp
+(custom-set-faces '(outline-4 ((t :foreground nil :inherit heading-4))))
+#+end_src
+***** 5
+#+begin_src emacs-lisp
+(custom-set-faces '(outline-5 ((t :foreground nil :inherit heading-5))))
+#+end_src
+***** 6
+#+begin_src emacs-lisp
+(custom-set-faces '(outline-6 ((t :foreground nil :inherit heading-6))))
+#+end_src
+***** 7
+#+begin_src emacs-lisp
+(custom-set-faces '(outline-7 ((t :foreground nil :inherit heading-7))))
+#+end_src
+***** 8
+#+begin_src emacs-lisp
+(custom-set-faces '(outline-8 ((t :foreground nil :inherit heading-8))))
+#+end_src
+**** Text
+#+begin_src emacs-lisp
+(add-hook 'text-mode-hook #'my/prose-mode)
+#+end_src
+**** Woman
+#+begin_src emacs-lisp
+(add-hook 'woman-mode-hook #'my/prose-mode)
+#+end_src
+** TODO Submit
+* EXWM
+#+begin_src emacs-lisp :noweb-ref package
+(straight-use-package 'exwm)
+(declare-function   exwm-enable "exwm" (&optional undo))
+(autoload         #'exwm-enable "exwm")
+(declare-function   exwm-randr-enable "exwm-randr" ())
+(autoload         #'exwm-randr-enable "exwm-randr")
+#+end_src
+** Behavior
+*** Blacklist Visual Line
+Visual Line mode remaps commands like ~beginning-of-line~ and ~end-of-line~ so they can’t be remapped by EXWM after. Disable Visual Line mode when the major mode is EXWM so no keys are already remapped.
+#+begin_src emacs-lisp
+(push 'exwm-mode my/visual-line-blacklist-modes)
+#+end_src
+*** Buffer Name Window Title
+#+begin_src emacs-lisp
+(defvar exwm-title)
+(defun my/exwm-buffer-name-window-title ()
+  "Set buffer name to window title."	    
+  (rename-buffer exwm-title t))
+(add-hook 'exwm-update-title-hook #'my/exwm-buffer-name-window-title
+          t ;; Append, so it runs after other EXWM hooks.
+          )
+#+end_src
+*** Enable On Startup
+#+begin_src emacs-lisp
+(add-hook 'emacs-startup-hook #'exwm-randr-enable 'append)
+(add-hook 'emacs-startup-hook #'exwm-enable       'append)
+#+end_src
+*** Keyboard Input                                                 :keyboard:
+
+Only forward ~self-insert-command~ and ~exwm-input-simulation-key-sequences~ to windows
+
+#+begin_src emacs-lisp
+(defvar exwm-input-line-mode-passthrough)
+(setq exwm-input-line-mode-passthrough t)
+;; TODO hack alert:
+(defvar xcb:Allow:ReplayPointer)
+(advice-add 'exwm-input--on-ButtonPress-line-mode :override
+            (lambda (_buffer _button-event)
+              "Never passthrough button events to Emacs."
+              xcb:Allow:ReplayPointer))
+(defvar exwm-mode-map)
+(setq exwm-mode-map (make-sparse-keymap))
+(declare-function exwm-input--fake-key "exwm-input" (event))
+(defun my/exwm-input-send-this-key ()
+  ""
+  (interactive)
+  (exwm-input--fake-key (aref (this-single-command-keys) 0)))
+(define-key exwm-mode-map [remap self-insert-command] #'my/exwm-input-send-this-key)
+(set-keymap-parent exwm-mode-map
+                   (make-composed-keymap (list (current-global-map)
+                                               (let ((fallback-map (make-sparse-keymap)))
+                                                 (define-key fallback-map [t] #'my/exwm-input-send-this-key)
+                                                 fallback-map))))
+#+end_src
+**** Disable Visual Line mode
+remap
+conflict
+#+begin_src emacs-lisp
+(defun my/exwm-disable-visual-line-mode ()
+  (visual-line-mode -1))
+(add-hook 'exwm-mode-hook #'my/exwm-disable-visual-line-mode)
+#+end_src
+**** Quoted insert
+
+#+begin_src emacs-lisp
+(declare-function exwm-input-send-next-key "exwm-input" (times) fileonly)
+(define-key exwm-mode-map [remap quoted-insert] #'exwm-input-send-next-key)
+#+end_src
+**** Simulation key sequences
+***** Global
+#+begin_src emacs-lisp
+(defun my/exwm-input-add-simulation-key-sequence (actual simulated)
+  ""
+  (let ((event-list (listify-key-sequence simulated)))
+    (define-key exwm-mode-map actual
+      ;; Closure.
+      (lambda ()
+        "TBD"
+        (interactive)
+        (dolist (event event-list)
+          (exwm-input--fake-key event))))))
+#+end_src
+****** Editing
+******* Backspace
+******** Character
+#+begin_src emacs-lisp
+(my/exwm-input-add-simulation-key-sequence [remap delete-backward-char] (kbd "<backspace>"))
+#+end_src
+******** Word
+#+begin_src emacs-lisp
+(my/exwm-input-add-simulation-key-sequence [remap backward-kill-word] (kbd "C-<backspace>"))
+#+end_src
+******* Copy
+#+begin_src emacs-lisp
+(my/exwm-input-add-simulation-key-sequence [remap kill-ring-save] (kbd "C-c"))
+#+end_src
+******* Delete
+******** Character
+#+begin_src emacs-lisp
+(my/exwm-input-add-simulation-key-sequence [remap delete-char] (kbd "<delete>"))
+(my/exwm-input-add-simulation-key-sequence [remap delete-forward-char] (kbd "<delete>"))
+#+end_src
+******** Word
+#+begin_src emacs-lisp
+(my/exwm-input-add-simulation-key-sequence [remap kill-word] (kbd "C-<delete>"))
+#+end_src
+******* Kill
+******** Line
+#+begin_src emacs-lisp
+(my/exwm-input-add-simulation-key-sequence [remap kill-line] (kbd "S-<end> C-x"))
+#+end_src
+******** Region
+#+begin_src emacs-lisp
+(my/exwm-input-add-simulation-key-sequence [remap kill-region] (kbd "C-x"))
+#+end_src
+******* Newline
+#+begin_src emacs-lisp
+(my/exwm-input-add-simulation-key-sequence [remap newline] (kbd "<return>"))
+(my/exwm-input-add-simulation-key-sequence (kbd "<S-return>") (kbd "S-<return>"))
+#+end_src
+******* Open Line
+#+begin_src emacs-lisp
+(my/exwm-input-add-simulation-key-sequence [remap open-line] (kbd "<return> <left>"))
+#+end_src
+******* Yank
+#+begin_src emacs-lisp
+(my/exwm-input-add-simulation-key-sequence [remap yank] (kbd "C-v"))
+#+end_src
+****** Escape
+#+begin_src emacs-lisp
+(my/exwm-input-add-simulation-key-sequence [remap keyboard-quit] (kbd "<escape>"))
+(my/exwm-input-add-simulation-key-sequence (kbd "<escape>") (kbd "<escape>"))
+#+end_src
+****** Movement
+******* Down
+#+begin_src emacs-lisp
+(my/exwm-input-add-simulation-key-sequence [remap next-line] (kbd "<down>"))
+#+end_src
+******* End
+#+begin_src emacs-lisp
+(my/exwm-input-add-simulation-key-sequence [remap move-end-of-line] (kbd "<end>"))
+#+end_src
+******* Home
+#+begin_src emacs-lisp
+(my/exwm-input-add-simulation-key-sequence [remap move-beginning-of-line] (kbd "<home>"))
+#+end_src
+******* Left
+******** Character
+#+begin_src emacs-lisp
+(my/exwm-input-add-simulation-key-sequence [remap backward-char] (kbd "<left>"))
+(my/exwm-input-add-simulation-key-sequence [remap left-char] (kbd "<left>"))
+#+end_src
+******** Word
+#+begin_src emacs-lisp
+(my/exwm-input-add-simulation-key-sequence [remap backward-word] (kbd "C-<left>"))
+#+end_src
+******* Page
+******** Down
+#+begin_src emacs-lisp
+(my/exwm-input-add-simulation-key-sequence [remap scroll-up-command] (kbd "<next>"))
+#+end_src
+******** Up
+#+begin_src emacs-lisp
+(my/exwm-input-add-simulation-key-sequence [remap scroll-down-command] (kbd "<prior>"))
+#+end_src
+******* Right
+******** Character
+#+begin_src emacs-lisp
+(my/exwm-input-add-simulation-key-sequence [remap forward-char] (kbd "<right>"))
+(my/exwm-input-add-simulation-key-sequence [remap right-char] (kbd "<right>"))
+#+end_src
+******** Word
+#+begin_src emacs-lisp
+(my/exwm-input-add-simulation-key-sequence [remap forward-word] (kbd "C-<right>"))
+#+end_src
+******* Tab
+
+does many things
+
+don't remap
+
+#+begin_src emacs-lisp
+(my/exwm-input-add-simulation-key-sequence (kbd "TAB") (kbd "<tab>"))
+(my/exwm-input-add-simulation-key-sequence (kbd "<backtab>") (kbd "S-<tab>"))
+#+end_src
+******* Up
+#+begin_src emacs-lisp
+(my/exwm-input-add-simulation-key-sequence [remap previous-line] (kbd "<up>"))
+#+end_src
+****** Save
+#+begin_src emacs-lisp
+(my/exwm-input-add-simulation-key-sequence [remap save-buffer] (kbd "C-s"))
+#+end_src
+****** Search
+******* Isearch
+#+begin_src emacs-lisp
+(my/exwm-input-add-simulation-key-sequence [remap isearch-forward] (kbd "C-f"))
+#+end_src
+******* Swiper
+#+begin_src emacs-lisp
+(my/exwm-input-add-simulation-key-sequence [remap swiper] (kbd "C-f"))
+#+end_src
+****** Select
+#+begin_src emacs-lisp
+(my/exwm-input-add-simulation-key-sequence [remap mark-whole-buffer] (kbd "C-a"))
+#+end_src
+****** Undo
+#+begin_src emacs-lisp
+(my/exwm-input-add-simulation-key-sequence [remap undo] (kbd "C-z"))
+#+end_src
+******* Undo Tree
+#+begin_src emacs-lisp
+(my/exwm-input-add-simulation-key-sequence [remap undo-tree-undo] (kbd "C-z"))
+#+end_src
+******** Redo
+#+begin_src emacs-lisp
+(my/exwm-input-add-simulation-key-sequence [redo undo-tree-redo] (kbd "C-y"))
+#+end_src
+***** TODO Local
+#+begin_src emacs-lisp :noweb-ref wip
+(defun my/exwm-input-add-local-simulation-key-sequence (actual simulated)
+  )
+#+end_src
+****** Chromium
+****** Firefox
+***** TODO Submit
+*** Set Monitors
+TODO Not hard-coded
+#+begin_src emacs-lisp
+(defvar exwm-randr-workspace-monitor-plist)
+(setq exwm-randr-workspace-monitor-plist '(0 "VGA-1"))
+#+end_src
+*** Super key is meta
+
+#+begin_src emacs-lisp
+(make-variable-buffer-local 'x-meta-keysym)
+(make-variable-buffer-local 'x-super-keysym)
+(setq-default x-meta-keysym nil
+              x-super-keysym 'meta)
+(defun my/exwm-super-meta-fix ()
+  (setq x-meta-keysym 'super
+        x-super-keysym nil))
+(add-hook 'exwm-mode-hook #'my/exwm-super-meta-fix)
+#+end_src
+*** Toggle External Monitors
+#+begin_src emacs-lisp
+(defun my/exwm-auto-toggle-screen ()
+  (with-temp-buffer
+    (call-process "xrandr" nil t nil)
+    (goto-char (point-min))
+    (if (search-forward "VGA-1 connected" nil 'noerror)
+        (start-process-shell-command
+         "xrandr" nil "xrandr --output VGA-1 --primary --auto --output LVDS-1 --off")
+      (start-process-shell-command
+       "xrandr" nil "xrandr --output LVDS-1 --auto"))))
+(add-hook 'emacs-startup-hook            #'my/exwm-auto-toggle-screen)
+(add-hook 'exwm-randr-screen-change-hook #'my/exwm-auto-toggle-screen)
+#+end_src
+*** Unbind Suspend Emacs                                           :keyboard:
+#+begin_src emacs-lisp
+(global-set-key [remap suspend-frame] 'undefined)
+#+end_src
+* Flyspell
+** Appearance
+*** Diminish
+#+begin_src emacs-lisp
+(diminish-hook 'flyspell-mode)
+#+end_src
+** Behavior
+*** Programming Modes
+#+begin_src emacs-lisp
+(add-hook 'prog-mode-hook #'flyspell-prog-mode)
+#+end_src
+*** Text Modes
+#+begin_src emacs-lisp
+(add-hook 'text-mode-hook #'flyspell-mode)
+#+end_src
+* Font Lock
+** Appearance
+*** Faces                                                              :face:
+**** Comment
+#+begin_src emacs-lisp
+(custom-set-faces (eval-when-compile
+                    (create-face-spec 'font-lock-comment-face
+                                      '(:height 105 :inherit prose))))
+#+end_src
+***** Delimiter
+#+begin_src emacs-lisp
+(custom-set-faces (eval-when-compile
+                    (create-face-spec 'font-lock-comment-delimiter-face
+                                      '(:slant normal :inherit fixed-pitch))))
+#+end_src
+**** Documentation
+#+begin_src emacs-lisp
+(custom-set-faces (eval-when-compile
+                    (create-face-spec 'font-lock-doc-face
+                                      '(:slant normal :inherit prose))))
+#+end_src
+**** Function Name
+Orange
+#+begin_src emacs-lisp
+(custom-set-faces (eval-when-compile
+                    (create-face-spec 'font-lock-function-name-face
+                                      '(:foreground orange :inherit fixed-pitch))))
+#+end_src
+**** Keyword
+#+begin_src emacs-lisp
+(custom-set-faces (eval-when-compile
+                    (create-face-spec 'font-lock-keyword-face
+                                      '(:foreground blue :inherit (bold fixed-pitch)))))
+#+end_src
+**** String
+#+begin_src emacs-lisp
+(custom-set-faces (eval-when-compile
+                    (create-face-spec 'font-lock-string-face
+                                      '(:height 105 :inherit prose))))
+#+end_src
+**** Type
+Magenta
+#+begin_src emacs-lisp
+(custom-set-faces (eval-when-compile
+                    (create-face-spec 'font-lock-type-face
+                                      '(:foreground magenta :inherit (bold fixed-pitch)))))
+#+end_src
+**** Variable Name
+Yellow
+#+begin_src emacs-lisp
+(custom-set-faces (eval-when-compile
+                    (create-face-spec 'font-lock-variable-name-face
+                                      '(:foreground yellow :inherit fixed-pitch))))
+#+end_src
+* Form Feed
+#+begin_src emacs-lisp :noweb-ref package
+(straight-use-package 'form-feed)
+(declare-function form-feed-mode "form-feed" (&optional arg))
+#+end_src
+** Appearance
+*** Diminish
+#+begin_src emacs-lisp
+(diminish-hook 'form-feed-mode)
+#+end_src
+*** Faces                                                              :face:
+#+begin_src emacs-lisp
+(custom-set-faces (eval-when-compile
+                    (create-face-spec 'form-feed-line
+                                      '(:strike-through t))))
+#+end_src
+** Behavior
+*** Compile Log
+#+begin_src emacs-lisp
+(add-hook 'compilation-mode-hook #'form-feed-mode)
+#+end_src
+*** Programming Modes
+#+begin_src emacs-lisp
+(add-hook 'prog-mode-hook #'form-feed-mode)
+#+end_src
+*** Text Modes
+#+begin_src emacs-lisp
+(add-hook 'text-mode-hook #'form-feed-mode)
+#+end_src
+* Fringe
+Fringe on left side only.
+#+begin_src emacs-lisp
+(fringe-mode '(8 . 0))
+#+end_src
+** Appearance
+*** Buffer Boundaries
+Indicate buffer boundaries by showing arrows when there is more to see off-screen. Buffer boundary bitmaps are redundant because lack of an arrow means you are at a boundary, so don't show them.
+#+begin_src emacs-lisp
+(setq-default indicate-buffer-boundaries '(;; Don't show top boundary.
+                                           (top . nil)
+                                           ;; Don't show bottom boundary.
+                                           (bottom . nil)
+                                           ;; Do show both arrows in the left fringe.
+                                           (t . left)))
+#+end_src
+*** Empty Lines
+Indicate empty lines (after the end of file) in the fringe.
+#+begin_src emacs-lisp
+(setq-default indicate-empty-lines t)
+#+end_src
+* Global Line
+#+begin_src emacs-lisp :noweb-ref package
+(straight-use-package `(global-line
+                        :local-repo ,(expand-file-name "local/global-line" user-emacs-directory)))
+#+end_src
+
+#+begin_src emacs-lisp :noweb-ref package
+(defface my/global-line/default
+  '((t))
+  ""
+  :group 'my
+  :group 'global-line)
+
+(defface my/global-line/debug-on-error
+  '((t))
+  ""
+  :group 'my
+  :group 'global-line)
+
+(defface my/global-line/recursive-edit
+  '((t))
+  ""
+  :group 'my
+  :group 'global-line)
+
+(defface my/global-line/org-clock
+  '((t))
+  ""
+  :group 'my
+  :group 'global-line)
+
+(defface my/global-line/date
+  '((t))
+  ""
+  :group 'my
+  :group 'global-line)
+
+(defface my/global-line/separator
+  '((t :inherit my/global-line/default))
+  ""
+  :group 'my
+  :group 'global-line)
+
+(defface my/global-line/time
+  '((t))
+  ""
+  :group 'my
+  :group 'global-line)
+
+(defvar global-line-refresh-function)
+(defun my/global-line ()
+  ""
+  (let* ((current-face 'my/global-line/default)
+         new-face
+         lhs rhs
+         space-position)
+    ;; Left side:
+    ;;  Recursive editing levels:
+    (when (> (recursion-depth) 0)
+      (setq current-face 'my/global-line/recursive-edit)
+      (push (propertize (concat " " (number-to-string (recursion-depth)))
+  			'face current-face)
+  	    lhs))
+    ;;  Debug on error:
+    (when debug-on-error
+      (setq new-face 'my/global-line/debug-on-error)
+      (unless (eq current-face 'my/global-line/default)
+	(push (powerline-arrow-left current-face new-face)
+  	      lhs))
+      (setq current-face new-face)
+      (push (propertize " 🐞"
+  			'face current-face)
+  	    lhs))
+    (unless (eq current-face 'my/global-line/default)
+      (setq new-face 'my/global-line/default)
+      (push (powerline-arrow-left current-face new-face)
+  	    lhs)
+      (setq current-face new-face))
+    ;; Right side:
+    ;;  Current Org clock:
+    (when (and (bound-and-true-p org-clock-heading)
+               (> (length org-clock-heading) 0))
+      (setq new-face 'my/global-line/org-clock)
+      (push (powerline-arrow-right current-face new-face) rhs)
+      (setq current-face new-face)
+      (push (propertize (concat " " (bound-and-true-p org-clock-heading) " ")
+                        'face current-face)
+            rhs))
+    ;;  Date:
+    (setq new-face 'my/global-line/date)
+    (push (powerline-arrow-right current-face new-face) rhs)
+    (setq current-face new-face)
+    (push (propertize (format-time-string " %A ")
+                      'face current-face)
+          rhs)
+    (push (powerline-arrow-outline-right 'my/global-line/date 'my/global-line/separator) rhs)
+    (push (propertize (format-time-string " %Y–%m–%d ")
+                      'face current-face)
+          rhs)
+    ;;  Time:
+    (setq new-face 'my/global-line/time)
+    (push (powerline-arrow-right current-face new-face) rhs)
+    (setq current-face new-face)
+    (push (propertize (format-time-string " %H:%M:%S")
+                      'face current-face)
+          rhs)
+    ;; (push (propertize (format-time-string "%^p")
+    ;;                   'face `((:height 0.8) ,current-face))
+    ;;       rhs)
+    (push (propertize " "
+                      'face current-face)
+          rhs)
+    (push (propertize (format-time-string "%Z")
+                      'face `(bold ,current-face))
+          rhs)
+    ;; Finalize.
+    (setq lhs (nreverse lhs)
+          rhs (nreverse rhs))
+    (erase-buffer)
+    ;; Insert:
+    (insert (powerline-render lhs))
+    (setq space-position (point))
+    (insert (propertize " "
+                        'face 'my/global-line/default))
+    (insert (powerline-render rhs))
+    (put-text-property space-position (1+ space-position)
+                       'display
+                       `(space :align-to (- right 1 (1)
+                                            (,(car (window-text-pixel-size nil
+                                                                           (1+ space-position)
+                                                                           t))))))))
+(setq global-line-refresh-function #'my/global-line)
+#+end_src
+** Appearance
+*** Diminish
+#+begin_src emacs-lisp
+(diminish-hook 'global-line-mode)
+#+end_src
+*** Faces                                                              :face:
+**** Left Side
+***** Debug On Error
+#+begin_src emacs-lisp
+(custom-set-faces (eval-when-compile
+  		  (create-face-spec 'my/global-line/debug-on-error
+  				    '(:height 120 :foreground base3 :background red :inverse-video nil))))
+#+end_src
+***** Recursive Edit
+#+begin_src emacs-lisp
+(custom-set-faces (eval-when-compile
+  		  (create-face-spec 'my/global-line/recursive-edit
+  				    '(:foreground magenta :inherit (bold mode-line)))))
+#+end_src
+**** Right Side
+***** Date
+#+begin_src emacs-lisp
+(custom-set-faces (eval-when-compile
+                    (create-face-spec 'my/global-line/date
+                                      '(:foreground cyan :inherit mode-line))))
+#+end_src
+***** Default
+#+begin_src emacs-lisp
+(custom-set-faces (eval-when-compile
+                    (create-face-spec 'my/global-line/default
+                                      '(:inverse-video nil :background base03))))
+#+end_src
+***** Org Clock
+#+begin_src emacs-lisp
+(custom-set-faces (eval-when-compile
+                    (create-face-spec 'my/global-line/org-clock
+                                      '(:foreground magenta :inherit (bold underline mode-line)))))
+#+end_src
+***** Separator
+#+begin_src emacs-lisp
+(custom-set-faces (eval-when-compile
+                    (create-face-spec 'my/global-line/separator
+                                      '(:foreground base02 :background base02))))
+#+end_src
+***** Time
+#+begin_src emacs-lisp
+(custom-set-faces (eval-when-compile
+                    (create-face-spec 'my/global-line/time
+                                      '(:foreground blue :inherit mode-line))))
+#+end_src
+*** Fill Background
+#+begin_src emacs-lisp
+(defun my/global-line-set-background ()
+  (face-remap-add-relative 'default 'my/global-line/time))
+(add-hook 'global-line-setup-hook #'my/global-line-set-background)
+#+end_src
+** Behavior
+*** Enable
+#+begin_src emacs-lisp
+(declare-function global-line-mode "global-line" (&optional arg))
+#+end_src
+**** Global
+#+begin_src emacs-lisp
+(add-hook 'after-init-hook #'global-line-mode)
+#+end_src
+**** Server After Make Frame
+#+begin_src emacs-lisp
+(add-hook 'server-after-make-frame-hook #'global-line-mode)
+#+end_src
+*** Refresh Interval
+Every second
+#+begin_src emacs-lisp
+(defvar global-line-refresh-interval)
+(setq global-line-refresh-interval 1)
+#+end_src
+** TODO CPU
+** TODO Memory
+** TODO Volume
+* Highlight Line
+** Behavior
+*** Programming Modes
+#+begin_src emacs-lisp
+(add-hook 'prog-mode-hook #'hl-line-mode)
+#+end_src
+* Ibuffer
+** Behavior
+*** Replace Buffer List                                            :keyboard:
+#+begin_src emacs-lisp
+(global-set-key (kbd "C-x C-b") #'ibuffer)
+#+end_src
+*** Use Other Window
+#+begin_src emacs-lisp
+(defvar ibuffer-use-other-window)
+(setq ibuffer-use-other-window t)
+#+end_src
+* Info
+** Appearance
+*** Faces                                                              :face:
+**** Menu Star
+#+begin_src emacs-lisp
+(custom-set-faces (eval-when-compile
+  		  (create-face-spec 'info-menu-star
+  				    '(:inherit default))))
+#+end_src
+**** Node
+#+begin_src emacs-lisp
+(custom-set-faces (eval-when-compile
+  		  (create-face-spec 'info-node
+  				    '(:foreground orange :inherit (bold italic)))))
+#+end_src
+*** Font Lock
+**** Code Block
+#+begin_src emacs-lisp :noweb-ref wip
+(font-lock-add-keywords 'Info-mode
+  		      '(("^\s\\{5\\}\\(.*\r?\n\\)" 1 'embedded-code)))
+#+end_src
+**** Italics
+#+begin_src emacs-lisp
+(font-lock-add-keywords 'Info-mode
+  		      '(("\\(_\\)\\(.+?\\)\\(_\\)"
+  			 (1 '(face nil invisible t))
+  			 (2 'italic)
+  			 (3 '(face nil invisible t)))))
+#+end_src
+**** TODO Extend Region To Paragraph
+#+begin_src emacs-lisp :noweb-ref wip
+(defvar font-lock-beg)
+(defvar font-lock-end)
+(defun my/font-lock-extend-region-paragraph ()
+  ""
+  (let (start end)
+    (goto-char font-lock-beg)
+    (when (not (looking-at "\n\n"))
+      (setq font-lock-beg (setq start (search-backward "\n\n" nil 'noerror))))
+    (goto-char font-lock-end)
+    (when (not (looking-at "\n\n"))
+      (setq font-lock-end (setq end (search-forward "\n\n" nil 'noerror))))
+    (or start
+      end)))
+(defun my/Info-font-lock-extend-region-paragraph ()
+  ""
+  (add-to-list 'font-lock-extend-region-functions #'my/font-lock-extend-region-paragraph 'append))
+(add-hook 'Info-mode-hook #'my/Info-font-lock-extend-region-paragraph)
+#+end_src
+**** TODO Refill
+#+begin_src emacs-lisp :noweb-ref wip
+(font-lock-add-keywords 'Info-mode
+  		      '(("[^\r\n]\\(\n\s\\{,4\\}\\)[^ •\\*\r\n]" 1 '(face default display " "))
+  			;; ("\n\n" 0 (face default display nil) t)
+  			))
+#+end_src
+* Ivy
+#+begin_src emacs-lisp :noweb-ref package
+(straight-use-package 'ivy)
+#+end_src
+** Appearance
+*** Count Format
+#+begin_src emacs-lisp
+(defvar ivy-count-format)
+(setq ivy-count-format "%d/%d ")
+#+end_src
+*** Diminish
+Remove
+
+#+begin_src emacs-lisp
+(diminish-hook 'ivy-mode)
+#+end_src
+**** TODO Explain
+*** Faces
+**** Current Match
+#+begin_src emacs-lisp
+(custom-set-faces (eval-when-compile
+                    (create-face-spec 'ivy-current-match
+                                      '(:foreground base02 :background base1))))
+#+end_src
+** Behavior
+*** Global
+#+begin_src emacs-lisp
+(add-hook 'after-init-hook 'ivy-mode)
+#+end_src
+*** Number Shortcuts
+*** Wrap
+#+begin_src emacs-lisp
+(defvar ivy-wrap)
+(setq ivy-wrap t)
+#+end_src
+* Ivy Number Shortcuts
+#+begin_src emacs-lisp :noweb-ref package
+(straight-use-package `(ivy-number-shortcuts
+                        :local-repo ,(expand-file-name "local/ivy-number-shortcuts" user-emacs-directory)))
+#+end_src
+** Appearance
+*** Faces                                                              :face:
+#+begin_src emacs-lisp
+(custom-set-faces (eval-when-compile
+  		  (create-face-spec 'ivy-number-shortcuts-face
+  				    '(:inherit keyboard))))
+#+end_src
+*** Format
+#+begin_src emacs-lisp
+(defvar ivy-number-shortcuts-format)
+(setq ivy-number-shortcuts-format "M-%d")
+#+end_src
+*** Show Numbers
+#+begin_src emacs-lisp
+(defvar ivy-format-function)
+(declare-function ivy-number-shortcuts-format-function "ivy-number-shortcuts" (candidates))
+(setq ivy-format-function #'ivy-number-shortcuts-format-function)
+#+end_src
+** Behavior
+*** Keybindings
+**** Ivy Integration
+#+begin_src emacs-lisp
+(defvar ivy-minibuffer-map)
+(declare-function ivy-number-shortcuts-goto "ivy-number-shortcuts" (number))
+(with-eval-after-load 'ivy
+  (define-key ivy-minibuffer-map (kbd "M-1") (lambda () (interactive) (ivy-number-shortcuts-goto 1)))
+  (define-key ivy-minibuffer-map (kbd "M-2") (lambda () (interactive) (ivy-number-shortcuts-goto 2)))
+  (define-key ivy-minibuffer-map (kbd "M-3") (lambda () (interactive) (ivy-number-shortcuts-goto 3)))
+  (define-key ivy-minibuffer-map (kbd "M-4") (lambda () (interactive) (ivy-number-shortcuts-goto 4)))
+  (define-key ivy-minibuffer-map (kbd "M-5") (lambda () (interactive) (ivy-number-shortcuts-goto 5)))
+  (define-key ivy-minibuffer-map (kbd "M-6") (lambda () (interactive) (ivy-number-shortcuts-goto 6)))
+  (define-key ivy-minibuffer-map (kbd "M-7") (lambda () (interactive) (ivy-number-shortcuts-goto 7)))
+  (define-key ivy-minibuffer-map (kbd "M-8") (lambda () (interactive) (ivy-number-shortcuts-goto 8)))
+  (define-key ivy-minibuffer-map (kbd "M-9") (lambda () (interactive) (ivy-number-shortcuts-goto 9)))
+  (define-key ivy-minibuffer-map (kbd "M-0") (lambda () (interactive) (ivy-number-shortcuts-goto 0))))
+#+end_src
+* Menu Bar
+Disable the menu bar to make more space.
+#+begin_src emacs-lisp
+(menu-bar-mode -1)
+#+end_src
+* Mode Line
+#+begin_src emacs-lisp :noweb-ref package
+(defface my/mode-line/eldoc
+  '((t))
+  ""
+  :group 'my
+  :group 'mode-line)
+
+(defface my/mode-line/buffer-directory
+  '((t))
+  ""
+  :group 'my
+  :group 'mode-line)
+
+(defface my/mode-line/buffer-directory/separator
+  '((t :inherit my/mode-line/buffer-directory))
+  ""
+  :group 'my
+  :group 'mode-line)
+
+(defface my/mode-line/buffer-directory/tilde
+  '((t :inherit my/mode-line/buffer-directory))
+  ""
+  :group 'my
+  :group 'mode-line)
+
+(defface my/mode-line/special-buffer-id
+  '((t))
+  ""
+  :group 'my
+  :group 'mode-line)
+
+(defface my/mode-line/uniquify-buffer-id
+  '((t))
+  ""
+  :group 'my
+  :group 'mode-line)
+
+(defface my/mode-line/major-mode
+  '((t))
+  ""
+  :group 'my
+  :group 'mode-line)
+
+(defface my/mode-line/vc
+  '((t))
+  ""
+  :group 'my
+  :group 'mode-line)
+
+(defface my/mode-line/minor-mode
+  '((t))
+  ""
+  :group 'my
+  :group 'mode-line)
+
+(defface my/mode-line/minor-mode-separator
+  '((t :inherit mode-line-inactive))
+  ""
+  :group 'my
+  :group 'mode-line)
+
+(defface my/mode-line/character-id
+  '((t))
+  ""
+  :group 'my
+  :group 'mode-line)
+
+(defface my/mode-line/mule-info
+  '((t))
+  ""
+  :group 'my
+  :group 'mode-line)
+
+(defface my/mode-line/position
+  '((t))
+  ""
+  :group 'my
+  :group 'mode-line)
+
+(defface my/mode-line/buffer-size
+  '((t))
+  ""
+  :group 'my
+  :group 'mode-line)
+
+;; We need all these active and inactive variants generated because powerline needs a fully specified face to render separators and inherits from the `default' face, rather than `mode-line', while convention for mode-line faces is to not inherit from `mode-line' explicitly and leave parts unspecified to be inherited from `mode-line' or `mode-line-inactve' later.
+;; Generate active and inactive variants of each face used in the modeline that explicitly inherit from `mode-line' and `mode-line-inactive', respectively, to be used in the mode line rendering function.
+(defgroup my/mode-line/internal nil
+  ""
+  :tag "Internal"
+  :group 'mode-line)
+(defmacro my/mode-line--generate-mode-line-faces (face-name &optional inheriting-face)
+  ""
+  (unless inheriting-face
+    (setq inheriting-face 'mode-line))
+  (let ((face-name-string (symbol-name face-name)))
+    `(progn
+       (defface ,(intern (concat face-name-string "--active"))
+         '((t :inherit (,face-name ,inheriting-face)))
+         ,(format "Active version of `%s' for the mode line." face-name-string)
+         :group 'my/mode-line/internal)
+       (defface ,(intern (concat face-name-string "--inactive"))
+         '((t :inherit (,face-name ,(intern (concat (symbol-name inheriting-face)
+                                                    "-inactive")))))
+         ,(format "Inactive version of `%s' for the mode line." face-name-string)
+         :group 'my/mode-line/internal))))
+(defsubst my/mode-line--choose-face (face-name active)
+  `,(intern (concat (symbol-name face-name) (if active
+                                                "--active"
+                                              "--inactive"))))
+(my/mode-line--generate-mode-line-faces my/mode-line/eldoc)
+(my/mode-line--generate-mode-line-faces my/mode-line/buffer-directory mode-line-buffer-id)
+(my/mode-line--generate-mode-line-faces my/mode-line/buffer-directory/separator mode-line-buffer-id)
+(my/mode-line--generate-mode-line-faces my/mode-line/buffer-directory/tilde mode-line-buffer-id)
+(my/mode-line--generate-mode-line-faces my/mode-line/special-buffer-id mode-line-buffer-id)
+(my/mode-line--generate-mode-line-faces my/mode-line/major-mode)
+(my/mode-line--generate-mode-line-faces my/mode-line/vc)
+(my/mode-line--generate-mode-line-faces my/mode-line/minor-mode)
+(my/mode-line--generate-mode-line-faces my/mode-line/minor-mode-separator)
+(my/mode-line--generate-mode-line-faces my/mode-line/character-id)
+(my/mode-line--generate-mode-line-faces my/mode-line/mule-info)
+(my/mode-line--generate-mode-line-faces my/mode-line/position)
+(my/mode-line--generate-mode-line-faces my/mode-line/buffer-size)
+
+(defsubst my/mode-line--no-inverse-background (face-name inheriting-face)
+  (let ((inverse (face-attribute inheriting-face
+  			       :inverse-video
+  			       nil
+  			       'default)))
+    (list (when inverse
+  	  (list :foreground
+  		(face-attribute inheriting-face
+  				:foreground
+  				nil
+  				'default)
+  		:background
+  		(face-attribute inheriting-face
+  				:background
+  				nil
+  				'default)))
+  	face-name
+  	inheriting-face)))
+
+(declare-function mode-line-sloc-get "mode-line-sloc" ())
+
+(declare-function powerline-fill "powerline" (face reserve))
+(declare-function powerline-major-mode "powerline" (&optional face pad) fileonly)
+(declare-function powerline-mouse "powerline" (click-group click-type string))
+(declare-function powerline-render "powerline" (values))
+(declare-function powerline-selected-window-active "powerline" ())
+(declare-function powerline-width "powerline" (values))
+
+(declare-function powerline-arrow-left                "ext:" (face1 face2 &optional height) fileonly)
+(declare-function powerline-arrow-right               "ext:" (face1 face2 &optional height) fileonly)
+(declare-function powerline-wave-left                 "ext:" (face1 face2 &optional height) fileonly)
+(declare-function powerline-wave-right                "ext:" (face1 face2 &optional height) fileonly)
+(declare-function powerline-arrow-outline-left        "ext:" (face1 face2 &optional height) fileonly)
+(declare-function powerline-arrow-outline-right       "ext:" (face1 face2 &optional height) fileonly)
+(declare-function powerline-arrow-outline-maybe-left  "ext:" (face1 face2 &optional height) fileonly)
+(declare-function powerline-arrow-outline-maybe-right "ext:" (face1 face2 &optional height) fileonly)
+
+;; TODO all-the icons
+(defun my/mode-line/buffer-directory (directory &optional inactive initials)
+  (let* ((active (not inactive))
+	 (current-face (my/mode-line--choose-face 'my/mode-line/buffer-directory active)))
+    (when directory
+      (setq directory (abbreviate-file-name directory))
+      (when (directory-name-p directory)
+	(setq directory (directory-file-name directory)))
+      (when initials
+	(setq directory (replace-regexp-in-string "\\(?1:[^[:alnum:]]+.\\)[[:alnum:]]*" "\\1" directory)))
+      (setq directory (replace-regexp-in-string "%" "%%" directory)
+  	    directory (propertize (concat " "
+  					  directory
+  					  " ")
+  				  'face current-face)
+  	    directory (replace-regexp-in-string "[/\\]"
+  						(propertize "/"
+  							    'face (my/mode-line--no-inverse-background 'my/mode-line/buffer-directory/separator
+  												       current-face))
+  						directory)
+  	    directory (replace-regexp-in-string "~"
+  						(propertize "~"
+  							    'face (my/mode-line--no-inverse-background 'my/mode-line/buffer-directory/tilde
+  												       current-face))
+  						directory)))))
+
+;; TODO like buffer directory
+(declare-function vc-git-state "vc-git" (file))
+(defun my/mode-line/vc (&optional inactive)
+  (let* ((_active (not inactive))
+       (file (or buffer-file-name
+  		 default-directory))
+       (state (or (vc-state file)
+  		  (vc-git-state file))))
+    (when state)))
+
+(defun my/mode-line ()
+  ""
+  (let* ((active (powerline-selected-window-active))
+         (current-face (if active
+                           'mode-line
+                         'mode-line-inactive))
+         new-face
+         lhs rhs)
+    ;; Left side:
+    ;;  ElDoc:
+    (when (and eldoc-mode-line-string
+	       (not (minibufferp))
+	       (eq (selected-window) (or (window-in-direction 'above (minibuffer-window))
+					 (minibuffer-selected-window)
+					 (get-largest-window))))
+      (setq current-face (my/mode-line--choose-face 'my/mode-line/eldoc active))
+      (add-face-text-property 0 (length eldoc-mode-line-string) current-face 'append eldoc-mode-line-string)
+      (push (concat (propertize " "
+				'face current-face)
+		    eldoc-mode-line-string)
+	    lhs))
+    ;;  Buffer identification:
+    (let* ((directory (my/mode-line/buffer-directory (if buffer-file-name
+							 (file-name-directory buffer-file-name)
+						       (unless (or (string= default-directory (file-name-as-directory "~"))
+								   (string= default-directory
+  									    (file-name-as-directory (expand-file-name "~"))))
+  							 default-directory))
+  						     (not active)
+  						     'initials))
+  	   (id (format-mode-line mode-line-buffer-identification))
+	   special new-id uniquify)
+      (save-match-data
+        (string-match "\\`\\(?:\\*\\(?1:.*?\\)\\*\\|\\(?2:.*?\\)\\)\\(?:<\\(?3:.*?\\)>\\)?\\'" id)
+        (when (match-string 1 id)
+          (setq special t))
+        (setq new-id (or (match-string 1 id)
+                         (match-string 2 id)
+			 id)
+              uniquify (match-string 3 id)))
+      ;; Directory.
+      (when directory
+        (setq new-face (my/mode-line--choose-face 'my/mode-line/buffer-directory active))
+	(push (propertize " "
+			  'face current-face
+			  'display (powerline-wave-left current-face new-face))
+	      lhs)
+	(setq current-face new-face)
+        (push directory lhs))
+      (setq new-face (if special
+                         (my/mode-line--choose-face 'my/mode-line/special-buffer-id active)
+                       (if active
+                           'mode-line-buffer-id
+                         'mode-line-buffer-id-inactive)))
+      (if directory
+  	  (push (powerline-arrow-outline-maybe-left current-face new-face) lhs)
+	(push (powerline-wave-left current-face new-face) lhs))
+      (setq current-face new-face)
+      (push (propertize (concat " "
+                                (if (buffer-modified-p)
+                                    "★ ")
+                                (if buffer-read-only
+                                    "🔒 ")
+                                (replace-regexp-in-string "%" "%%" new-id)
+                                " ")
+                        'face (if (buffer-modified-p)
+                                  (list 'bold
+                                        current-face)
+                                current-face))
+            lhs)
+      (when uniquify
+        (push (propertize (concat "– "
+                                  (replace-regexp-in-string "%" "%%" uniquify)
+                                  " ")
+                          'face (my/mode-line--no-inverse-background 'my/mode-line/uniquify-buffer-id
+  								     current-face))
+              lhs)))
+    ;;  Version control.
+    (when (and vc-mode buffer-file-name)
+      (setq new-face (my/mode-line--choose-face 'my/mode-line/vc active))
+      (push (powerline-wave-right current-face new-face) lhs)
+      (setq current-face new-face)
+      ;; TODO
+      (push (pcase (vc-state buffer-file-name)
+              ((or 'edited 'added)
+               ;; octicon "git-compare", v-adjust -0.05
+               )
+              ('needs-merge
+               ;; octicon "git-merge", v-adjust -0.1
+               )
+              ('needs-update
+               ;; octicon "arrow-down", v-adjust -0.1
+               )
+              ((or 'removed 'conflict 'unregistered)
+               ;; octicon "alert", v-adjust -0.1
+               )
+              (_
+               ;; octicon "git-compare", v-adjust -0.05, but everything following using `font-lock-doc-face' for some reason
+               ))
+            lhs)
+      (push (propertize (concat vc-mode " ")
+                        'face current-face)
+            lhs))
+    ;;  Major mode.
+    (setq new-face (my/mode-line--choose-face 'my/mode-line/major-mode active))
+    (push (if (and vc-mode buffer-file-name)
+              (powerline-arrow-outline-maybe-left current-face new-face)
+            (powerline-wave-right current-face new-face))
+          lhs)
+    (setq current-face new-face)
+    (push (powerline-major-mode current-face 'l) lhs)
+    (push (propertize " "
+                      'face current-face)
+          lhs)
+    ;;  Minor modes.
+    (setq new-face (my/mode-line--choose-face 'my/mode-line/minor-mode active))
+    (push (powerline-arrow-outline-maybe-left current-face new-face) lhs)
+    (setq current-face new-face)
+    (dolist (minor-mode (split-string (format-mode-line minor-mode-alist)))
+      (push (propertize (concat " " minor-mode " ")
+                        'face current-face
+                        'mouse-face 'mode-line-highlight
+                        'help-echo (concat minor-mode " minor mode
+ Left click: Display minor mode menu
+ Middle click: Show help for minor mode
+ Right click: Toggle minor modes")
+                        'local-map (let ((map (make-sparse-keymap)))
+                                     (define-key map
+                                       [mode-line down-mouse-1]
+                                       (powerline-mouse 'minor 'menu minor-mode))
+                                     (define-key map
+                                       [mode-line mouse-2]
+                                       (powerline-mouse 'minor 'help minor-mode))
+                                     (define-key map
+                                       [mode-line down-mouse-3]
+                                       (powerline-mouse 'minor 'menu minor-mode))
+                                     (define-key map
+                                       [header-line down-mouse-3]
+                                       (powerline-mouse 'minor 'menu minor-mode))
+                                     map))
+            lhs)
+      (push (powerline-arrow-outline-left
+             (my/mode-line--choose-face 'my/mode-line/minor-mode-separator active)
+             current-face)
+            lhs))
+    (setq new-face (if active
+                       'mode-line
+                     'mode-line-inactive)) 
+    (push (powerline-arrow-left current-face new-face) lhs)
+    (setq current-face new-face)
+    ;; Right side.
+    ;;  Non-ASCII character indicator.
+    (let ((char (following-char)))
+      (when (and char (>= char 127))
+        (setq new-face (my/mode-line--choose-face 'my/mode-line/character-id active))
+        (push (powerline-arrow-outline-maybe-right current-face new-face) rhs)
+        (setq current-face new-face)
+        (push (propertize (concat
+                           " "
+                           (capitalize (or (get-char-code-property char
+                                                                   'name)
+                                           "Unknown Character"))
+                           " ")
+                          'face current-face)
+              rhs)))
+    ;;  Coding system and EOL format.
+    (setq new-face (my/mode-line--choose-face 'my/mode-line/mule-info active))
+    (push (powerline-arrow-outline-maybe-right current-face new-face) rhs)
+    (setq current-face new-face)
+    (push (propertize (concat " " (format-mode-line mode-line-mule-info) " ")
+                      'face current-face)
+          rhs) 
+    ;;  Line and column number.
+    (setq new-face (my/mode-line--choose-face 'my/mode-line/position active))
+    (push (powerline-arrow-outline-maybe-right current-face new-face) rhs)
+    (setq current-face new-face)
+    (push (propertize " %l:%c "
+                      'face current-face)
+          rhs)
+    ;;  Buffer size.
+    (setq new-face (my/mode-line--choose-face 'my/mode-line/buffer-size active))
+    (push (powerline-arrow-outline-maybe-right current-face new-face) rhs)
+    (setq current-face new-face)
+    (push (propertize (concat " "
+                              (mode-line-sloc-get)
+                              " ")
+                      'face current-face)
+          rhs)
+    ;; Finalize.
+    (setq lhs (nreverse lhs)
+          rhs (nreverse rhs))
+    (concat (powerline-render lhs)
+            (powerline-fill (if active
+                                'mode-line
+                              'mode-line-inactive)
+                            (powerline-width rhs))
+            (powerline-render rhs))))
+(setq-default mode-line-format '("%e"
+				 (eldoc-mode-line-string "")
+                                 (:eval (my/mode-line))))
+#+end_src
+#+end_src
+** Appearance
+*** Faces                                                              :face:
+**** Left Side
+***** Buffer Id
+****** Active
+#+begin_src emacs-lisp
+(custom-set-faces (eval-when-compile
+                    (create-face-spec 'mode-line-buffer-id
+                                      '(:font "Liberation Sans" :height 120 :foreground base0 :background base03 :inverse-video nil :underline t))))
+#+end_src
+****** Directory
+#+begin_src emacs-lisp
+(custom-set-faces (eval-when-compile
+  		  (create-face-spec 'my/mode-line/buffer-directory
+  				    '(:height 0.95 :background base02))))
+#+end_src
+******* Separator
+#+begin_src emacs-lisp
+(custom-set-faces (eval-when-compile
+  		  (create-face-spec 'my/mode-line/buffer-directory/separator
+  				    '(:height 110 :foreground blue :inherit (bold fixed-pitch)))))
+#+end_src
+******* Tilde
+#+begin_src emacs-lisp
+(custom-set-faces (eval-when-compile
+  		  (create-face-spec 'my/mode-line/buffer-directory/tilde
+  				    '(:height 130 :foreground yellow :inherit my/mode-line/buffer-directory/separator))))
+#+end_src
+****** Inactive
+#+begin_src emacs-lisp
+(custom-set-faces (eval-when-compile
+                    (create-face-spec 'mode-line-buffer-id-inactive
+                                      '(:inverse-video t :inherit mode-line-buffer-id))))
+#+end_src
+****** Special
+#+begin_src emacs-lisp
+(custom-set-faces (eval-when-compile
+                    (create-face-spec 'my/mode-line/special-buffer-id
+                                      '(:foreground cyan))))
+#+end_src
+****** Uniquify
+#+begin_src emacs-lisp
+(custom-set-faces (eval-when-compile
+                    (create-face-spec
+                     'my/mode-line/uniquify-buffer-id
+                     '(:foreground yellow))))
+#+end_src
+***** ElDoc
+#+begin_src emacs-lisp
+(custom-set-faces (eval-when-compile
+		    (create-face-spec 'my/mode-line/eldoc
+				      '(:background base03 :overline t :inherit fixed-pitch))))
+#+end_src
+***** Major Mode
+#+begin_src emacs-lisp
+(custom-set-faces (eval-when-compile
+                    (create-face-spec 'my/mode-line/major-mode
+                                      '(:weight bold :foreground blue))))
+#+end_src
+***** Minor Mode
+#+begin_src emacs-lisp
+(custom-set-faces (eval-when-compile
+                    (create-face-spec 'my/mode-line/minor-mode
+                                      '(:foreground base1))))
+#+end_src
+***** Minor Mode Separator
+#+begin_src emacs-lisp
+(custom-set-faces (eval-when-compile
+                    (create-face-spec 'my/mode-line/minor-mode-separator
+                                      '(:foreground base01 :background base01))))
+#+end_src
+***** Version Control
+#+begin_src emacs-lisp
+(custom-set-faces (eval-when-compile
+                    (create-face-spec 'my/mode-line/vc
+                                      '(:weight bold :foreground green))))
+#+end_src
+**** Overall
+***** Active
+#+begin_src emacs-lisp
+(custom-set-faces (eval-when-compile
+                    (create-face-spec 'mode-line
+                                      '(:height 0.95 :inverse-video t :inherit variable-pitch))))
+#+end_src
+***** Inactive
+#+begin_src emacs-lisp
+(custom-set-faces (eval-when-compile
+                    (create-face-spec 'mode-line-inactive
+                                      `(;; :stipple (5 5 ,(string #b00001
+                                        ;;                        #b00010
+                                        ;;                        #b00100
+                                        ;;                        #b01000
+                                        ;;                        #b10000))
+                                        :inverse-video nil :inherit mode-line))))
+#+end_src
+**** Right Side
+***** Buffer Size
+#+begin_src emacs-lisp
+(custom-set-faces (eval-when-compile
+                    (create-face-spec 'my/mode-line/buffer-size
+                                      '(:foreground violet :inherit fixed-pitch))))
+#+end_src
+***** Character Id
+TODO variable-pitch
+#+begin_src emacs-lisp
+(custom-set-faces (eval-when-compile
+                    (create-face-spec 'my/mode-line/character-id
+                                      '(:foreground cyan :inherit fixed-pitch))))
+#+end_src
+***** Mule Info
+#+begin_src emacs-lisp
+(custom-set-faces (eval-when-compile
+                    (create-face-spec 'my/mode-line/mule-info
+                                      '(:foreground base0 :inherit fixed-pitch))))
+#+end_src
+***** Position
+#+begin_src emacs-lisp
+(custom-set-faces (eval-when-compile
+                    (create-face-spec 'my/mode-line/position
+                                      '(:foreground base00 :inherit fixed-pitch))))
+#+end_src
+** Behavior
+*** Default Buffer Identification
+
+#+begin_src emacs-lisp
+(setq-default mode-line-buffer-identification
+              (list (propertize "%b"
+                                'face 'mode-line-buffer-id
+                                'help-echo "Buffer name
+Left click: Previous buffer
+Right click: Next buffer"
+                                'mouse-face 'mode-line-highlight
+                                'local-map mode-line-buffer-identification-keymap)))
+#+end_src
+* Mode Line SLOC
+#+begin_src emacs-lisp :noweb-ref package
+(straight-use-package `(mode-line-sloc
+                        :local-repo ,(expand-file-name "local/mode-line-sloc" user-emacs-directory)))
+#+end_src
+** TODO MELPA
+** TODO Upload to Git
+* Org
+#+begin_src emacs-lisp :noweb-ref package
+(straight-use-package 'org-plus-contrib)
+#+end_src
+** Appearance
+*** Face Cycling
+**** Disable Cycling
+#+begin_src emacs-lisp
+(defvar org-cycle-level-faces)
+(setq org-cycle-level-faces nil)
+#+end_src
+**** Max Level Faces
+Level 5
+#+begin_src emacs-lisp
+(defvar org-n-level-faces)
+(setq org-n-level-faces 5)
+#+end_src
+*** Faces                                                              :face:
+**** Block
+#+begin_src emacs-lisp
+(custom-set-faces (eval-when-compile
+                    (create-face-spec 'org-block
+                                      '(:foreground base0 :inherit embedded-code))))
+#+end_src
+***** Begin/End Lines
+#+begin_src emacs-lisp
+(custom-set-faces (eval-when-compile
+                    (create-face-spec 'org-block-begin-line
+                                      '(:height 0.9 :inherit (org-meta-line org-block)))))
+#+end_src
+**** Checkbox
+#+begin_src emacs-lisp
+(custom-set-faces '(org-checkbox ((t :inherit fixed-pitch))))
+#+end_src
+**** Code
+#+begin_src emacs-lisp
+(custom-set-faces (eval-when-compile
+                    (create-face-spec 'org-code
+                                      '(:foreground base0 :inherit embedded-code))))
+#+end_src
+**** Date
+#+begin_src emacs-lisp
+(custom-set-faces (eval-when-compile
+                    (create-face-spec 'org-date
+                                      '(:foreground base3 :underline nil :height 0.95 :inherit (bold variable-pitch)))))
+#+end_src
+**** Default
+#+begin_src emacs-lisp
+(custom-set-faces '(org-default ((t :inherit prose))))
+#+end_src
+**** Document Info
+#+begin_src emacs-lisp
+(custom-set-faces (eval-when-compile
+                    (create-face-spec 'org-document-info
+                                      '(:foreground base1))))
+#+end_src
+**** Document Info Keyword
+#+begin_src emacs-lisp
+(custom-set-faces (eval-when-compile
+                    (create-face-spec 'org-document-info-keyword
+                                      '(:foreground base00 :inherit bold))))
+#+end_src
+**** Formula
+#+begin_src emacs-lisp
+(custom-set-faces (eval-when-compile
+                    (create-face-spec 'org-formula
+                                      '(:inherit org-table))))
+#+end_src
+**** Meta Line
+#+begin_src emacs-lisp
+(custom-set-faces '(org-meta-line ((t :inherit (bold org-document-info-keyword)))))
+#+end_src
+**** Special Keyword
+#+begin_src emacs-lisp
+(custom-set-faces '(org-special-keyword ((t :box t :slant normal :inherit variable-pitch))))
+#+end_src
+**** Table
+alignment
+#+begin_src emacs-lisp
+(custom-set-faces (eval-when-compile
+                    (create-face-spec 'org-table
+                                      '(:foreground base0 :inherit fixed-pitch))))
+#+end_src
+***** TODO ~org-unicode-table~ should not depend on ~fixed-pitch~
+**** Todo Keywords
+***** Done
+#+begin_src emacs-lisp
+(custom-set-faces (eval-when-compile
+                    (create-face-spec 'org-done
+                                      '(:foreground green :inverse-video nil :inherit (org-todo highlight)))))
+#+end_src
+***** Todo
+#+begin_src emacs-lisp
+(custom-set-faces (eval-when-compile
+                    (create-face-spec 'org-todo
+                                      '(:foreground red :background nil :inverse-video t :height 1.1 :inherit fixed-pitch))))
+#+end_src
+*** Indent Mode
+Make all Org buffers use ~org-indent-mode~ so subheading bullets are hidden and text 
+
+#+begin_src emacs-lisp
+(defvar org-startup-indented)
+(setq org-startup-indented t)
+#+end_src
+**** Diminish
+#+begin_src emacs-lisp
+(diminish-hook 'org-indent-mode)
+#+end_src
+*** Source Code Syntax Highlighting
+
+#+begin_src emacs-lisp
+(defvar org-src-fontify-natively)
+(setq org-src-fontify-natively t)
+#+end_src
+** Behavior
+*** Agenda
+**** Files
+#+begin_src emacs-lisp
+(defvar org-agenda-files)
+(setq org-agenda-files (list my/org-todo-file))
+#+end_src
+*** Capture
+**** Templates
+#+begin_src emacs-lisp
+(defvar org-capture-templates)
+(setq org-capture-templates nil)
+#+end_src
+***** Append
+#+begin_src emacs-lisp
+(add-to-list 'org-capture-templates '("a"
+                                      "Append"
+                                      entry
+                                      (clock)
+                                      "* TODO %?
+%a"))
+#+end_src
+***** Appointment
+#+begin_src emacs-lisp
+(add-to-list 'org-capture-templates '("p"
+                                      "Appointment"
+                                      entry
+                                      (file+function my/org-todo-file
+                                                     org-goto)
+                                      "* APPOINTMENT %?
+%a"))
+#+end_src
+***** Contacts
+#+begin_src emacs-lisp
+(add-to-list 'org-capture-templates '("c"
+                                      "Contact"
+                                      entry
+                                      (file my/org-contacts-file)
+                                      "* %?"))
+#+end_src
+***** Todo
+#+begin_src emacs-lisp
+(add-to-list 'org-capture-templates '("t"
+                                      "Todo"
+                                      entry
+                                      (file+fuction my/org-todo-file
+                                                    org-goto)
+                                      "* TODO %?
+%a"))
+#+end_src
+*** Contacts File
+#+begin_src emacs-lisp :noweb-ref package
+(defvar my/org-contacts-file (getenv "ORG_CONTACTS_FILE")
+  "")
+#+end_src
+*** Goto
+**** Interface
+Use outline path completion
+
+#+begin_src emacs-lisp
+(defvar org-goto-interface)
+(setq org-goto-interface 'outline-path-completion)
+#+end_src
+*** Keybindings                                                    :keyboard:
+#+begin_src emacs-lisp
+(defvar org-mode-map)
+#+end_src
+**** Agenda
+#+begin_src emacs-lisp
+(declare-function org-agenda "org-agenda" (&optional arg org-keys restriction))
+(global-set-key (kbd "C-c a") #'org-agenda)
+#+end_src
+**** C-j
+#+begin_src emacs-lisp
+(with-eval-after-load 'org
+  (define-key org-mode-map (kbd "C-j") nil))
+#+end_src
+**** Move Up/Down
+#+begin_src emacs-lisp
+(declare-function org-metaup   "org" (&optional arg))
+(declare-function org-metadown "org" (&optional arg))
+(with-eval-after-load 'org
+  (define-key org-mode-map (kbd "M-p") #'org-metaup)
+  (define-key org-mode-map (kbd "M-n") #'org-metadown))
+#+end_src
+*** Log
+**** Done
+Add time stamp when task is marked DONE.
+#+begin_src emacs-lisp
+(defvar org-log-done)
+(setq org-log-done 'time)
+#+end_src
+**** Into Drawer
+#+begin_src emacs-lisp
+(defvar org-log-into-drawer)
+(setq org-log-into-drawer "LOGBOOK")
+#+end_src
+**** Reschedule
+#+begin_src emacs-lisp
+(defvar org-log-reschedule)
+(setq org-log-reschedule 'time)
+#+end_src
+*** Modules
+**** Tempo
+Template expansion
+#+begin_src emacs-lisp
+(funcall (lambda ()
+           ;; Byte-compiler will evaluate any `require' statements at the top-level. However, the proper load path may not be set at compile time; wrapping the `require' will prevent the byte-compiler from compiling until load time, when the load path will be set.
+           ;; No macros from `org-tempo' are needed in the rest of initialization.
+           (require 'org-tempo)))
+#+end_src
+*** Outline Path Completion
+**** Complete In Steps
+
+#+begin_src emacs-lisp
+(defvar org-outline-path-complete-in-steps)
+(setq org-outline-path-complete-in-steps nil)
+#+end_src
+*** Refile
+**** Targets
+Display up to 8 levels of headings from the current buffer when refiling.
+#+begin_src emacs-lisp
+(defvar org-refile-targets)
+(setq org-refile-targets '((nil . (:maxlevel . 8))))
+#+end_src
+**** Use Outline Path
+#+begin_src emacs-lisp
+(defvar org-refile-use-outline-path)
+(setq org-refile-use-outline-path t)
+#+end_src
+*** Source Code
+**** Ask Before Returning To Edit Buffer
+#+begin_src emacs-lisp
+(defvar org-src-ask-before-returning-to-edit-buffer)
+(setq org-src-ask-before-returning-to-edit-buffer nil)
+#+end_src
+**** Content Indentation
+#+begin_src emacs-lisp
+(defvar org-edit-src-content-indentation)
+(setq org-edit-src-content-indentation 0)
+#+end_src
+**** Window Setup
+#+begin_src emacs-lisp
+(defvar org-src-window-setup)
+(setq org-src-window-setup 'split-window-below)
+#+end_src
+*** Tangle
+**** Compile Init File
+#+begin_src emacs-lisp
+(defconst my/init-file-compile-log-buffer "*Init File Compile-Log*"
+  "Buffer for init file compilation output.")
+(defconst my/init-file-compile-display-regex (regexp-opt '("Warning" "Error"))
+  "If this regex matches in the init file compilation, the compilation output buffer will be displayed.")
+(defun my/org-compile-init-file-post-tangle ()
+  ""
+  (when (and (eq major-mode 'emacs-lisp-mode)
+             (string= buffer-file-name user-init-file))
+    (check-declare-file user-init-file)
+    (with-current-buffer (get-buffer-create my/init-file-compile-log-buffer)
+      (setq default-directory (file-name-directory user-init-file))
+      (emacs-lisp-compilation-mode)
+      (goto-char (point-max))
+      (let ((inhibit-read-only t))
+        (insert "\f\n"))
+      (message "Compiling init file...")
+      (make-process :name "Init File Compiler"
+                    :buffer (current-buffer)
+                    :command (list (expand-file-name invocation-name invocation-directory)
+                                   "-Q"
+                                   "--batch"
+                                   "-f" "batch-byte-compile" user-init-file)
+                    :filter (lambda (process string)
+                              (when (buffer-live-p (process-buffer process))
+                                (with-current-buffer (process-buffer process)
+                                  (let ((moving (= (point) (process-mark process))))
+                                    (save-excursion
+                                      ;; Insert the text, advancing the process marker.
+                                      (goto-char (process-mark process))
+                                      (let ((inhibit-read-only t))
+                                        (insert string))
+                                      (set-marker (process-mark process) (point)))
+                                    (when moving
+                                      (goto-char (process-mark process))))
+                                  (when (string-match my/init-file-compile-display-regex string)
+                                    (display-buffer (process-buffer process))))))
+                    :sentinel (lambda (_process event)
+                                (when (string= event "finished\n")
+                                  (message "Compiling init file...done")))))))
+(add-hook 'org-babel-post-tangle-hook #'my/org-compile-init-file-post-tangle)
+#+end_src
+**** Notification
+#+begin_src emacs-lisp
+(defun my/org-babel-tangle-notification ()
+  ""
+  (message "Tangling..."))
+(add-hook 'org-babel-pre-tangle-hook #'my/org-babel-tangle-notification 'append)
+#+end_src
+*** Todo File
+#+begin_src emacs-lisp :noweb-ref package
+(defvar my/org-todo-file (getenv "ORG_TODO_FILE")
+  "")
+#+end_src
+*** Todo Keywords
+#+begin_src emacs-lisp
+(defvar org-todo-keywords)
+(setq org-todo-keywords '((sequence
+                           "TODO(t)"
+                           "BLOCKED(b)"
+                           "|"
+                           "DONE(d)")))
+#+end_src
+* Org Bullets
+#+begin_src emacs-lisp :noweb-ref package
+(straight-use-package 'org-bullets)
+#+end_src
+** Appearance
+*** Bullets
+#+begin_src emacs-lisp
+(defvar org-bullets-bullet-list)
+(setq org-bullets-bullet-list '("◉"  "○"))
+#+end_src
+*** Faces                                                              :face:
+**** Bullet Face
+alignment
+indentation
+#+begin_src emacs-lisp
+(defvar org-bullets-face-name)
+(defface my/org-bullets
+  '((t :inherit fixed-pitch))
+  ""
+  :group 'my
+  :group 'org-bullets)
+(custom-set-faces (eval-when-compile
+                    (create-face-spec 'my/org-bullets
+                                      '(:foreground base1 :inherit fixed-pitch))))
+(setq org-bullets-face-name 'my/org-bullets)
+#+end_src
+***** Org Hide
+alignment
+also indentation
+#+begin_src emacs-lisp
+(custom-set-faces `(org-hide ((t :inherit ,org-bullets-face-name))))
+#+end_src
+** Behavior
+*** Enable
+#+begin_src emacs-lisp
+(declare-function org-bullets-mode "org-bullets" (&optional arg))
+#+end_src
+**** Org
+#+begin_src emacs-lisp
+(add-hook 'org-mode-hook #'org-bullets-mode)
+#+end_src
+* Org Expert TODO Selection
+#+begin_src emacs-lisp :noweb-ref package
+(straight-use-package `(org-expert-todo-selection
+                        :local-repo ,(expand-file-name "local/org-expert-todo-selection" user-emacs-directory)))
+#+end_src
+** Appearance
+*** Diminish
+#+begin_src emacs-lisp
+(diminish-hook 'org-expert-todo-selection-mode)
+#+end_src
+** Behavior
+*** Enable
+#+begin_src emacs-lisp
+(declare-function org-expert-todo-selection-mode "org-expert-todo-selection" (&optional arg))
+#+end_src
+**** Global
+#+begin_src emacs-lisp
+(add-hook 'after-init-hook #'org-expert-todo-selection-mode)
+#+end_src
+* Org Sort Tree
+#+begin_src emacs-lisp :noweb-ref package
+(straight-use-package `(org-sort-tree
+                        :local-repo ,(expand-file-name "local/org-sort-tree" user-emacs-directory)))
+#+end_src
+* Powerline
+#+begin_src emacs-lisp :noweb-ref package
+(straight-use-package 'powerline)
+(dolist (powerline-func (eval-when-compile
+                          (let (powerline-funcs)
+                            (dolist (type '("alternate"
+                                            "arrow"
+                                            "arrow-fade"
+                                            "bar"
+                                            "box"
+                                            "brace"
+                                            "butt"
+                                            "chamfer"
+                                            "contour"
+                                            "curve"
+                                            "rounded"
+                                            "roundstub"
+                                            "slant"
+                                            "wave"
+                                            "zigzag"
+                                            "utf-8"
+                                            "nil")
+                                          powerline-funcs)
+                              (push (intern (concat "powerline-" type "-left"))  powerline-funcs)
+                              (push (intern (concat "powerline-" type "-right")) powerline-funcs)))))
+  (autoload powerline-func "powerline"))
+#+end_src
+** Appearance
+*** Height
+#+begin_src emacs-lisp
+(defvar powerline-height)
+(setq powerline-height 19)
+#+end_src
+* Powerline Arrow Outline
+#+begin_src emacs-lisp :noweb-ref package
+(straight-use-package `(powerline-arrow-outline
+                        :local-repo ,(expand-file-name "local/powerline-arrow-outline" user-emacs-directory)))
+#+end_src
+** TODO Fix Git history
+** TODO MELPA
+** TODO Upload to GitHub + personally hosted GitLab
+* Re-init
+#+begin_src emacs-lisp :noweb-ref package
+(defun my/reinit ()
+  "Reload init file."
+  (interactive)
+  (let ((load-prefer-newer t))
+    (message "Reloading init file...")
+    (load (file-name-sans-extension user-init-file)
+          nil ;; Error if file doesn't exist.
+          'nomessage)
+    (run-hooks 'after-init-hook)
+    (message "Reloading init file...done")))
+#+end_src
+* Scroll Bar
+** Appearance
+*** Width
+12
+#+begin_src emacs-lisp
+(set-frame-parameter nil 'scroll-bar-width 12)
+#+end_src
+* Show Paren
+** Behavior
+*** Delay
+#+begin_src emacs-lisp
+(defvar show-paren-delay)
+(setq show-paren-delay 0)
+#+end_src
+*** Global
+#+begin_src emacs-lisp
+(add-hook 'after-init-hook #'show-paren-mode)
+#+end_src
+*** Highlight Parenthesis Underneath Cursor
+The default behavior of Show Paren mode is to highlight the matching pair of p
+#+begin_src emacs-lisp
+(defvar show-paren-data-function)
+(declare-function show-paren--default "paren" ())
+(defun my/show-paren-data-function ()
+  ""
+  (if (looking-at-p "\\s)")
+      (save-excursion
+        (forward-char 1)
+        (show-paren--default))
+    (show-paren--default)))
+(setq show-paren-data-function #'my/show-paren-data-function)
+#+end_src
+* SmartParens
+#+begin_src emacs-lisp :noweb-ref package
+(straight-use-package 'smartparens)
+#+end_src
+** Appearance
+*** Diminish
+#+begin_src emacs-lisp
+(diminish-hook 'smartparens-mode)
+#+end_src
+** Behavior
+*** Enable
+#+begin_src emacs-lisp
+(declare-function smartparens-strict-mode "smartparens" (&optional arg))
+#+end_src
+**** Eval Expression Minibuffer
+#+begin_src emacs-lisp
+(add-hook 'eval-expression-minibuffer-setup-hook #'smartparens-strict-mode)
+#+end_src
+**** Global
+Strict mode
+#+begin_src emacs-lisp
+(declare-function smartparens-global-strict-mode "smartparens" (&optional arg))
+(add-hook 'after-init-hook #'smartparens-global-strict-mode)
+#+end_src
+*** Ignore Modes
+#+begin_src emacs-lisp
+(defvar sp-ignore-modes-list)
+(setq sp-ignore-modes-list nil)
+#+end_src
+**** EXWM
+#+begin_src emacs-lisp
+(add-to-list 'sp-ignore-modes-list 'exwm-mode)
+#+end_src
+**** Inactive Minibuffer
+#+begin_src emacs-lisp
+(add-to-list 'sp-ignore-modes-list 'minibuffer-inactive-mode)
+#+end_src
+*** Keybindings                                                    :keyboard:
+#+begin_src emacs-lisp
+(defvar smartparens-mode-map)
+#+end_src
+**** Navigation
+***** Backward
+#+begin_src emacs-lisp
+(declare-function sp-backward-sexp "smartparens" (&optional arg))
+(with-eval-after-load 'smartparens
+  (define-key smartparens-mode-map (kbd "C-M-b") #'sp-backward-sexp))
+#+end_src
+***** Backward Down
+#+begin_src emacs-lisp
+(declare-function sp-backward-down-sexp "smartparens" (&optional arg))
+(with-eval-after-load 'smartparens
+  (define-key smartparens-mode-map (kbd "C-M-a") #'sp-backward-down-sexp))
+#+end_src
+***** Backward Up
+#+begin_src emacs-lisp
+(declare-function sp-backward-up-sexp "smartparens" (&optional arg interactive))
+(with-eval-after-load 'smartparens
+  (define-key smartparens-mode-map (kbd "C-M-u") #'sp-backward-up-sexp))
+#+end_src
+***** Beginning
+#+begin_src emacs-lisp
+(declare-function sp-beginning-of-sexp "smartparens" (&optional arg))
+(with-eval-after-load 'smartparens
+  (define-key smartparens-mode-map (kbd "C-S-d") #'sp-beginning-of-sexp))
+#+end_src
+***** Down
+#+begin_src emacs-lisp
+(declare-function sp-down-sexp "smartparens" (&optional arg))
+(with-eval-after-load 'smartparens
+  (define-key smartparens-mode-map (kbd "C-M-d") #'sp-down-sexp))
+#+end_src
+***** End
+#+begin_src emacs-lisp
+(declare-function sp-end-of-sexp "smartparens" (&optional arg))
+(with-eval-after-load 'smartparens
+  (define-key smartparens-mode-map (kbd "C-S-a") #'sp-end-of-sexp))
+#+end_src
+***** Forward
+#+begin_src emacs-lisp
+(declare-function sp-forward-sexp "smartparens" (&optional arg))
+(with-eval-after-load 'smartparens
+  (define-key smartparens-mode-map (kbd "C-M-f") #'sp-forward-sexp))
+#+end_src
+***** Next
+#+begin_src emacs-lisp
+(declare-function sp-next-sexp "smartparens" (&optional arg))
+(with-eval-after-load 'smartparens
+  (define-key smartparens-mode-map (kbd "C-M-n") #'sp-next-sexp))
+#+end_src
+***** Previous
+#+begin_src emacs-lisp
+(declare-function sp-previous-sexp "smartparens" (&optional arg))
+(with-eval-after-load 'smartparens
+  (define-key smartparens-mode-map (kbd "C-M-p") #'sp-previous-sexp))
+#+end_src
+***** Up
+#+begin_src emacs-lisp
+(declare-function sp-up-sexp "smartparens" (&optional arg interactive))
+(with-eval-after-load 'smartparens
+  (define-key smartparens-mode-map (kbd "C-M-e") #'sp-up-sexp))
+#+end_src
+*** Use Default Configuration
+#+begin_src emacs-lisp
+(funcall (lambda ()
+           ;; Byte-compiler will evaluate any `require' statements at the top-level. However, the proper load path may not be set at compile time; wrapping the `require' will prevent the byte-compiler from compiling until load time, when the load path will be set.
+           ;; No macros from `smartparens-config' are needed in the rest of initialization.
+           (require 'smartparens-config)))
+#+end_src
+* Smart Quotes
+#+begin_src emacs-lisp :noweb-ref package
+(straight-use-package 'smart-quotes)
+#+end_src
+** Appearance
+*** Diminish
+#+begin_src emacs-lisp
+(diminish-hook 'smart-quotes-mode)
+#+end_src
+** Behavior
+*** Disable
+#+begin_src emacs-lisp
+(declare-function turn-off-smart-quotes "smart-quotes" ())
+#+end_src
+**** TeX
+TeX already handles smart quotes itself; the source TeX should contain plain ASCII quotes.
+#+begin_src emacs-lisp
+;; Built-in TeX mode:
+(add-hook 'tex-mode-hook #'turn-off-smart-quotes)
+;; When AUCTeX is enabled:
+(add-hook 'TeX-mode-hook #'turn-off-smart-quotes)
+#+end_src
+*** Enable
+#+begin_src emacs-lisp
+(declare-function turn-on-smart-quotes "smart-quotes" ())
+#+end_src
+**** Text Modes
+#+begin_src emacs-lisp
+(add-hook 'text-mode-hook #'turn-on-smart-quotes)
+#+end_src
+* Straight.el
+:PROPERTIES:
+:header-args:emacs-lisp: :noweb-ref straight.el-config
+:END:
+#+begin_src emacs-lisp :noweb-ref straight.el-bootstrap
+(defvar bootstrap-version) ;; Dynamically bound.
+(let ((bootstrap-file
+       (expand-file-name "straight/repos/straight.el/bootstrap.el" user-emacs-directory))
+      (bootstrap-version 5))
+  (unless (file-exists-p bootstrap-file)
+    (with-current-buffer
+        (url-retrieve-synchronously
+         "https://raw.githubusercontent.com/raxod502/straight.el/develop/install.el"
+         'silent 'inhibit-cookies)
+      (goto-char (point-max))
+      (eval-print-last-sexp)))
+  (load bootstrap-file nil 'nomessage))
+#+end_src
+** Behavior
+*** No Startup Modification Check
+Don't check for modified packages at startup (the default).
+#+begin_src emacs-lisp
+(setq straight-check-for-modifications '(find-when-checking check-on-save))
+#+end_src
+*** Use GNU ELPA Mirror
+
+#+begin_src emacs-lisp
+(setq straight-recipes-gnu-elpa-use-mirror t)
+#+end_src
+* Swiper
+#+begin_src emacs-lisp :noweb-ref package
+(straight-use-package 'swiper)
+#+end_src
+** Behavior
+*** Enable
+#+begin_src emacs-lisp
+(declare-function swiper "swiper" (&optional initial-input))
+#+end_src
+**** Replace Isearch                                               :keyboard:
+
+with Swiper
+
+#+begin_src emacs-lisp
+(global-set-key (kbd "C-s") #'swiper)
+#+end_src
+*** Keybindings                                                    :keyboard:
+#+begin_src emacs-lisp
+(defvar swiper-map)
+#+end_src
+**** Avy
+#+begin_src emacs-lisp
+(declare-function swiper-avy "swiper" ())
+(with-eval-after-load 'swiper
+  (define-key swiper-map (kbd "C-j") #'swiper-avy))
+#+end_src
+* System.el
+#+begin_src emacs-lisp :noweb-ref package
+(straight-use-package `(system.el
+                        :local-repo ,(expand-file-name "local/system.el" user-emacs-directory)))
+#+end_src
+** Behavior
+*** Lock                                                           :keyboard:
+#+begin_src emacs-lisp
+(declare-function system-lock "system" ())
+(global-set-key (kbd "C-c s C-l") #'system-lock)
+(global-set-key (kbd "<f5>") #'system-lock)
+#+end_src
+*** Reboot                                                         :keyboard:
+#+begin_src emacs-lisp
+(declare-function system-reboot "system" (&optional confirm))
+(global-set-key (kbd "C-c s C-r") #'system-reboot)
+#+end_src
+*** Shutdown                                                       :keyboard:
+#+begin_src emacs-lisp
+(declare-function system-shutdown "system" (&optional confirm))
+(global-set-key (kbd "C-c s C-p") #'system-shutdown)
+#+end_src
+*** Suspend                                                        :keyboard:
+#+begin_src emacs-lisp
+(declare-function system-suspend "system" (&optional confirm))
+(global-set-key (kbd "C-c s C-s") #'system-suspend)
+(global-set-key (kbd "<f6>") #'system-suspend)
+#+end_src
+* Tool Bar
+Disable the tool bar to make more space.
+#+begin_src emacs-lisp
+(tool-bar-mode -1)
+#+end_src
+* Undo Tree
+#+begin_src emacs-lisp :noweb-ref package
+(straight-use-package 'undo-tree)
+#+end_src
+** Appearance
+*** Custom Background                                                  :face:
+#+begin_src emacs-lisp
+(defface my/undo-tree/background
+  '((t))
+  ""
+  :group 'my
+  :group 'undo-tree)
+
+(defun my/undo-tree-set-background ()
+  (face-remap-add-relative 'default 'my/undo-tree/background)
+  (face-remap-add-relative 'fringe 'my/undo-tree/background))
+(add-hook 'undo-tree-visualizer-mode-hook #'my/undo-tree-set-background)
+#+end_src
+**** Color
+#+begin_src emacs-lisp
+(custom-set-faces (eval-when-compile
+                    (create-face-spec 'my/undo-tree/background
+                                      '(:background base3))))
+#+end_src
+*** Diminish
+#+begin_src emacs-lisp
+(diminish-hook 'undo-tree-mode)
+#+end_src
+*** Faces                                                              :face:
+**** Active Branch
+#+begin_src emacs-lisp
+(custom-set-faces (eval-when-compile
+                    (create-face-spec 'undo-tree-visualizer-active-branch-face
+                                      '(:foreground base02 :background base3 :inherit bold))))
+#+end_src
+**** Current
+#+begin_src emacs-lisp
+(custom-set-faces (eval-when-compile
+                    (create-face-spec 'undo-tree-visualizer-current-face
+                                      '(:foreground yellow :background base02 :inverse-video t :inherit bold))))
+#+end_src
+**** Default
+#+begin_src emacs-lisp
+(custom-set-faces (eval-when-compile
+                    (create-face-spec 'undo-tree-visualizer-default-face
+                                      '(:foreground base01))))
+#+end_src
+** Behavior
+*** Enable
+**** Global
+#+begin_src emacs-lisp
+(declare-function global-undo-tree-mode "undo-tree" (&optional arg))
+(add-hook 'after-init-hook #'global-undo-tree-mode)
+#+end_src
+*** Show Timestamps
+#+begin_src emacs-lisp
+(defvar undo-tree-visualizer-timestamps)
+(setq undo-tree-visualizer-timestamps t)
+#+end_src
+*** Visualizer
+**** Keybindings                                                   :keyboard:
+#+begin_src emacs-lisp
+(defvar undo-tree-visualizer-mode-map)
+#+end_src
+***** Keyboard Quit
+#+begin_src emacs-lisp
+(declare-function undo-tree-visualizer-abort "undo-tree" ())
+(with-eval-after-load 'undo-tree
+  (define-key undo-tree-visualizer-mode-map [remap keyboard-quit] #'undo-tree-visualizer-abort))
+#+end_src
+***** Return
+#+begin_src emacs-lisp
+(declare-function undo-tree-visualizer-quit "undo-tree" ())
+(with-eval-after-load 'undo-tree
+  (define-key undo-tree-visualizer-mode-map (kbd "RET")      #'undo-tree-visualizer-quit)
+  (define-key undo-tree-visualizer-mode-map (kbd "<return>") #'undo-tree-visualizer-quit))
+#+end_src
+* Visual Line
+** Appearance
+*** Fringe Indicators
+#+begin_src emacs-lisp
+(setq visual-line-fringe-indicators '(left-curly-arrow right-curly-arrow))
+#+end_src
+** Behavior
+*** Enable
+**** Global
+#+begin_src emacs-lisp
+(add-hook 'after-init-hook #'global-visual-line-mode)
+#+end_src
+* Visual Line Blacklist
+#+begin_src emacs-lisp :noweb-ref package
+(defvar my/visual-line-blacklist-modes nil
+  "List of major modes for which Visual Line mode should never be enabled.")
+(defun my/visual-line-blacklist-check ()
+  "Disable Visual Line mode if the current major mode is blacklisted in `my/visual-line-blacklisted-modes'."
+  (when (and visual-line-mode
+             (memq major-mode my/visual-line-blacklist-modes))
+    (visual-line-mode -1)))
+(add-hook 'visual-line-mode-hook #'my/visual-line-blacklist-check)
+#+end_src
+* Window Divider
+Add window dividers so windows can be resized using the mouse.
+#+begin_src emacs-lisp
+(window-divider-mode)
+#+end_src
+** Appearance
+*** Location
+Put window dividers on the right side only (and not the bottom), since windows can already be resized vertically using the mouse by dragging the modeline.
+#+begin_src emacs-lisp
+(setq window-divider-default-places 'right-only)
+#+end_src
+* WoMan
+** Appearance
+*** No Fill
+#+begin_src emacs-lisp
+(defvar woman-fill-column)
+(setq woman-fill-column 0)
+#+end_src
+*** Render Tables
+Attempt to render tables in man pages like the ~tbl~ preprocessor does for ~troff~, instead of leaving the table code in the text.
+#+begin_src emacs-lisp
+(defvar woman-emulate-tbl)
+(setq woman-emulate-tbl t)
+#+end_src
+**** TODO Render tables with box-drawing characters for readibility (and eye-candy)
+***** TODO Submit
+*** Title In Header Line
+#+begin_src emacs-lisp
+(defun my/woman-header-line ()
+  (goto-char (point-min))
+  (setq header-line-format (buffer-substring-no-properties (point) (line-end-position)))
+  (forward-line 2)
+  (let (buffer-read-only)
+    (with-silent-modifications
+      (delete-region (point-min) (point)))))
+(add-hook 'woman-mode-hook #'my/woman-header-line)
+#+end_src
+*** Use Heading Face
+#+begin_src emacs-lisp
+(defun my/woman-fontify-headings ()
+  (declare-function woman-set-face "woman" (from to face))
+  (goto-char (point-min))
+  (while (re-search-forward "^\\(?:   \\)?\\(?1:[A-Z].*\\)" nil t)
+    (woman-set-face (match-beginning 1) (match-end 1) 'org-level-1)))
+(add-hook 'woman-post-format-hook #'my/woman-fontify-headings)
+#+end_src
+* YASnippet Snippets
+#+begin_src emacs-lisp :noweb-ref package
+(straight-use-package 'yasnippet-snippets)
+#+end_src
+* TODO All The Icons Portable
+** TODO Using Font Reader
+* TODO CalFW
+#+begin_src emacs-lisp :noweb-ref package
+(straight-use-package 'calfw)
+(autoload 'cfw:open-calendar-buffer "calfw")
+#+end_src
+** Appearance
+#+begin_src emacs-lisp
+(defvar cfw:fchar-junction)
+(defvar cfw:fchar-vertical-line)
+(defvar cfw:fchar-horizontal-line)
+(defvar cfw:fchar-left-junction)
+(defvar cfw:fchar-right-junction)
+(defvar cfw:fchar-top-junction)
+(defvar cfw:fchar-top-left-corner)
+(defvar cfw:fchar-top-right-corner)
+(setq cfw:fchar-junction         ?╋
+      cfw:fchar-vertical-line    ?┃
+      cfw:fchar-horizontal-line  ?━
+      cfw:fchar-left-junction    ?┣
+      cfw:fchar-right-junction   ?┫
+      cfw:fchar-top-junction     ?┯
+      cfw:fchar-top-left-corner  ?┏
+      cfw:fchar-top-right-corner ?┓)
+#+end_src
+** Behavior
+*** Bind Calendar View                                             :keyboard:
+#+begin_src emacs-lisp
+(global-set-key (kbd "C-c c C-m") #'cfw:open-calendar-buffer)
+#+end_src
+* TODO CalFW Org
+#+begin_src emacs-lisp :noweb-ref package
+(straight-use-package 'calfw-org)
+#+end_src
+* TODO CEDET
+* TODO Chess
+#+begin_src emacs-lisp :noweb-ref package
+(straight-use-package '(chess
+                        :type git
+                        :host github
+                        :repo "jwiegley/emacs-chess"))
+#+end_src
+** TODO Why is the ELPA version messed up?
+*** Sounds not working in ELPA
+* TODO Command Error Function
+#+begin_src emacs-lisp :noweb-ref wip
+(defface my/command-error-function
+  '((t :inherit variable-pitch))
+  ""
+  :group 'my
+  :group 'mode-line)
+
+(defface my/command-error-function/quit
+  '((t :inherit (mode-line my/command-error-function)))
+  ""
+  :group 'my
+  :group 'mode-line)
+
+(defface my/command-error-function/context
+  '((t :inherit (mode-line my/command-error-function)))
+  ""
+  :group 'my
+  :group 'mode-line)
+
+(defface my/command-error-function/function
+  '((t :inherit (mode-line my/command-error-function)))
+  ""
+  :group 'my
+  :group 'mode-line)
+
+(defun my/command-error-function (data context func)
+  "Format uncaught signals."
+  (let (current-face new-face)
+    (pcase (car data)
+      ('quit
+       ;; TODO
+       (message (powerline-render (list (propertize " Quit "
+                                                    'face 'my/command-error-function/quit)
+                                        (powerline-arrow-left 'my/comand-error-function/quit
+                                                              'default)))))
+      (_
+       (when (= (length context) 0)
+         (setq context nil))
+       (when func
+         (setq func (symbol-name func)))
+       (message (powerline-render (list (when context
+                                          (setq (current))
+                                          (propertize context
+                                                      'face ')))))
+       (message "%s"
+                (concat (when context
+                          context)
+                        (when func
+                          (concat (if context " in " "In ") func))
+                        (when (or context func)
+                          ": ")
+                        (error-message-string data)))))))
+(setq command-error-function #'my/command-error-function)
+#+end_src
+* TODO Company Quickhelp
+#+begin_src emacs-lisp
+(straight-use-package 'company-quickhelp)
+#+end_src
+** Enable
+*** Global
+#+begin_src emacs-lisp :noweb-ref wip
+(declare-function company-quickhelp-mode "company-quickhelp" (&optional arg))
+(add-hook 'after-init-hook #'company-quickhelp-mode)
+#+end_src
+* TODO Company YASnippet
+* TODO Dired Hacks
+#+begin_src emacs-lisp :noweb-ref package
+(straight-use-package 'dired-hacks)
+#+end_src
+* TODO Elastic Tabs
+* TODO ENWC
+Emacs NetWork Client
+NetworkManager and Wicd
+#+begin_src emacs-lisp :noweb-ref package
+(straight-use-package 'enwc)
+#+end_src
+* TODO ESS
+* TODO Font Reader
+#+begin_src emacs-lisp :noweb-ref package
+(straight-use-package `(font-reader
+                        :local-repo ,(expand-file-name "local/font-reader" user-emacs-directory)))
+#+end_src
+* TODO Gnus
+** Behavior
+*** Select Method
+#+begin_src emacs-lisp
+(defvar gnus-select-method)
+(setq gnus-select-method '(nnnil ""))
+(defvar gnus-secondary-select-methods)
+(setq gnus-secondary-select-methods nil)
+#+end_src
+**** NNReddit
+#+begin_src emacs-lisp
+(add-to-list 'gnus-secondary-select-methods '(nnreddit ""))
+#+end_src
+* TODO JS2 Mode
+#+begin_src emacs-lisp
+(straight-use-package 'js2-mode)
+#+end_src
+* TODO Ledger
+#+begin_src emacs-lisp
+(straight-use-package 'ledger-mode)
+#+end_src
+* TODO Lispbars
+#+begin_src emacs-lisp
+(scroll-bar-mode -1)
+#+end_src
+* TODO Magit
+#+begin_src emacs-lisp :noweb-ref package
+(straight-use-package 'magit)
+#+end_src
+** Behavior
+*** TODO Status                                                    :keyboard:
+#+begin_src emacs-lisp
+(declare-function magit-status "magit-status" (&optional directory cache))
+(global-set-key (kbd "C-x g") #'magit-status)
+#+end_src
+* TODO Markdown
+#+begin_src emacs-lisp :noweb-ref package
+(straight-use-package 'markdown-mode)
+#+end_src
+* TODO Mode Line Stats
+#+begin_src emacs-lisp :noweb-ref package
+(straight-use-package '(mode-line-stats
+                        :type git
+                        :host github
+                        :repo "Idorobots/mode-line-stats"))
+#+end_src
+** TODO Contribute autoloads
+** TODO Make consistent autoloads
+** TODO MELPA
+* TODO Multiple Cursors
+#+begin_src emacs-lisp :noweb-ref package
+(straight-use-package 'multiple-cursors)
+#+end_src
+* TODO NNReddit
+#+begin_src emacs-lisp :noweb-ref package
+(straight-use-package '(nnreddit
+			:type git
+			:host github
+			:repo "paul-issartel/nnreddit"))
+#+end_src
+* TODO Org CalDAV
+#+begin_src emacs-lisp :noweb-ref package
+(straight-use-package 'org-caldav)
+#+end_src
+* TODO Org Dependentrees
+* TODO Org Pretty Table
+#+begin_src emacs-lisp :noweb-ref wip
+(straight-use-package '(org-pretty-table
+                        :type git
+                        :host github
+                        :repo "Fuco1/org-pretty-table"))
+#+end_src
+** TODO Fix this shit
+* TODO PDF Tools
+#+begin_src emacs-lisp :noweb-ref package
+(straight-use-package 'pdf-tools)
+#+end_src
+* TODO Percent Bar
+* TODO Perspective
+#+begin_src emacs-lisp :noweb-ref package
+(straight-use-package 'perspective)
+#+end_src
+* TODO Rectangular Region Mode
+** Behavior
+*** Replace Rectangle Mark Mode                                    :keyboard:
+#+begin_src emacs-lisp
+(declare-function set-rectangular-region-anchor "rectangular-region-mode" ())
+(global-set-key (kbd "C-x SPC") #'set-rectangular-region-anchor)
+#+end_src
+* TODO Speedbar
+* TODO S.R. Speedbar
+#+begin_src emacs-lisp :noweb-ref package
+(straight-use-package 'sr-speedbar)
+#+end_src
+* TODO Tide
+* TODO Volume Control
+** Behavior                                                        :keyboard:
+#+begin_src emacs-lisp
+(global-set-key (kbd "<XF86AudioRaiseVolume>")
+                (lambda ()
+                  (interactive)
+                  (start-process-shell-command  "unmute" nil "amixer set Master unmute")
+                  (start-process-shell-command  "raise-volume" nil "amixer set Master 5%+")
+                  (message "Volume up")))
+(global-set-key (kbd "<XF86AudioLowerVolume>")
+                (lambda ()
+                  (interactive)
+                  (start-process-shell-command  "unmute" nil "amixer set Master unmute")
+                  (start-process-shell-command  "lower-volume" nil "amixer set Master 5%-")
+                  (message "Volume down")))
+(global-set-key (kbd "<XF86AudioMute>")
+                (lambda ()
+                  (interactive)
+                  (start-process-shell-command  "mute" nil "amixer set Master mute")
+                  (message "Muted")))
+#+end_src
+* TODO Wgrep
+For Ivy
+
+#+begin_src emacs-lisp :noweb-ref package
+(straight-use-package 'wgrep)
+#+end_src
+* TODO Which Key
+#+begin_src emacs-lisp :noweb-ref package
+(straight-use-package 'which-key)
+#+end_src
+** Behavior
+*** Global
+WIP because Demigod integration not yet complete
+#+begin_src emacs-lisp :noweb-ref wip
+(add-hook 'after-init-hook #'which-key-mode)
+#+end_src
+* TODO Whitespace
+** Appearance
+*** Display Mappings
+#+begin_src emacs-lisp
+(defvar whitespace-display-mappings)
+(setq whitespace-display-mappings
+      '((space-mark ?\s
+                    [?·]
+                    [?.])
+        (space-mark ? 
+                    [?¤]
+                    [?_])
+        (newline-mark ?\C-j
+                      [?¶ ?\C-j]
+                      [?$ ?\C-j])
+        (tab-mark ?\C-i
+                  [?\s ?→ ?\C-i]
+                  [?\s ?» ?\C-i]
+                  [?\\    ?\C-i])))
+#+end_src
+*** TODO Faces                                                         :face:
+* TODO YASnippet
+#+begin_src emacs-lisp :noweb-ref package
+(straight-use-package 'yasnippet)
+#+end_src
+** Appearance
+*** Diminish
+#+begin_src emacs-lisp
+(diminish-hook 'yas-minor-mode)
+#+end_src
+** Behavior
+*** Enable
+**** Global
+#+begin_src emacs-lisp
+(declare-function yas-global-mode "yasnippet" (&optional arg))
+(add-hook 'after-init-hook #'yas-global-mode)
+#+end_src
