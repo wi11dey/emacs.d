@@ -359,7 +359,11 @@
     (mkdir my/$-directory :parents)
     
     (setq $-by-copying t
-	  $-directory-alist `(("." . ,my/$-directory)))))
+	  $-directory-alist `(("." . ,my/$-directory))
+	  version-control t
+	  kept-old-versions 1
+	  kept-new-versions 3
+	  delete-old-versions t)))
 
 ;;; Font Lock
 (p@ck font-lock
