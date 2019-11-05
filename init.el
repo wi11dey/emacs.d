@@ -245,16 +245,18 @@
   ~(straight-use-package '$)
   !^)
 
+;;; Novice
+(p@ck novice
+  ;;;; Disable
+  ;; Enable all commands:
+  (setq disabled-command-function nil))
+
 ;;; Emacs
 (p@ck emacs
   ;;;; Graphical display
   ;; xdisp
   (setq x-underline-at-descent-line t ; Line up underline with `telephone-line' separators.
 	x-stretch-cursor t)
-
-  ;;;; Disabled commands
-  ;; Enable all commands:
-  (setq disabled-command-function nil)
 
   ;;;; Mark
   ;;;;; Pop
