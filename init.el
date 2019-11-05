@@ -344,6 +344,26 @@
      t)
   (add-hook 'kill-buffer-query-functions #'my/prompt-before-killing-buffer))
 
+;;; Keyboard
+(p@ck keyboard
+  ;;;; X
+  ;;;;; Super key
+  ;; Super key is meta:
+  (when (and (boundp 'x-meta-keysym)
+	     (boundp 'x-super-keysym))
+    (setq-default x-meta-keysym nil
+		  x-super-keysym 'meta)
+    !(defun my/exwm-super-meta-fix ()
+       (setq-local x-meta-keysym 'super)
+       (setq-local x-super-keysym nil))
+    (add-hook 'exwm-mode-hook #'my/exwm-super-meta-fix))
+
+  ;;;; Mac
+  ;;;;; Command key
+  ;; Command key is control:
+  (when (boundp 'mac-command-modifier)
+    (setq mac-command-modifier 'control)))
+
 ;;; Path
 (p@ck path
   (when (eq window-system 'ns)
@@ -1570,14 +1590,6 @@ Hollow mode returns the Telephone Line subseparator using the merged foreground 
 			     ([remap undo-tree-undo] . "C-z")
 			     ([remap undo-tree-redo] . "C-y")))))
   
-  ;;;; Super key is meta
-  (setq-default x-meta-keysym nil
-		x-super-keysym 'meta)
-  !(defun my/$-super-meta-fix ()
-     (setq-local x-meta-keysym 'super)
-     (setq-local x-super-keysym nil))
-  (add-hook '$-mode-hook #'my/$-super-meta-fix)
-
   ;;;; Visual Line
   (add-hook 'my/visual-line-ignore-modes #'$-mode)
 
