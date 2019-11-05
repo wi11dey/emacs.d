@@ -334,11 +334,13 @@
 ;;;;; Final newline
 (setq require-final-newline 'ask)
 ;;;;; Auto-save
-(defvar my/auto-save-file-directory (getenv "AUTO_SAVE_FILE_DIRECTORY")
+(defvar my/auto-save-file-directory (file-name-as-directory (expand-file-name "auto-save"
+									      user-emacs-directory))
   "")
 (setq auto-save-file-name-transforms `((".*" ,my/auto-save-file-directory t)))
 ;;;;; Backup files
-(defvar my/backup-file-directory (getenv "BACKUP_FILE_DIRECTORY")
+(defvar my/backup-file-directory (file-name-as-directory (expand-file-name "backup"
+									   user-emacs-directory))
   "")
 (setq backup-by-copying t
       backup-directory-alist `(("." . ,my/backup-file-directory)))
