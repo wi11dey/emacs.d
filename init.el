@@ -164,6 +164,13 @@
   ;;;; Build
   ~(straight-use-package 'color-theme-$)
 
+  ;;;; Mac
+  ;;;;; Color space
+  (when (boundp 'ns-use-srgb-colorspace)
+    ;; Consistenly use Apple RGB across faces and XPM images, so use altered Solarized values intended for Apple RGB:
+    (setq ns-use-srgb-colorspace nil
+	  solarized-broken-srgb t))
+
   ;;;; Load
   (require '$-theme)
   (load-theme '$ :no-confirm)
