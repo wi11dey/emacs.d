@@ -1623,6 +1623,8 @@ Hollow mode returns the Telephone Line subseparator using the merged foreground 
 
 ;;; Ispell
 (p@ck ispell
+  ~^
+  
   (setq $-program-name (cond ((executable-find "aspell")
 			      "aspell")
 			     ((executable-find "hunspell")
