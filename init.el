@@ -270,17 +270,6 @@
   ;;;;;; Repeat
   (setq set-mark-command-repeat-pop t)
 
-  ;;;; Kill buffer
-  ;; Prompt before killing a modified buffer:
-  !(defun my/prompt-before-killing-buffer ()
-     ""
-     (when (and buffer-file-name
-		(buffer-modified-p)
-		(yes-or-no-p (format "Save %s before killing buffer? " buffer-file-name)))
-       (save-buffer))
-     t)
-  (add-hook 'kill-buffer-query-functions #'my/prompt-before-killing-buffer)
-
   ;;;; Command error function
   !(defun my/command-error-function (data context function)
      (message (concat (propertize (concat context
@@ -339,9 +328,22 @@
    (warning :foreground orange :inherit variable-pitch)
    (minibuffer-prompt :foreground base1 :height 0.95 :inherit variable-pitch)))
 
-;;;; Files
-;;;;; Final newline
-(setq require-final-newline 'ask)
+;;; Save
+(p@ck save
+  ;;;; Final newline
+  (setq require-final-newline 'ask)
+
+  ;;;; Kill buffer
+  ;; Prompt before killing a modified buffer:
+  !(defun my/prompt-before-killing-buffer ()
+     ""
+     (when (and buffer-file-name
+		(buffer-modified-p)
+		(yes-or-no-p (format "Save %s before killing buffer? " buffer-file-name)))
+       (save-buffer))
+     t)
+  (add-hook 'kill-buffer-query-functions #'my/prompt-before-killing-buffer))
+
 ;;; Path
 (p@ck path
   (when (eq window-system 'ns)
