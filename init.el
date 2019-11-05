@@ -333,17 +333,33 @@
 ;;;; Files
 ;;;;; Final newline
 (setq require-final-newline 'ask)
-;;;;; Auto-save
-(defvar my/auto-save-file-directory (file-name-as-directory (expand-file-name "auto-save"
-									      user-emacs-directory))
-  "")
-(setq auto-save-file-name-transforms `((".*" ,my/auto-save-file-directory t)))
-;;;;; Backup files
-(defvar my/backup-file-directory (file-name-as-directory (expand-file-name "backup"
-									   user-emacs-directory))
-  "")
-(setq backup-by-copying t
-      backup-directory-alist `(("." . ,my/backup-file-directory)))
+
+;;; Recovery
+(p@ck recovery
+  (defvar my/$-directory (file-name-as-directory (expand-file-name "recovery"
+								   user-emacs-directory))
+    "")
+  (mkdir my/$-directory :parents)
+
+  ;;;; Auto-save
+  (p@ck auto-save
+    (defvar my/$-directory (file-name-as-directory (concat my/recovery-directory
+							   "auto-save"))
+      "")
+    (mkdir my/$-directory :parents)
+    
+    (setq $-file-name-transforms `((".*"
+				    ,my/$-directory
+				    t))))
+
+  ;;;; Backup
+  (p@ck backup
+    (defvar my/$-directory (file-name-as-directory (concat my/recovery-directory
+							   "backup")))
+    (mkdir my/$-directory :parents)
+    
+    (setq $-by-copying t
+	  $-directory-alist `(("." . ,my/$-directory)))))
 
 ;;; Font Lock
 (p@ck font-lock
