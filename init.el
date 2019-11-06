@@ -2829,6 +2829,14 @@ Hollow mode returns the Telephone Line subseparator using the merged foreground 
   ;; TODO Activate somehow
   )
 
+;;; Font Lock Studio
+(p@ck font-lock-studio
+  ;;;; Build
+  ~(straight-use-package '$)
+
+  ;; TODO Activate somehow
+  )
+
 ;;; Diff HL
 (p@ck diff-hl
   ;;;; Build
