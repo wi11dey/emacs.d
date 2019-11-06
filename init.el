@@ -2859,6 +2859,13 @@ Hollow mode returns the Telephone Line subseparator using the merged foreground 
   ;;;; Magit
   (add-hook 'magit-post-refresh-hook #'diff-hl-magit-post-refresh))
 
+;;; Geiser
+(p@ck geiser
+  ;;;; Build
+  ~(straight-use-package '$)
+
+  @run-geiser)
+
 ;;; Debian.el
 (p@ck debian-el
   ;;;; Buid
