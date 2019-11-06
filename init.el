@@ -652,8 +652,11 @@
      "Merges FG-FACE and BG-FACE backgrounds, switches to hollow mode if they are equal, and returns a propertized string with the rendered SEPARATOR-BASE DIRECTION Telephone Line separator with spacing on either side.
 
 Hollow mode returns the Telephone Line subseparator using the merged foreground from BG-FACE without spacing, because subseparators already include spacing"
-     (let* ((bg-face (list bg-face inherit-from 'default))
-	    (fg-face (list fg-face inherit-from 'default))
+     (setq inherit-from (if inherit-from
+			    (list inherit-from 'default)
+			  (list 'default)))
+     (let* ((bg-face (cons bg-face inherit-from))
+	    (fg-face (cons fg-face inherit-from))
 	    (bg (my/$--face-attribute bg-face :background))
 	    (fg (my/$--face-attribute fg-face :background))
 	    (hollow (equal bg fg)))
