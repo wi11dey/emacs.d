@@ -2847,7 +2847,9 @@ Hollow mode returns the Telephone Line subseparator using the merged foreground 
    ($-insert :background green  :foreground green)
    ($-change :background violet :foreground violet)
    ($-delete :background red    :foreground red))
-  )
+
+  ;;;; Magit
+  (add-hook 'magit-post-refresh-hook #'diff-hl-magit-post-refresh))
 
 ;;; Debian.el
 (p@ck debian-el
