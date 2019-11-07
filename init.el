@@ -380,14 +380,21 @@
 
   ;;;; Auto-save
   (p@ck auto-save
+    ;;;;; Directory
     (defvar my/$-directory (file-name-as-directory (concat my/recovery-directory
 							   "auto-save"))
       "")
     (mkdir my/$-directory :parents)
-    
+
     (setq $-file-name-transforms `((".*"
 				    ,my/$-directory
-				    t))))
+				    t)))
+
+    ;;;;; List file
+    (setq $-list-file-prefix (concat (file-name-as-directory (concat my/$-directory
+								     "lists"))
+				     "saves-"))
+    (mkdir (file-name-directory $-list-file-prefix) :parents))
 
   ;;;; Backup
   (p@ck backup
