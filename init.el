@@ -373,41 +373,45 @@
 
 ;;; Recovery
 (p@ck recovery
-  (defvar my/$-directory (file-name-as-directory (expand-file-name "recovery"
-								   user-emacs-directory))
-    "")
-  (mkdir my/$-directory :parents)
+  (let (($-directory (file-name-as-directory (expand-file-name "recovery"
+							       user-emacs-directory))))
+    (mkdir $-directory :parents)
 
-  ;;;; Auto-save
-  (p@ck auto-save
-    ;;;;; Directory
-    (defvar my/$-directory (file-name-as-directory (concat my/recovery-directory
-							   "auto-save"))
-      "")
-    (mkdir my/$-directory :parents)
+    ;;;; Auto-save
+    (p@ck auto-save
+      (let (($-directory (file-name-as-directory (concat recovery-directory
+							 "auto-save"))))
 
-    (setq $-file-name-transforms `((".*"
-				    ,my/$-directory
-				    t)))
+	(mkdir $-directory :parents)
 
-    ;;;;; List file
-    (setq $-list-file-prefix (concat (file-name-as-directory (concat my/$-directory
-								     "lists"))
-				     "saves-"))
-    (mkdir (file-name-directory $-list-file-prefix) :parents))
+	;;;;; Directory
+	(setq $-file-name-transforms `((".*"
+					,$-directory
+					t)))
 
-  ;;;; Backup
-  (p@ck backup
-    (defvar my/$-directory (file-name-as-directory (concat my/recovery-directory
-							   "backup")))
-    (mkdir my/$-directory :parents)
-    
-    (setq $-by-copying t
-	  $-directory-alist `(("." . ,my/$-directory))
-	  version-control t
-	  kept-old-versions 1
-	  kept-new-versions 3
-	  delete-old-versions t)))
+	;;;;; List file
+	(setq $-list-file-prefix (concat (file-name-as-directory (concat $-directory
+									 "lists"))
+					 "saves-"))
+	(mkdir (file-name-directory $-list-file-prefix) :parents)))
+
+    ;;;; Backup
+    (p@ck backup
+      (let (($-directory (file-name-as-directory (concat recovery-directory
+							 "backup"))))
+	(mkdir $-directory :parents)
+
+	;;;;; Directory
+	(setq $-directory-alist `(("." . ,$-directory)))
+
+	;;;;; Copying
+	(setq $-by-copying t)
+
+	;;;;; Versions
+	(setq version-control t
+	      kept-old-versions 1
+	      kept-new-versions 3
+	      delete-old-versions t)))))
 
 ;;; Font Lock
 (p@ck font-lock
