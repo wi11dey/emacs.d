@@ -96,48 +96,47 @@
     (load bootstrap-file nil 'nomessage)))
 (declare-function cl-delete-if "cl-lib")
 (eval-and-compile
-  ;;;; Built
-  (defvar my/straight-build-dir (expand-file-name (concat (file-name-as-directory "straight")
-							  (file-name-as-directory "build"))
-						  user-emacs-directory))
-  (defvar my/straight-built (directory-files my/straight-build-dir
-					     :full-name
-					     "\\`[^.]")
-    "")
-  ;;;;; Load path
-  (setq load-path (cons (expand-file-name "lisp" user-emacs-directory)
-			(append my/straight-built
-				load-path)))
-  ;;;;; Info
-  (setq Info-additional-directory-list my/straight-built)
-
-  ;;;; Autoloads
-  (autoload 'straight-use-package "straight-init" nil :interactive)
-  (autoload 'straight-get-recipe  "straight-init" nil :interactive)
-  ;;;;; Package
-  ;;;;;; Disable
-  (setq straight-disable-autoloads t)
-  ;;;;;; Update
-  (defun my/update-package-autoloads (package &optional file)
-    (defvar generated-autoload-file)
-    (defvar autoload-timestamps)
-    (defvar version-control)
-    (let* ((package-name (symbol-name package))
-	   (directory (concat my/straight-build-dir package-name))
-	   (generated-autoload-file (expand-file-name (or file
-							  (concat package-name
-								  "-autoloads.el"))
-						      directory))
-	   (noninteractive t)
-	   (backup-inhibited t)
-	   (version-control 'never)
-	   buffer
-	   (inhibit-message t))
-      (update-directory-autoloads directory)
-      (setq buffer (find-buffer-visiting generated-autoload-file))
-      (when buffer
-	(kill-buffer buffer))
-      generated-autoload-file)))
+  (let* ((straight-build-dir (expand-file-name (concat (file-name-as-directory "straight")
+						       (file-name-as-directory "build"))
+					       user-emacs-directory))
+	 (straight-built (directory-files straight-build-dir
+					  :full-name
+					  "\\`[^.]")))
+    ;;;; Built
+    ;;;;; Load path  
+    (setq load-path (cons (expand-file-name "lisp" user-emacs-directory)
+			  (append straight-built
+				  load-path)))
+    ;;;;; Info  
+    (setq Info-additional-directory-list straight-built)
+    
+    ;;;; Autoloads
+    (autoload 'straight-use-package "straight-init" nil :interactive)
+    (autoload 'straight-get-recipe  "straight-init" nil :interactive)
+    ;;;;; Package
+    ;;;;;; Disable  
+    (setq straight-disable-autoloads t)
+    ;;;;;; Update  
+    (defun my/update-package-autoloads (package &optional file)
+      (defvar generated-autoload-file)
+      (defvar autoload-timestamps)
+      (defvar version-control)
+      (let* ((package-name (symbol-name package))
+	     (directory (concat straight-build-dir package-name))
+	     (generated-autoload-file (expand-file-name (or file
+							    (concat package-name
+								    "-autoloads.el"))
+							directory))
+	     (noninteractive t)
+	     (backup-inhibited t)
+	     (version-control 'never)
+	     buffer
+	     (inhibit-message t))
+	(update-directory-autoloads directory)
+	(setq buffer (find-buffer-visiting generated-autoload-file))
+	(when buffer
+	  (kill-buffer buffer))
+	generated-autoload-file))))
 
 ;;; p@ck
 (eval-when-compile
