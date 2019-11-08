@@ -1219,7 +1219,7 @@ Hollow mode returns the Telephone Line subseparator using the merged foreground 
   ;; Don't automatically calculate face colors:
   (setq highlight-indent-guides-auto-enabled nil)
   (solarized-set-faces
-   (highlight-indent-guides-character-face :foreground base01 :family "FreeMono")
+   (highlight-indent-guides-character-face :foreground base01 :inherit fixed-pitch)
    (highlight-indent-guides-top-character-face :foreground magenta :inherit (bold highlight-indent-guides-character-face))))
 
 ;;; REST Client
