@@ -1944,6 +1944,11 @@ Hollow mode returns the Telephone Line subseparator using the merged foreground 
   (bind-key "<C-return>" #'ivy-immediate-done ivy-minibuffer-map)
   (bind-key "M-RET" #'ivy-alt-done ivy-minibuffer-map)
   (bind-key "C-j" #'ivy-avy ivy-minibuffer-map)
+  ;;;;; Mark
+  (bind-key "C->" #'ivy-mark ivy-minibuffer-map)
+  (bind-key "C-<" #'ivy-unmark ivy-minibuffer-map)
+  (bind-key "<C-backspace>" #'ivy-unmark-backward ivy-minibuffer-map)
+  (bind-key "C-M->" #'ivy-toggle-marks ivy-minibuffer-map)
   ;;;;; Number shortcuts
   (bind-key "M-1" #'ivy-number-shortcuts-goto-auto ivy-minibuffer-map)
   (bind-key "M-2" #'ivy-number-shortcuts-goto-auto ivy-minibuffer-map)
