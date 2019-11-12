@@ -1199,14 +1199,14 @@ Hollow mode returns the Telephone Line subseparator using the merged foreground 
     ^)
   
   ;;;; Delay
-  (setq highlight-indent-guides-delay 0.05)
+  (setq $-delay 0.05)
 
   ;;;; Character
-  (setq highlight-indent-guides-method 'character
-	highlight-indent-guides-character ?┊)
+  (setq $-method 'character
+	$-character ?┊)
 
   ;;;; Responsive
-  (setq highlight-indent-guides-responsive 'top)
+  (setq $-responsive 'top)
 
   ;;;; Enable
   ;;;;; Programming modes
@@ -1217,10 +1217,10 @@ Hollow mode returns the Telephone Line subseparator using the merged foreground 
 
   ;;;; Faces
   ;; Don't automatically calculate face colors:
-  (setq highlight-indent-guides-auto-enabled nil)
+  (setq $-auto-enabled nil)
   (solarized-set-faces
-   (highlight-indent-guides-character-face :foreground base01 :inherit fixed-pitch)
-   (highlight-indent-guides-top-character-face :foreground magenta :inherit (bold highlight-indent-guides-character-face))))
+   ($-character-face :foreground base01 :inherit fixed-pitch)
+   ($-top-character-face :foreground magenta :inherit (bold $-character-face))))
 
 ;;; REST Client
 (p@ck restclient
