@@ -1940,7 +1940,7 @@ Hollow mode returns the Telephone Line subseparator using the merged foreground 
      (interactive)
      (let ((current (ivy-state-current ivy-last)))
        (unless (member current ivy-marked-candidates)
-	 (push current ivy-marked-candidiates)))
+	 (push current ivy-marked-candidates)))
      (ivy-next-line))
   (bind-key "C->" #'my/$-mark $-minibuffer-map)
   ;;;;; Unmark
