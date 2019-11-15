@@ -2138,7 +2138,41 @@ Hollow mode returns the Telephone Line subseparator using the merged foreground 
 		   (@swiper-isearch))))
 	   (@swiper-isearch))))
 
-    ;;;;; Format function
+    ;;;;; Format
+    !(defun my/$-isearch-format-function (candidates)
+       "Format function for `swiper-isearch' that displays one line per match.
+
+If there are multiple matches on  a line, the line is repeated with a different match highlighted with `swiper-faces' each time."
+       (if (not (numberp (car-safe candidates)))
+	   (ivy-format-function-default candidates)
+	 (let ((i 0)
+	       line
+	       lines
+	       bol
+	       offset
+	       start)
+	   (save-excursion
+	     (with-current-buffer (ivy-state-buffer ivy-last)
+	       (dolist (candidate candidates)
+		 (setq start 0
+		       line (ivy-cleanup-string (progn
+						  (goto-char candidate)
+						  (buffer-substring (setq bol (line-beginning-position))
+								    (line-end-position))))
+		       offset (- candidate bol))
+		 (while (string-match ivy--old-re line start)
+		   (setq start (match-end 0))
+		   (when (= start offset)
+		     (swiper--add-properties swiper-faces
+					     (lambda (beg end face _priority)
+					       (ivy-add-face-text-property beg end face line)))))
+                 (when (= i ivy--window-index)
+		   (font-lock-append-text-property 0 (length line)
+						   'face 'swiper-line-face
+						   line))
+		 (push line lines)
+		 (setq i (1+ i)))))
+	   (mapconcat #'identity (nreverse lines) "\n"))))
     (add-to-list 'ivy-format-functions-alist (cons @'$-isearch #'$-isearch-format-function))
     
     ;;;;; Launch
