@@ -2028,6 +2028,7 @@ Hollow mode returns the Telephone Line subseparator using the merged foreground 
    (my/$-number-shortcuts :inherit keyboard)
    (my/$-mark-prefix :inherit (diredfl-flag-mark fixed-pitch))
    (my/$-mark :inherit diredfl-flag-mark-line))
+  _(setq ivy-format-functions-alist (list (cons t #'my/$-format-function)))
   
   ;;;; Delight
   (delight '$-mode nil '$)
