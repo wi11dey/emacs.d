@@ -1933,6 +1933,50 @@ Hollow mode returns the Telephone Line subseparator using the merged foreground 
 	      #'my/$-number-shortcut
 	      $-minibuffer-map))
 
+  ;;;; Mark
+  (setq ivy-mark-prefix "")
+  ;;;;; Mark
+  !(defun my/$-mark ()
+     (interactive)
+     (let ((current (ivy-state-current ivy-last)))
+       (unless (member current ivy-marked-candidates)
+	 (push current ivy-marked-candidiates)))
+     (ivy-next-line))
+  (bind-key "C->" #'my/$-mark $-minibuffer-map)
+  ;;;;; Unmark
+  !(defun my/$-unmark ()
+     (interactive)
+     (let ((current (ivy-state-current ivy-last)))
+       (setq ivy-marked-candidates (delete current ivy-marked-candidates)))
+     (ivy-next-line))
+  (bind-key "C-<" #'my/$-unmark $-minibuffer-map)
+  ;;;;; Unmark backward
+  !(defun my/$-unmark-backward ()
+     (interactive)
+     (ivy-previous-line)
+     (ivy--exhibit)
+     (let ((current (ivy-state-current ivy-last)))
+       (setq ivy-marked-candidates (delete current ivy-marked-candidates))))
+  (bind-key "<C-backspace>" #'my/$-unmark-backward $-minibuffer-map)
+  ;;;;; Toggle marks
+  !(defun my/$-toggle-marks ()
+     (interactive)
+     (let ((new-candidates (cons nil ivy-marked-candidates))
+	   current-candidates
+	   found)
+       (dolist (candidate ivy--old-cands)
+	 (setq current-candidates new-candidates
+	       found nil)
+	 (while (and (cdr current-candidates)
+		     (not found))
+	   (when (equal (cadr current-candidates) candidate)
+	     (setcdr current-candidates (cddr current-candidates))
+	     (setq found t))
+	   (setq current-candidates (cdr current-candidates)))
+	 (unless found
+	   (push candidate (cdr new-candidates))))
+       (setq ivy-marked-candidates (cdr new-candidates))))
+  (bind-key "C-M->" #'my/$-toggle-marks $-minibuffer-map)
 
   ;;;; Format
   (defconst my/$-format-functions-alist (list (cons t #'ivy-format-function-default)))
@@ -1996,12 +2040,6 @@ Hollow mode returns the Telephone Line subseparator using the merged foreground 
 
   ;;;; Delete
   (setq ivy-on-del-error-function #'ignore)
-
-  ;;;; Mark
-  (bind-key "C->" #'ivy-mark ivy-minibuffer-map)
-  (bind-key "C-<" #'ivy-unmark ivy-minibuffer-map)
-  (bind-key "<C-backspace>" #'ivy-unmark-backward ivy-minibuffer-map)
-  (bind-key "C-M->" #'ivy-toggle-marks ivy-minibuffer-map)
 
   ;;;; Done
   (bind-key "<C-return>" #'ivy-immediate-done ivy-minibuffer-map)
