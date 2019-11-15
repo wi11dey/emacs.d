@@ -1938,6 +1938,57 @@ Hollow mode returns the Telephone Line subseparator using the merged foreground 
   (bind-key "M-9" #'ivy-number-shortcuts-goto-auto ivy-minibuffer-map)
   (bind-key "M-0" #'ivy-number-shortcuts-goto-auto ivy-minibuffer-map)
 
+  ;;;; Format
+  (defconst my/$-format-functions-alist (list (cons t #'ivy-format-function-default)))
+  !(defun my/$-format-function (candidates)
+     (let ((i 0)
+	   lines
+	   current-lines
+	   strings)
+       (dolist (candidate candidates)
+	 (setq lines (split-string (let (($--window-index (if (= i $--window-index) 0 -1)))
+				     (funcall (ivy-alist-setting my/$-format-functions-alist)
+					      (list candidate)))
+				   "\n"
+				   t))
+         ;;;;; Number shortcuts
+	 (unless ivy-marked-candidates
+	   (setq current-lines lines)
+	   (while current-lines
+	     (setcar current-lines
+		     (concat (propertize " "
+					 'display '(space :align-to 4))
+			     (car current-lines)))
+	     (setq current-lines (cdr current-lines)))
+	   (when lines
+	     (setcar lines
+		     (concat (when (< i 10)
+			       (let ((number (% (1+ i) 10)))
+				 ;; Propertize a single character with a longer display property so if `ivy-avy' runs, the entire prefix is replaced.
+				 (propertize " "
+					     'display (propertize (format "M-%d" number)
+								  'face 'my/$-number-shortcuts))))
+			     (car lines)))))
+	 ;;;;; Mark
+	 (when (member candidate $-marked-candidates)
+	   (setq current-lines lines)
+	   (while current-lines
+	     (setcar current-lines
+		     (concat (propertize ivy-mark-prefix
+					 'face 'my/$-mark-prefix)
+			     (propertize " "
+					 'face 'my/$-mark
+					 'display '(space :align-to 4))
+			     (ivy--add-face (car lines) 'my/$-mark)))
+	     (setq current-lines (cdr current-lines))))
+	 (push (mapconcat #'identity lines "\n") strings)
+	 (setq i (1+ i)))
+       (mapconcat #'identity (nreverse strings) "\n")))
+  (solarized-set-faces
+   (my/$-number-shortcuts :inherit keyboard)
+   (my/$-mark-prefix :inherit (diredfl-flag-mark fixed-pitch))
+   (my/$-mark :inherit diredfl-flag-mark-line))
+  
   ;;;; Delight
   (delight '$-mode nil '$)
 
