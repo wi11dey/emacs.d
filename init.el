@@ -1924,7 +1924,7 @@ Hollow mode returns the Telephone Line subseparator using the merged foreground 
 	    (start (max 0 (min start (- end (1- ivy-height))))))
        (when (<= 0 number 9)
 	 ;; The `%' function doesn't handle negatives correctly in this context.
-	 (ivy-set-index (+ (mod (- number ivy-number-shortcuts-start-index) ivy-height) start))
+	 (ivy-set-index (+ (mod (1- number) ivy-height) start))
 	 (ivy--exhibit)
 	 (ivy-done)
 	 (ivy-call))))
