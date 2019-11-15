@@ -2259,7 +2259,7 @@ If there are multiple matches on  a line, the line is repeated with a different 
 		 (push line lines)
 		 (setq i (1+ i)))))
 	   (mapconcat #'identity (nreverse lines) "\n"))))
-    (add-to-list 'ivy-format-functions-alist (cons @'$-isearch #'$-isearch-format-function))
+    _(push (cons #'swiper-isearch #'my/$-isearch-format-function) my/ivy-format-functions-alist)
     
     ;;;;; Launch
     (bind-key "C-s" #'my/$-isearch-region)
