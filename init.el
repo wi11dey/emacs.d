@@ -1915,28 +1915,24 @@ Hollow mode returns the Telephone Line subseparator using the merged foreground 
   !^
 
   ;;;; Number shortcuts
-  (p@ck $-number-shortcuts
-    ;;;;; Build
-    ~(straight-use-package '($ :local-repo "~/.emacs.d/local/ivy-number-shortcuts"))
-    !^
+  !(defun my/$-number-shortcut ()
+     (interactive)
+     (let* ((number (- (event-basic-type last-command-event) ?0))
+	    (half-height (/ ivy-height 2))
+	    (start (max 0 (- ivy--index half-height)))
+	    (end (min (+ start (1- ivy-height)) ivy--length))
+	    (start (max 0 (min start (- end (1- ivy-height))))))
+       (when (<= 0 number 9)
+	 ;; The `%' function doesn't handle negatives correctly in this context.
+	 (ivy-set-index (+ (mod (- number ivy-number-shortcuts-start-index) ivy-height) start))
+	 (ivy--exhibit)
+	 (ivy-done)
+	 (ivy-call))))
+  (dotimes (i 10)
+    (bind-key (format "M-%d" i)
+	      #'my/$-number-shortcut
+	      $-minibuffer-map))
 
-    ;;;;; Format
-    (setq ivy-number-shortcuts-format "M-%d")
-    
-    ;;;;; Faces
-    (solarized-set-faces
-     (ivy-number-shortcuts-face :inherit keyboard)))
-  (setq ivy-format-functions-alist (list (cons t #'ivy-number-shortcuts-format-function)))
-  (bind-key "M-1" #'ivy-number-shortcuts-goto-auto ivy-minibuffer-map)
-  (bind-key "M-2" #'ivy-number-shortcuts-goto-auto ivy-minibuffer-map)
-  (bind-key "M-3" #'ivy-number-shortcuts-goto-auto ivy-minibuffer-map)
-  (bind-key "M-4" #'ivy-number-shortcuts-goto-auto ivy-minibuffer-map)
-  (bind-key "M-5" #'ivy-number-shortcuts-goto-auto ivy-minibuffer-map)
-  (bind-key "M-6" #'ivy-number-shortcuts-goto-auto ivy-minibuffer-map)
-  (bind-key "M-7" #'ivy-number-shortcuts-goto-auto ivy-minibuffer-map)
-  (bind-key "M-8" #'ivy-number-shortcuts-goto-auto ivy-minibuffer-map)
-  (bind-key "M-9" #'ivy-number-shortcuts-goto-auto ivy-minibuffer-map)
-  (bind-key "M-0" #'ivy-number-shortcuts-goto-auto ivy-minibuffer-map)
 
   ;;;; Format
   (defconst my/$-format-functions-alist (list (cons t #'ivy-format-function-default)))
