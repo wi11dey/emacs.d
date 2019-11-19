@@ -2025,6 +2025,9 @@ Hollow mode returns the Telephone Line subseparator using the merged foreground 
 	 (push (mapconcat #'identity lines "\n") strings)
 	 (setq i (1+ i)))
        (mapconcat #'identity (nreverse strings) "\n")))
+  !(defun my/$-format-function-install ()
+     (setq $-format-functions-alist (list (cons t #'my/$-format-function))))
+  _(my/$-format-function-install)
   (solarized-set-faces
    (my/$-number-shortcuts :inherit keyboard)
    (my/$-mark-prefix :inherit (diredfl-flag-mark fixed-pitch))
@@ -2174,6 +2177,9 @@ Hollow mode returns the Telephone Line subseparator using the merged foreground 
     ;; Hide dotfiles:
     (setq $-find-file-ignore-regexp "\\(?:\\`\\|[/\\]\\)\\.")
 
+    ;;;;; Format
+    _(my/ivy-format-function-install)
+
     ;;;;; Faces
     (solarized-set-faces
      ($-outline-default :height 130)
@@ -2260,7 +2266,8 @@ If there are multiple matches on  a line, the line is repeated with a different 
 		 (push line lines)
 		 (setq i (1+ i)))))
 	   (mapconcat #'identity (nreverse lines) "\n"))))
-    _(push (cons #'swiper-isearch #'my/$-isearch-format-function) my/ivy-format-functions-alist)
+    _((my/ivy-format-function-install)
+      (push (cons #'swiper-isearch #'my/$-isearch-format-function) my/ivy-format-functions-alist))
     
     ;;;;; Launch
     (bind-key "C-s" #'my/$-isearch-region)
