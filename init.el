@@ -2945,8 +2945,9 @@ If there are multiple matches on  a line, the line is repeated with a different 
     (p@ck $-cns-tsangchi
       (with-eval-after-load "quail/tsang-cns"
 	(let ((quail-current-package (quail-package "chinese-cns-tsangchi")))
-	  (dolist (rule '(("z" "\C-g") ; Quit, completing the current translation.
-			  ("," "，")
+	  (quail-install-map (assq-delete-all ?z (quail-map)))
+          (define-key (quail-translation-keymap) "z" #'keyboard-quit) ; Quit, completing the current translation.  
+	  (dolist (rule '(("," "，")
 			  ("\\" "、")
 			  ("." "。")
 			  (":" "：")
@@ -2955,8 +2956,7 @@ If there are multiple matches on  a line, the line is repeated with a different 
 			  (">" "》")
 			  ("_" "＿")
 			  ("anau" "晩")))
-	    (quail-install-map (assq-delete-all (aref (car rule) 0) (quail-map)))
-	    (define-key (quail-translation-keymap) (vector (aref (car rule) 0)) #'quail-self-insert-command)
+            (define-key (quail-translation-keymap) (vector (aref (car rule) 0)) #'quail-self-insert-command)
 	    (quail-defrule (car rule) (cadr rule))))))))
 
 
