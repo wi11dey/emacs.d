@@ -2932,6 +2932,30 @@ If there are multiple matches on  a line, the line is repeated with a different 
     (add-to-list 'auto-mode-alist (cons "sources\\.list\\'" @'apt-sources-mode))
     (add-to-list 'auto-mode-alist (cons "sources\\.list\\.d/.*\\.list\\'" @'apt-sources-mode))))
 
+;;; Quail
+(p@ck quail
+  ~^
+
+  @$-self-insert-command
+  
+  ;;;; Chinese
+  (p@ck chinese
+    ;;;;; Tsangchi
+    (p@ck $-cns-tsangchi
+      (with-eval-after-load "quail/tsang-cns"
+	(let ((quail-current-package (quail-package "chinese-cns-tsangchi")))
+	  (dolist (rule '(("z" "\C-g") ; Quit, completing the current translation.
+			  ("," "，")
+			  ("\\" "、")
+			  ("." "。")
+			  (":" "：")
+			  (";" "；")
+			  ("<" "《")
+			  (">" "》")))
+	    (quail-install-map (assq-delete-all (aref (car rule) 0) (quail-map)))
+	    (define-key (quail-translation-keymap) (vector (aref (car rule) 0)) #'quail-self-insert-command)
+	    (quail-defrule (car rule) (cadr rule))))))))
+
 
 ;;; Finish
 ;;;; Straight.el
