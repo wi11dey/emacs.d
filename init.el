@@ -1992,8 +1992,22 @@ Hollow mode returns the Telephone Line subseparator using the merged foreground 
 					      (list candidate)))
 				   "\n"
 				   t))
-         ;;;;; Number shortcuts
-	 (unless ivy-marked-candidates
+	 (if (member candidate $-marked-candidates)
+             ;;;;; Mark
+	     (progn
+	       (setq current-lines lines)
+	       (while current-lines
+		 (setcar current-lines
+			 (concat (propertize " "
+					     'display '(space :align-to 2))
+				 (propertize "*"
+					     'face 'my/$-mark-prefix)
+				 (propertize " "
+					     'face 'my/$-mark
+					     'display '(space :align-to 4))
+				 (ivy--add-face (car lines) 'my/$-mark)))
+		 (setq current-lines (cdr current-lines))))
+           ;;;;; Number shortcuts
 	   (setq current-lines lines)
 	   (while current-lines
 	     (setcar current-lines
@@ -2003,36 +2017,25 @@ Hollow mode returns the Telephone Line subseparator using the merged foreground 
 	     (setq current-lines (cdr current-lines)))
 	   (when lines
 	     (setcar lines
-		     (concat (when (< i 10)
+		     (concat (when (and (< i 10)
+					(null ivy-marked-candidates))
 			       (let ((number (% (1+ i) 10)))
 				 ;; Propertize a single character with a longer display property so if `ivy-avy' runs, the entire prefix is replaced.
 				 (propertize " "
 					     'display (propertize (format "M-%d" number)
 								  'face 'my/$-number-shortcuts))))
 			     (car lines)))))
-	 ;;;;; Mark
-	 (when (member candidate $-marked-candidates)
-	   (setq current-lines lines)
-	   (while current-lines
-	     (setcar current-lines
-		     (concat (propertize ivy-mark-prefix
-					 'face 'my/$-mark-prefix)
-			     (propertize " "
-					 'face 'my/$-mark
-					 'display '(space :align-to 4))
-			     (ivy--add-face (car lines) 'my/$-mark)))
-	     (setq current-lines (cdr current-lines))))
 	 (push (mapconcat #'identity lines "\n") strings)
 	 (setq i (1+ i)))
        (mapconcat #'identity (nreverse strings) "\n")))
   !(defun my/$-format-function-install ()
      (setq $-format-functions-alist (list (cons t #'my/$-format-function))))
   _(my/$-format-function-install)
+  ;;;;; Faces
   (solarized-set-faces
    (my/$-number-shortcuts :inherit keyboard)
-   (my/$-mark-prefix :inherit (diredfl-flag-mark fixed-pitch))
+   (my/$-mark-prefix :inherit diredfl-flag-mark)
    (my/$-mark :inherit diredfl-flag-mark-line))
-  _(setq ivy-format-functions-alist (list (cons t #'my/$-format-function)))
   
   ;;;; Delight
   (delight '$-mode nil '$)
