@@ -147,7 +147,8 @@
 (p@ck bytecomp-simplify
   ~((straight-use-package '$)
     ^)
-  (declare-function $-warn "bytecomp-simplify"))
+
+  @$-warn)
 
 ;; Bootstrapped.
 
