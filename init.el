@@ -2862,11 +2862,18 @@ If there are multiple matches on  a line, the line is repeated with a different 
   (add-hook '$-mode-hook #'my/$-set-outline)
   (add-hook '$-mode-hook #'outline-minor-mode :append)
 
+  ;;;; Compile
+  ;;;;; Command
   !(defun my/$-set-compile-command ()
      (setq-local compile-command (format "%s -Q --batch -f batch-byte-compile %s "
 					 (expand-file-name invocation-name invocation-directory)
 					 buffer-file-name)))
-  (add-hook '$-mode-hook #'my/$-set-compile-command))
+  (add-hook '$-mode-hook #'my/$-set-compile-command)
+
+  ;;;; Completion
+  ;; Disable:
+  (setq elisp--local-variables-completion-table nil) ; Completing local variables causes macro expansion which can have side-effects on the editor.
+  )
 
 ;;; Tabulated List
 (p@ck tabulated-list
