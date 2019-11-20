@@ -2925,9 +2925,25 @@ If there are multiple matches on  a line, the line is repeated with a different 
 
   ;;;; Faces
   (solarized-set-faces
-   ($-insert :background green  :foreground green)
-   ($-change :background violet :foreground violet)
-   ($-delete :background red    :foreground red))
+   ($-insert :foreground green)
+   ($-change :foreground violet)
+   ($-delete :foreground red))
+
+  ;;;; Bitmap
+  (define-fringe-bitmap 'my/$-bmp-delete
+    (make-vector 2 #b11111111)
+    nil nil
+    'top)
+  (define-fringe-bitmap 'my/$-bmp-middle
+    (make-vector 1 #b00000111)
+    nil nil
+    '(top :periodic))
+  !(defun my/$-fringe-bmp (type _pos)
+     (if (eq type 'delete)
+	 'my/$-bmp-delete
+       'my/$-bmp-middle))
+  (setq $-fringe-bmp-function #'my/$-fringe-bmp
+	$-draw-borders nil)
 
   ;;;; Magit
   (add-hook 'magit-post-refresh-hook #'$-magit-post-refresh))
