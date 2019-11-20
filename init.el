@@ -2930,7 +2930,7 @@ If there are multiple matches on  a line, the line is repeated with a different 
    ($-delete :background red    :foreground red))
 
   ;;;; Magit
-  (add-hook 'magit-post-refresh-hook #'diff-hl-magit-post-refresh))
+  (add-hook 'magit-post-refresh-hook #'$-magit-post-refresh))
 
 ;;; Geiser
 (p@ck geiser
