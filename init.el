@@ -2966,6 +2966,25 @@ If there are multiple matches on  a line, the line is repeated with a different 
     (add-to-list 'auto-mode-alist (cons "sources\\.list\\'" @'apt-sources-mode))
     (add-to-list 'auto-mode-alist (cons "sources\\.list\\.d/.*\\.list\\'" @'apt-sources-mode))))
 
+;;; Which Key
+(p@ck which-key
+  ;;;; Build
+  ~(straight-use-package '$)
+  !^
+
+  ;;;; Manual
+  (setq $-show-early-on-C-h t
+	$-idle-delay 0.05)
+
+  ;;;; Remaps
+  (setq $-compute-remaps t)
+
+  ;;;; Delight
+  (delight '$-mode nil '$)
+
+  ;;;; Enable
+  ($-mode))
+
 
 ;;; Finish
 ;;;; Straight.el
