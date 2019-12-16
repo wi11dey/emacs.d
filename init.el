@@ -2865,7 +2865,7 @@ If there are multiple matches on  a line, the line is repeated with a different 
   ;;;; Compile
   ;;;;; Command
   !(defun my/$-set-compile-command ()
-     (setq-local compile-command (format "%s -Q --batch -f batch-byte-compile %s "
+     (setq-local compile-command (format "\"%s\" -Q --batch -f batch-byte-compile %s "
 					 (expand-file-name invocation-name invocation-directory)
 					 buffer-file-name)))
   (add-hook '$-mode-hook #'my/$-set-compile-command)
