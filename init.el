@@ -2985,6 +2985,11 @@ If there are multiple matches on  a line, the line is repeated with a different 
   ;;;; Enable
   ($-mode))
 
+;;; MMM Mode
+(p@ck mmm-mode
+  ;;;; Build
+  ~(straight-use-package '$))
+
 
 ;;; Finish
 ;;;; Straight.el
