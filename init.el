@@ -2702,8 +2702,8 @@ If there are multiple matches on  a line, the line is repeated with a different 
      ($-white-face :foreground base3))))
 
 ;;; Font Reader
-(p@ck font-reader
-  ~(straight-use-package '($ :local-repo "~/.emacs.d/local/font-reader")))
+(p@ck fontfile
+  ~(straight-use-package '($ :local-repo "~/.emacs.d/local/fontfile")))
 
 ;;; Gnus
 (p@ck gnus
