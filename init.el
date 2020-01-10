@@ -1602,7 +1602,8 @@ Hollow mode returns the Telephone Line subseparator using the merged foreground 
 			     ([remap mark-whole-buffer] . "C-a")
 			     ([remap undo] . "C-z")
 			     ([remap undo-tree-undo] . "C-z")
-			     ([remap undo-tree-redo] . "C-y")))))
+			     ([remap undo-tree-redo] . "C-y")
+			     ("C-@" . "C-@")))))
   
   ;;;; Visual Line
   (add-hook 'my/visual-line-ignore-modes #'$-mode)
