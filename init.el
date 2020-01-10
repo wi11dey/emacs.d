@@ -2966,6 +2966,11 @@ If there are multiple matches on  a line, the line is repeated with a different 
     (add-to-list 'auto-mode-alist (cons "sources\\.list\\'" @'apt-sources-mode))
     (add-to-list 'auto-mode-alist (cons "sources\\.list\\.d/.*\\.list\\'" @'apt-sources-mode))))
 
+;;; Guix
+(p@ck guix
+  ;;;; Build
+  ~(straight-use-package '$))
+
 ;;; Which Key
 (p@ck which-key
   ;;;; Build
