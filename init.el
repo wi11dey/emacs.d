@@ -348,18 +348,6 @@
 
 ;;; Keyboard
 (p@ck keyboard
-  ;;;; X
-  ;;;;; Super key
-  ;; Super key is meta:
-  (when (and (boundp 'x-meta-keysym)
-	     (boundp 'x-super-keysym))
-    (setq-default x-meta-keysym nil
-		  x-super-keysym 'meta)
-    !(defun my/exwm-super-meta-fix ()
-       (setq-local x-meta-keysym 'super)
-       (setq-local x-super-keysym nil))
-    (add-hook 'exwm-mode-hook #'my/exwm-super-meta-fix))
-
   ;;;; Mac
   ;;;;; Command key
   ;; Command key is control:
