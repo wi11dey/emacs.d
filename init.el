@@ -1487,26 +1487,17 @@ Hollow mode returns the Telephone Line subseparator using the merged foreground 
     (solarized-set-faces
      (eshell-ls-directory :inherit diredfl-dir-name))))
 
-;;; MD Readme
-;; TODO Replace `replace-regexp' with appropriate non-interactive Lisp versions
-;; TODO Add `defcustom' options to make ``quotes'` non-redundant and remove the standard header up to the "Commentary" line
-(p@ck md-readme
+;;; README.org
+(p@ck readme-org
   ;;;; Build
-  ~(straight-use-package '($ :type git :host github :repo "thomas11/md-readme"
-			     :fork (:host github :repo "wi11dey/md-readme")))
+  ~(straight-use-package '($ :local-repo "~/.emacs.d/local/readme-org-el"))
+  !^
 
-  ;;;; After save
-  !(defun my/$-after-save ()
-     (when (and buffer-file-name
-		(derived-mode-p 'emacs-lisp-mode)
-		(not (backup-file-name-p buffer-file-name))
-		(equal (file-name-base buffer-file-name)
-		       (file-name-nondirectory
-			(directory-file-name
-			 (file-name-directory buffer-file-name)))))
-       (@mdr-generate)
-       (message "Generated README.md from %s" (file-name-nondirectory buffer-file-name))))
-  (add-hook 'after-save-hook #'my/$-after-save))
+  ;;;; Delight
+  (delight '$-mode nil '$)
+
+  ;;;; Enable
+  (readme-org-mode))
 
 ;;; Extended Faces
 (p@ck extended-faces
