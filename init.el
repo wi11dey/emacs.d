@@ -1062,20 +1062,11 @@ Hollow mode returns the Telephone Line subseparator using the merged foreground 
     (defun my/$-reset ()
       (interactive)
       ($-mode -1)))
-  
-  (defhydra my/$ (global-map "C-x")
-    (concat (my/hydra-docstring "Text scale"
-				("+" . "increase")
-				("-" . "decrease")
-				("0" . "reset")))
-    ("C-+" $-increase nil)
-    ("C-=" $-increase nil)
-    ("C--" $-decrease nil)
-    ("C-0" my/$-reset nil :exit t)
-    ("+" $-increase   nil :bind nil)
-    ("=" $-increase   nil :bind nil)
-    ("-" $-decrease   nil :bind nil)
-    ("0" my/$-reset   nil :bind nil :exit t)))
+
+  (bind-key "C-x C-+" #'$-increase)
+  (bind-key "C-x C-=" #'$-increase)
+  (bind-key "C-x C--" #'$-decrease)
+  (bind-key "C-x C-0" #'my/$-reset))
 
 ;;; Calculator
 (p@ck calculator
