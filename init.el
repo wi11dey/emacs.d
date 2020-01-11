@@ -331,7 +331,9 @@
 ;;; Save
 (p@ck save
   ;;;; Final newline
-  (setq require-final-newline 'ask)
+  (p@ck require-final-newline
+    (setq $ nil)
+    (setq mode-$ :ask))
 
   ;;;; Kill buffer
   ;; Prompt before killing a modified buffer:
