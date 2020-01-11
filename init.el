@@ -366,6 +366,10 @@
   (when (boundp 'mac-command-modifier)
     (setq mac-command-modifier 'control)))
 
+;;; Repeat
+(p@ck repeat
+  (bind-key "C-z" #'$))
+
 ;;; Path
 (p@ck path
   (when (eq window-system 'ns)
