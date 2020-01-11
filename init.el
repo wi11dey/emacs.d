@@ -103,20 +103,20 @@
 					  :full-name
 					  "\\`[^.]")))
     ;;;; Built
-    ;;;;; Load path  
+    ;;;;; Load path
     (setq load-path (cons (expand-file-name "lisp" user-emacs-directory)
 			  (append straight-built
 				  load-path)))
-    ;;;;; Info  
+    ;;;;; Info
     (setq Info-additional-directory-list straight-built)
     
     ;;;; Autoloads
     (autoload 'straight-use-package "straight-init" nil :interactive)
     (autoload 'straight-get-recipe  "straight-init" nil :interactive)
     ;;;;; Package
-    ;;;;;; Disable  
+    ;;;;;; Disable
     (setq straight-disable-autoloads t)
-    ;;;;;; Update  
+    ;;;;;; Update
     (defun my/update-package-autoloads (package &optional file)
       (defvar generated-autoload-file)
       (defvar autoload-timestamps)
@@ -1613,7 +1613,7 @@ Hollow mode returns the Telephone Line subseparator using the merged foreground 
   
   ;;;; Window title buffer name
   !(defun my/$-buffer-name-window-title ()
-     "Set buffer name to window title."	    
+     "Set buffer name to window title."
      (rename-buffer $-title t))
   (add-hook '$-update-title-hook #'my/$-buffer-name-window-title
 	    t ;; Append, so it runs after other EXWM hooks.
