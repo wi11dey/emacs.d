@@ -2426,6 +2426,10 @@ If there are multiple matches on  a line, the line is repeated with a different 
   
   ;;;; Refile
   (setq org-refile-targets '((nil . (:maxlevel 8))))
+
+  ;;;; Move
+  _((bind-key "M-p" @'org-metaup   org-mode-map)
+    (bind-key "M-n" @'org-metadown org-mode-map))
   
   ;;;; Log
   ;; Log what time an item is marked DONE:
@@ -2458,17 +2462,15 @@ If there are multiple matches on  a line, the line is repeated with a different 
 
   ;;;; Expert Todo Selection
   ;; TODO Make this a hydra
-  
-  ;;;; Keybindings
+
   ;;;; Insert
   ;;;;; Heading
   (setq $-insert-heading-respect-content t)
   ;;;;; Subheading
   _(bind-key "<C-return>" @'$-insert-subheading $-mode-map)
 
+  ;;;; Agenda
   (bind-key "C-c a" @'org-agenda)
-  _((bind-key "M-p" @'org-metaup   org-mode-map)
-    (bind-key "M-n" @'org-metadown org-mode-map))
 
   ;;;; Faces
   (setq org-cycle-level-faces nil)
