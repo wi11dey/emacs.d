@@ -2023,8 +2023,7 @@ Hollow mode returns the Telephone Line subseparator using the merged foreground 
   (setq ivy-on-del-error-function #'ignore)
 
   ;;;; Done
-  (bind-key "<C-return>" #'ivy-immediate-done ivy-minibuffer-map)
-  (bind-key "M-RET" #'ivy-alt-done ivy-minibuffer-map)
+  (bind-key "M-RET" #'$-immediate-done $-minibuffer-map)
   
   ;;;; Prompt
   !(defun my/ivy-prompt--variable-pitch-number (num-string face)
