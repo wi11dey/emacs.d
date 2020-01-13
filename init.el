@@ -300,14 +300,6 @@
   ;;;; Variable Pitch
   (add-hook '$-inactive-mode-hook #'variable-pitch-mode))
 
-;;; Window Divider
-(p@ck window-divider
-  ;;;; Right side
-  (setq $-default-places 'right-only)
-
-  ;;;; Enable
-  ($-mode))
-
 ;;; Blink Cursor
 (p@ck blink-cursor
   ;;;; Disable
