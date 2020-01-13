@@ -1324,10 +1324,6 @@ Hollow mode returns the Telephone Line subseparator using the merged foreground 
   (p@ck $-collapse
     ;;;;; Build
     ~(straight-use-package '$)
-    
-    ;;;;; Enable
-    ;;;;;; Dired
-    (add-hook 'dired-mode-hook @'$-mode)
 
     ;;;;; Face
     !(defun my/$-face ()
