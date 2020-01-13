@@ -2460,6 +2460,12 @@ If there are multiple matches on  a line, the line is repeated with a different 
   ;; TODO Make this a hydra
   
   ;;;; Keybindings
+  ;;;; Insert
+  ;;;;; Heading
+  (setq $-insert-heading-respect-content t)
+  ;;;;; Subheading
+  _(bind-key "<C-return>" @'$-insert-subheading $-mode-map)
+
   (bind-key "C-c a" @'org-agenda)
   _((bind-key "M-p" @'org-metaup   org-mode-map)
     (bind-key "M-n" @'org-metadown org-mode-map))
