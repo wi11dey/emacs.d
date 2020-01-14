@@ -265,11 +265,6 @@
   (setq x-underline-at-descent-line t ; Line up underline with `telephone-line' separators.
 	x-stretch-cursor t)
 
-  ;;;; Mark
-  ;;;;; Pop
-  ;;;;;; Repeat
-  (setq set-mark-command-repeat-pop t)
-
   ;;;; Command error function
   !(defun my/command-error-function (data context function)
      (message (concat (propertize (concat context
