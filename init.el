@@ -1145,6 +1145,7 @@ Hollow mode returns the Telephone Line subseparator using the merged foreground 
    (company-preview-common :foreground base0 :inherit company-preview)))
 
 ;;; Demigod
+;; TODO Remove eventually
 ;; TODO something keeps disabling Demigod on startup
 (p@ck demigod-mode
   ;;;; Build
@@ -1162,7 +1163,8 @@ Hollow mode returns the Telephone Line subseparator using the merged foreground 
   (delight '$ nil '$)
   
   ;;;; Enable
-  ($))
+  ;; ($)
+  )
 
 ;;; Highlight Indent Guides
 ;; TODO Use font-lock "stealth" to add guides to buffers
