@@ -1660,6 +1660,14 @@ Hollow mode returns the Telephone Line subseparator using the merged foreground 
 
   @$)
 
+;;; Minibuffer Line
+;; TODO
+(p@ck minibuffer-line
+  ;;;; Build
+  ~(straight-use-package '$)
+  !^
+  )
+
 ;;; Global Line
 ;; TODO fix heading indentation
 ;; TODO make function headings subheading of "Function" heading
