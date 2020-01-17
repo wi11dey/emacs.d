@@ -178,7 +178,7 @@
 
   ;;;; Utils
   (p@ck $-utils
-    ~(straight-use-package '($ :local-repo "~/.emacs.d/local/solarized-utils"))
+    ~(straight-use-package '($ :type git :host github :repo "wi11dey/solarized-utils"))
     !^))
 
 ;;; Hydra
