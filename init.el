@@ -141,7 +141,7 @@
 
 ;;; p@ck
 (eval-when-compile
-  (straight-use-package '(p@ck :local-repo "~/.emacs.d/local/p@ck")))
+  (straight-use-package '(p@ck :type git :host github :repo "wi11dey/p-ck")))
 (require 'p@ck)
 
 ;;; Bytecomp Simplify
