@@ -20,6 +20,7 @@
 ;; For a full copy of the GNU General Public License
 ;; see <http://www.gnu.org/licenses/>.
 
+;; Generate README:
 ;;; Commentary:
 
 ;; p@ck
