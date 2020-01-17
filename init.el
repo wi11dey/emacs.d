@@ -1463,6 +1463,9 @@ Hollow mode returns the Telephone Line subseparator using the merged foreground 
   ~(straight-use-package '($ :local-repo "~/.emacs.d/local/readme-org-el"))
   !^
 
+  ;;;; Title format
+  (setq $-title-format "#+title: \\1")
+
   ;;;; Delight
   (delight '$-mode nil '$)
 
