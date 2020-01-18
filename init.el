@@ -346,13 +346,6 @@
 (p@ck repeat
   (bind-key "C-z" #'$))
 
-;;; Path
-(p@ck path
-  (when (eq window-system 'ns)
-    ;; GUI apps on macOS don’t have /usr/local/bin in their PATH by default. Add it manually:
-    (unless (member "/usr/local/bin" exec-path)
-      (push "/usr/local/bin" exec-path))))
-
 ;;; Recovery
 (p@ck recovery
   (let (($-directory (file-name-as-directory (expand-file-name "recovery"
