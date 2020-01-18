@@ -1461,7 +1461,7 @@ Hollow mode returns the Telephone Line subseparator using the merged foreground 
 ;;; README.org
 (p@ck readme-org
   ;;;; Build
-  ~(straight-use-package '($ :local-repo "~/.emacs.d/local/readme-org-el"))
+  ~(straight-use-package '($ :type git :host github :repo "wi11dey/README.org.el"))
   !^
 
   ;;;; Title format
