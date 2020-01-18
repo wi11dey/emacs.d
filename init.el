@@ -1150,7 +1150,7 @@ Hollow mode returns the Telephone Line subseparator using the merged foreground 
 ;; TODO something keeps disabling Demigod on startup
 (p@ck demigod-mode
   ;;;; Build
-  ~(straight-use-package '($ :local-repo "~/.emacs.d/local/demigod-mode"))
+  ~(straight-use-package '($ :type git :host github :repo "wi11dey/demigod-mode"))
   !^
 
   ;;;; Prefix
