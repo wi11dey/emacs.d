@@ -2319,7 +2319,7 @@ If there are multiple matches on  a line, the line is repeated with a different 
 ;;; Major Extension
 (p@ck major-extension
   ;;;; Build
-  ~(straight-use-package '($ :local-repo "~/.emacs.d/local/major-extension")))
+  ~(straight-use-package '($ :type git :host github :repo "wi11dey/major-extension")))
 
 ;;; Notes
 (p@ck notes
