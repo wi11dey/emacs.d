@@ -2978,6 +2978,13 @@ If there are multiple matches on  a line, the line is repeated with a different 
   ;;;; Build
   ~(straight-use-package '$))
 
+;;; Pwdgen
+(p@ck pwdgen
+  ;;;; Build
+  ~(straight-use-package '($ :type git :host github :repo "wi11dey/pwdgen.el"))
+
+  @pwdgen)
+
 
 ;;; Finish
 ;;;; Straight.el
