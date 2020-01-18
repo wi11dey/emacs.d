@@ -2537,7 +2537,7 @@ If there are multiple matches on  a line, the line is repeated with a different 
 ;;; Syscontrol
 (p@ck syscontrol
   ;;;; Build
-  ~(straight-use-package '($ :local-repo "~/.emacs.d/local/syscontrol.el"))
+  ~(straight-use-package '($ :type git :host github :repo "wi11dey/syscontrol.el"))
 
   !(defhydra my/$ ()
      (concat (my/hydra-docstring "System" 1
