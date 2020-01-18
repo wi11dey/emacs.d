@@ -1501,10 +1501,10 @@ Hollow mode returns the Telephone Line subseparator using the merged foreground 
    (keyboard :foreground base1 :height 0.9 :box (:line-width 2 :style released-button) :inherit (variable-pitch highlight))
    (keyboard-pressed :box (:line-width 1 :style pressed-button) :inherit keyboard)))
 
-;;; Forwarded Input
-(p@ck forwarded-input
+;;; Passthru
+(p@ck passthru
   ;;;; Build
-  ~(straight-use-package '($ :local-repo "~/.emacs.d/local/forwarded-input"))
+  ~(straight-use-package '($ :type git :host github :repo "wi11dey/passthru.el"))
 
   (solarized-set-faces
    ($-keyboard :inherit keyboard-pressed)))
@@ -1521,8 +1521,8 @@ Hollow mode returns the Telephone Line subseparator using the merged foreground 
   ;;;; Workspaces
   (setq $-randr-workspace-monitor-plist '(0 "VGA-1"))
 
-  ;;;; Forwarded input
-  (p@ck forwarded-input-$
+  ;;;; Passthru
+  (p@ck passthru-$
     !^
 
     ;;;;; Delight
