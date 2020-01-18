@@ -2324,7 +2324,7 @@ If there are multiple matches on  a line, the line is repeated with a different 
 ;;; Notes
 (p@ck notes
   ;;;; Build
-  ~((straight-use-package '($ :local-repo "~/.emacs.d/local/notes"))
+  ~((straight-use-package '($ :type git :host github :repo "wi11dey/notes.el"))
     ^)
 
   ;;;; Smartparens
