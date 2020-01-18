@@ -1844,7 +1844,7 @@ Hollow mode returns the Telephone Line subseparator using the merged foreground 
 
 ;;; Auto Save Visited Minor Mode
 (p@ck auto-save-visited-minor-mode
-  ~(straight-use-package '($ :local-repo "~/.emacs.d/local/auto-save-visited-minor-mode"))
+  ~(straight-use-package '($ :type git :host github :repo "wi11dey/auto-save-visited-minor-mode"))
 
   @$)
 
