@@ -339,8 +339,8 @@
   ;;;; Mac
   ;;;;; Command key
   ;; Command key is control:
-  (when (boundp 'mac-command-modifier)
-    (setq mac-command-modifier 'control)))
+  (when (boundp 'ns-command-modifier)
+    (setq ns-command-modifier 'control)))
 
 ;;; Repeat
 (p@ck repeat
