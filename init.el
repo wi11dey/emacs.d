@@ -1677,7 +1677,7 @@ Hollow mode returns the Telephone Line subseparator using the merged foreground 
 ;; TODO make function headings subheading of "Function" heading
 (p@ck global-line
   ;;;; Build
-  ~(straight-use-package '($ :local-repo "~/.emacs.d/local/global-line"))
+  ~(straight-use-package '($ :type git :host github :repo "wi11dey/global-line"))
   !^
 
   ;;;; Refresh
