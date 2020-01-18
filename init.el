@@ -1473,10 +1473,10 @@ Hollow mode returns the Telephone Line subseparator using the merged foreground 
   ;;;; Enable
   (readme-org-mode))
 
-;;; Extended Faces
-(p@ck extended-faces
+;;; Xtended Faces
+(p@ck xtended-faces
   ;;;; Build
-  ~(straight-use-package '($ :local-repo "~/.emacs.d/local/extended-faces"))
+  ~(straight-use-package '($ :type git :host github :repo "wi11dey/xtended-faces"))
   !^
 
   ;;;; Prose mode
