@@ -1117,6 +1117,7 @@ Hollow mode returns the Telephone Line subseparator using the merged foreground 
 	company-show-numbers-function #'my/company-show-numbers-function)
 
   ;;;; Posframe
+  ;; TODO Remove completely
   (p@ck $-posframe
     ~(straight-use-package '$)
     !^
@@ -1126,7 +1127,8 @@ Hollow mode returns the Telephone Line subseparator using the merged foreground 
 
     !(defun my/company-posframe-try-enable ()
        (when (posframe-workable-p)
-	 (company-posframe-mode)))
+	 ;; (company-posframe-mode)
+	 ))
     (my/company-posframe-try-enable)
     (add-hook 'server-after-make-frame-hook #'my/company-posframe-try-enable))
   
