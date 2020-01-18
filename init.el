@@ -2682,9 +2682,9 @@ If there are multiple matches on  a line, the line is repeated with a different 
      ($-black-face :foreground base3)
      ($-white-face :foreground base3))))
 
-;;; Font Reader
+;;; Fontfile
 (p@ck fontfile
-  ~(straight-use-package '($ :local-repo "~/.emacs.d/local/fontfile")))
+  ~(straight-use-package '($ :type git :host github :repo "wi11dey/fontfile.el")))
 
 ;;; Gnus
 (p@ck gnus
