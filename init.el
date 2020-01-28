@@ -1108,22 +1108,6 @@ Hollow mode returns the Telephone Line subseparator using the merged foreground 
   		  'face 'keyboard)))
   (setq company-show-numbers t
 	company-show-numbers-function #'my/company-show-numbers-function)
-
-  ;;;; Posframe
-  ;; TODO Remove completely
-  (p@ck $-posframe
-    ~(straight-use-package '$)
-    !^
-
-    ;;;; Lighter
-    (setq company-posframe-lighter nil)
-
-    !(defun my/company-posframe-try-enable ()
-       (when (posframe-workable-p)
-	 ;; (company-posframe-mode)
-	 ))
-    (my/company-posframe-try-enable)
-    (add-hook 'server-after-make-frame-hook #'my/company-posframe-try-enable))
   
   ;;;; Enable
   ;;;;; Programming modes
