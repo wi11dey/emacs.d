@@ -1497,9 +1497,6 @@ Hollow mode returns the Telephone Line subseparator using the merged foreground 
   ;;;; No suspend frame
   (unbind-key [remap suspend-frame])
 
-  ;;;; Workspaces
-  (setq $-randr-workspace-monitor-plist '(0 "VGA-1"))
-
   ;;;; Passthru
   (p@ck passthru-$
     !^
@@ -1570,27 +1567,18 @@ Hollow mode returns the Telephone Line subseparator using the merged foreground 
 	    t ;; Append, so it runs after other EXWM hooks.
 	    )
 
-  ;;;; Auto toggle screen
-  !(defun my/$-auto-toggle-screen ()
-     (with-temp-buffer
-       (call-process "xrandr" nil t nil)
-       (goto-char (point-min))
-       (if (search-forward "VGA-1 connected" nil 'noerror)
-	   (call-process "xrandr" nil nil nil
-			 "--output" "VGA-1" "--primary" "--auto" "--output" "LVDS-1" "--off")
-	 (call-process "xrandr" nil nil nil
-		       "--output" "LVDS-1" "--auto"))))
-  (add-hook 'after-init-hook #'my/$-auto-toggle-screen)
-  (add-hook '$-randr-screen-change-hook 'my/$-auto-toggle-screen)
-
+  ;; TODO Plug and play new screens
   ;;;; RandR
-  (p@ck $-randr
-    !^
+  ;; (p@ck $-randr
+  ;;   !^
 
-    (add-hook 'after-init-hook #'$-enable :append))
+  ;;   ;;;;; Workspaces
+  ;;   (setq $-workspace-monitor-plist '(0 "VGA-1"))
+
+  ;;   (add-hook 'after-init-hook #'$-enable :append))
 
   ;;;; Enable
-  (add-hook 'after-init-hook #'$-enable :append))
+  ($-enable))
 
 ;;; Ispell
 (p@ck ispell
