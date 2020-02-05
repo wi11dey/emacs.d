@@ -2710,7 +2710,12 @@ If there are multiple matches on  a line, the line is repeated with a different 
 ;;; PDF Tools
 (p@ck pdf-tools
   ;;;; Build
-  ~(straight-use-package '$))
+  ~(straight-use-package '$)
+
+  ;;;; Isearch
+  (p@ck pdf-isearch
+    ;; Inhibit any later remappings of `isearch-forward'.
+    _(bind-key [remap isearch-forward] #'isearch-forward $-minor-mode-map)))
 
 ;;; Perspective
 (p@ck perspective
