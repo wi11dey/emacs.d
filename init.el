@@ -2213,7 +2213,7 @@ If there are multiple matches on  a line, the line is repeated with a different 
       (push (cons #'swiper-isearch #'my/$-isearch-format-function) my/ivy-format-functions-alist))
     
     ;;;;; Launch
-    (bind-key "C-s" #'my/$-isearch-region)
+    (bind-key [remap isearch-forward] #'my/$-isearch-region)
     
     ;;;;; Faces
     (solarized-set-faces
