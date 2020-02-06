@@ -2722,6 +2722,8 @@ If there are multiple matches on  a line, the line is repeated with a different 
 
   ;;;; Isearch
   (p@ck pdf-isearch
+    ~^
+
     ;; Inhibit any later remappings of `isearch-forward'.
     _(bind-key [remap isearch-forward] #'isearch-forward $-minor-mode-map)))
 
