@@ -2665,6 +2665,11 @@ If there are multiple matches on  a line, the line is repeated with a different 
 (p@ck fontfile
   ~(straight-use-package '($ :type git :host github :repo "wi11dey/fontfile.el")))
 
+;;; NNReddit
+(p@ck nnreddit
+  ;;;; Build
+  ~(straight-use-package '($ :type git :host github :repo "paul-issartel/nnreddit")))
+
 ;;; Gnus
 (p@ck gnus
   ~^
@@ -2708,11 +2713,6 @@ If there are multiple matches on  a line, the line is repeated with a different 
   (solarized-set-faces
    (markdown-pre-face :inherit embedded-code)
    (markdown-inline-code-face :inherit embedded-code)))
-
-;;; NNReddit
-(p@ck nnreddit
-  ;;;; Build
-  ~(straight-use-package '($ :type git :host github :repo "paul-issartel/nnreddit")))
 
 ;;; Org CalDAV
 (p@ck org-caldav
