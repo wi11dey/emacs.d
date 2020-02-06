@@ -998,7 +998,15 @@ Hollow mode returns the Telephone Line subseparator using the merged foreground 
   ;;;; Font lock
   (p@ck tex-font
     ;; Use built-in `tex-mode' syntax highlighting, which highlights all control sequences.
-    (setq TeX-install-font-lock @'tex-font-setup)))
+    (setq TeX-install-font-lock @'tex-font-setup))
+
+  ;;;; Viewer
+  (setq TeX-view-program-selection '((output-pdf "PDF Tools")))
+
+  ;;;; Buffer
+  (p@ck tex-buf
+    ;;;;; Revert
+    (add-hook 'TeX-after-compilation-finished-functions @'TeX-revert-document-buffer)))
 
 ;;; Auto Dim Other Buffers
 (p@ck auto-dim-other-buffers
