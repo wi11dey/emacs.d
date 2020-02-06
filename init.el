@@ -346,6 +346,10 @@
 (p@ck repeat
   (bind-key "C-z" #'$))
 
+;;; Paragraphs
+(p@ck paragraphs
+  (setq sentence-end-double-space nil))
+
 ;;; Recovery
 (p@ck recovery
   (let (($-directory (file-name-as-directory (expand-file-name "recovery"
