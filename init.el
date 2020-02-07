@@ -2252,9 +2252,9 @@ If there are multiple matches on  a line, the line is repeated with a different 
      (unwind-protect
 	 (progn
 	   (widen)
-	   (command-execute this-original-command))
+	   (my/swiper-isearch-region))
        (@Info-select-node)))
-  _(bind-key [remap my/swiper-isearch-region] #'my/Info-search Info-mode-map)
+  _(bind-key [remap isearch-forward] #'my/Info-search Info-mode-map)
 
   ;;;; Faces
   (solarized-set-faces
