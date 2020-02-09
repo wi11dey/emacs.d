@@ -1,2 +1,6 @@
-*/
+straight/
+recovery/
+gnus/
+
+# Compiled Emacs lisp files
 *.elc
