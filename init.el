@@ -2673,6 +2673,15 @@ If there are multiple matches on  a line, the line is repeated with a different 
 ;;; Gnus
 (p@ck gnus
   ~^
+
+  ;;;; Start
+  (p@ck $-start
+    ~^
+
+    ;;;;; Init file
+    (setq gnus-init-file (expand-file-name (concat (file-name-as-directory "gnus")
+						   "gnus.el")
+					   user-emacs-directory)))
   
   ;;;; Select methods
   (setq $-select-method '(nnnil "")
