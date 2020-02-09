@@ -486,25 +486,6 @@
   ;;;; Disable
   ($-mode -1))
 
-;;;; Window management
-(defhydra my/hydra-window (global-map "C-x")
-  (concat (my/hydra-docstring "Window" 7
-			      ("o" . "other")
-			      ("0" . "delete")
-			      ("1" . "delete others")
-			      ("2" . "split below")
-			      ("3" . "split right")
-			      ("b" . "switch buffer")
-			      ("k" . "kill buffer")))
-  ("o" other-window          nil)
-  ("0" delete-window         nil)
-  ("1" delete-other-windows  nil)
-  ("2" split-window-below    nil)
-  ("3" split-window-right    nil)
-  ("b" counsel-switch-buffer nil :bind nil)
-  ("k" kill-current-buffer   nil))
-(bind-key "C-x w" #'my/hydra-window/body)
-
 ;;; Telephone Line
 ;; TODO Arithmetic overflows when this is run immediately on `after-init-hook'
 (p@ck telephone-line
@@ -2684,7 +2665,11 @@ If there are multiple matches on  a line, the line is repeated with a different 
 					   user-emacs-directory)))
   
   ;;;; Select methods
-  (setq $-select-method '(nnnil "")
+  (setq $-select-method '(nnml ""
+			       (nnml-directory (expand-file-name "~/Mail/"))
+			       (nnml-use-compressed-files ".bz2")
+			       (nnml-nov-file-name ".mail")
+			       (nnml-get-new-mail t))
 	$-secondary-select-methods '((nnreddit ""))))
 
 ;;; Ledger
