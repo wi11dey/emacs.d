@@ -112,8 +112,6 @@
     (setq Info-additional-directory-list straight-built)
     
     ;;;; Autoloads
-    (autoload 'straight-use-package "straight-init" nil :interactive)
-    (autoload 'straight-get-recipe  "straight-init" nil :interactive)
     ;;;;; Package
     ;;;;;; Disable
     (setq straight-disable-autoloads t)
