@@ -2963,6 +2963,12 @@ If there are multiple matches on  a line, the line is repeated with a different 
 
   @pwdgen)
 
+;;; Nov.el
+(p@ck nov
+  ~(straight-use-package '$)
+
+  (add-to-list 'auto-mode-alist (cons "\\.epub\\'" @'$-mode)))
+
 
 ;;; Finish
 ;;;; Straight.el
