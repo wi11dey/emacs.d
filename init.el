@@ -2963,8 +2963,10 @@ If there are multiple matches on  a line, the line is repeated with a different 
 
 ;;; Nov.el
 (p@ck nov
+  ;;;; Build
   ~(straight-use-package '$)
 
+  ;;;; Auto mode
   (add-to-list 'auto-mode-alist (cons "\\.epub\\'" @'$-mode)))
 
 
