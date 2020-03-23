@@ -2969,6 +2969,11 @@ If there are multiple matches on  a line, the line is repeated with a different 
   ;;;; Auto mode
   (add-to-list 'auto-mode-alist (cons "\\.epub\\'" @'$-mode)))
 
+;;; Julia
+(p@ck julia-mode
+  ;;;; Build
+  ~(straight-use-package '$))
+
 
 ;;; Finish
 ;;;; Straight.el
