@@ -105,9 +105,8 @@
 					  "\\`[^.]")))
     ;;;; Built
     ;;;;; Load path
-    (setq load-path (cons (expand-file-name "lisp" user-emacs-directory)
-			  (append straight-built
-				  load-path)))
+    (setq load-path (append straight-built
+			    load-path))
     ;;;;; Info
     (setq Info-additional-directory-list straight-built)
     
