@@ -2756,7 +2756,7 @@ If there are multiple matches on  a line, the line is repeated with a different 
 
   ;;;; Install
   !^
-  ($-install)
+  ($-install-noverify)
 
   ;;;; Isearch
   (p@ck pdf-isearch
