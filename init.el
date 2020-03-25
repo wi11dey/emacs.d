@@ -54,6 +54,10 @@
   (setq load-prefer-newer t))
 
 ;;; Straight.el
+;;;; Autoloads
+(eval-and-compile
+  ;;;;; Disable
+  (setq straight-disable-autoloads t))
 (eval-when-compile
   ;;;; Develop
   (defvar straight-repository-branch)
@@ -84,45 +88,65 @@
         (eval-print-last-sexp)))
     (load bootstrap-file nil 'nomessage)))
 (declare-function cl-delete-if "cl-lib")
+;;;; Built
 (eval-and-compile
-  (let* ((straight-build-dir (expand-file-name (concat (file-name-as-directory "straight")
-						       (file-name-as-directory "build"))
-					       user-emacs-directory))
-	 (straight-built (directory-files straight-build-dir
-					  :full-name
-					  "\\`[^.]")))
-    ;;;; Built
+  (defconst my/straight-build-dir (expand-file-name (concat (file-name-as-directory "straight")
+							    (file-name-as-directory "build"))
+						    user-emacs-directory))
+  (let ((straight-built (directory-files my/straight-build-dir
+					 :full-name
+					 "\\`[^.]")))
     ;;;;; Load path
     (setq load-path (append straight-built
 			    load-path))
     ;;;;; Info
-    (setq Info-additional-directory-list straight-built)
-    
-    ;;;; Autoloads
-    ;;;;; Package
-    ;;;;;; Disable
-    (setq straight-disable-autoloads t)
-    ;;;;;; Update
-    (defun my/update-package-autoloads (package &optional file)
-      (defvar generated-autoload-file)
-      (defvar autoload-timestamps)
-      (defvar version-control)
-      (let* ((package-name (symbol-name package))
-	     (directory (concat straight-build-dir package-name))
-	     (generated-autoload-file (expand-file-name (or file
-							    (concat package-name
-								    "-autoloads.el"))
-							directory))
-	     (noninteractive t)
-	     (backup-inhibited t)
-	     (version-control 'never)
-	     buffer
-	     (inhibit-message t))
-	(update-directory-autoloads directory)
-	(setq buffer (find-buffer-visiting generated-autoload-file))
-	(when buffer
-	  (kill-buffer buffer))
-	generated-autoload-file))))
+    (setq Info-additional-directory-list straight-built)))
+
+;;; Autoloads
+(eval-when-compile
+  ;;;;; Generate
+  (defun my/package-autoloads--clean-p (func
+					file
+					&optional
+					docstring
+					interactive
+					type)
+    (pcase nil
+      ((and (let `(quote ,(pred symbolp)) func)
+	    (let (pred stringp) file)
+	    (let (or (pred stringp)
+		     (pred null))
+	      docstring)
+	    (let (pred symbolp) interactive)
+	    (let (pred symbolp) type))
+       t)))
+  (defmacro my/package-autoloads (package)
+    (defvar generated-autoload-file)
+    (defvar autoload-timestamps)
+    (defvar version-control)
+    (let* ((package-name (symbol-name package))
+	   (directory (concat my/straight-build-dir package-name))
+	   (generated-autoload-file (expand-file-name (concat package-name
+							      "-autoloads.el")
+						      directory))
+	   (noninteractive t)
+	   (backup-inhibited t)
+	   (version-control 'never)
+	   (inhibit-message t)
+	   sexp
+	   autoloads)
+      (update-directory-autoloads directory)
+      (with-current-buffer (find-file-noselect generated-autoload-file)
+	(goto-char (point-min))
+	(prog1
+	    (condition-case nil
+		(while t
+		  (setq sexp (read (current-buffer)))
+		  (pcase sexp
+		    (`(autoload . ,(pred (apply #'my/package-autoloads--clean-p)))
+		     (push sexp autoloads))))
+	      (end-of-file (cons 'progn autoloads)))
+	  (kill-buffer (current-buffer)))))))
 
 ;;; p@ck
 (eval-when-compile
@@ -958,9 +982,9 @@ Hollow mode returns the Telephone Line subseparator using the merged foreground 
 ;;; AUCTeX
 (p@ck auctex
   ;;;; Build
-  ~((straight-use-package '$)
-    (my/update-package-autoloads '$)
-    (require 'tex))
+  ~(straight-use-package '$)
+  !(my/package-autoloads $)
+  ~(require 'tex)
 
   ;;;; Enable
   (require 'tex-site)
@@ -2279,12 +2303,12 @@ If there are multiple matches on  a line, the line is repeated with a different 
 
 ;;; Org
 (p@ck org
-  ~((straight-use-package '($ :type git
-			      :repo "https://code.orgmode.org/bzg/org-mode.git"
-			      :local-repo "org"
-			      :files (:defaults "contrib/lisp/*.el")))
-    (my/update-package-autoloads '$ "org-loaddefs.el")
-    ^)
+  ~(straight-use-package '($ :type git
+			     :repo "https://code.orgmode.org/bzg/org-mode.git"
+			     :local-repo "org"
+			     :files (:defaults "contrib/lisp/*.el")))
+  !(my/package-autoloads $)
+  ~^
 
   @$-mode
 
