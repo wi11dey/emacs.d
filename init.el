@@ -2754,6 +2754,10 @@ If there are multiple matches on  a line, the line is repeated with a different 
   ;;;; Build
   ~(straight-use-package '$)
 
+  ;;;; Install
+  !^
+  ($-install)
+
   ;;;; Isearch
   (p@ck pdf-isearch
     ~^
