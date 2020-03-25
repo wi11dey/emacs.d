@@ -51,12 +51,6 @@
   "")
 (setq my/init-start (current-time))
 
-;;;; Magic files
-;; Init should not use magic files, disable them temporarily for performance.
-(defvar my/default-file-name-handler-alist file-name-handler-alist
-  "")
-(setq file-name-handler-alist nil)
-
 ;;; GC
 (setq gc-cons-threshold 16777216
       gc-cons-percentage 0.1)
@@ -2977,9 +2971,6 @@ If there are multiple matches on  a line, the line is repeated with a different 
 ;;; Finish
 ;;;; Straight.el
 ;; TODO Remove unused and up-to-date straight local-repos
-
-;;;; Magic files
-(setq file-name-handler-alist my/default-file-name-handler-alist)
 
 ;;;; Timing
 (message "Init took %.3f seconds" (float-time (time-since my/init-start)))
