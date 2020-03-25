@@ -2979,7 +2979,8 @@ If there are multiple matches on  a line, the line is repeated with a different 
 
   ;;;; Manual
   (setq $-show-early-on-C-h t
-	$-idle-delay 0.05)
+	$-idle-delay 10000
+	$-idle-secondary-delay 0.05)
 
   ;;;; Remaps
   (setq $-compute-remaps t)
