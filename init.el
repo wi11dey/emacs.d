@@ -150,7 +150,6 @@ Optional argument FILE-OVERRIDE is a string to be passed as the FILE parameter t
     (load bootstrap-file nil 'nomessage)))
 ;;;; Autoloads
 (my/package-autoloads straight (expand-file-name "init.el" user-emacs-directory))
-(declare-function cl-delete-if "cl-lib")
 
 ;;; Paths
 (eval-and-compile
