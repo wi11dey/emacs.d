@@ -117,8 +117,6 @@ Optional argument FILE-OVERRIDE is a string to be passed as the FILE parameter t
 
   (defconst my/straight-build-dir (concat my/straight-dir (file-name-as-directory "build")))
 
-  (defconst my/straight-bootstrap-file (concat my/straight-dir "repos/straight.el/bootstrap.el"))
-
   ;;;; Build
   ;;;;; Disable autoloads
   (setq straight-disable-autoloads t))
@@ -140,17 +138,18 @@ Optional argument FILE-OVERRIDE is a string to be passed as the FILE parameter t
 
   ;;;; Bootstrap
   (defvar bootstrap-version)
-  (let ((bootstrap-version 5))
-    (unless (file-exists-p my/straight-bootstrap-file)
+  (let ((bootstrap-file (concat my/straight-dir "repos/straight.el/bootstrap.el"))
+	(bootstrap-version 5))
+    (unless (file-exists-p bootstrap-file)
       (with-current-buffer
           (url-retrieve-synchronously
            "https://raw.githubusercontent.com/raxod502/straight.el/develop/install.el"
            'silent 'inhibit-cookies)
         (goto-char (point-max))
         (eval-print-last-sexp)))
-    (load my/straight-bootstrap-file nil 'nomessage)))
+    (load bootstrap-file nil 'nomessage)))
 ;;;; Autoloads
-(my/package-autoloads straight my/straight-bootstrap-file)
+(my/package-autoloads straight (expand-file-name "init.el" user-emacs-directory))
 (declare-function cl-delete-if "cl-lib")
 ;;;; Search paths
 (eval-and-compile
