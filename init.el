@@ -53,58 +53,8 @@
 (eval-and-compile
   (setq load-prefer-newer t))
 
-;;; Straight.el
-;;;; Autoloads
-(eval-and-compile
-  ;;;;; Disable
-  (setq straight-disable-autoloads t))
-(eval-when-compile
-  ;;;; Develop
-  (defvar straight-repository-branch)
-  (setq straight-repository-branch "develop")
-  
-  ;;;; Checking
-  (defvar straight-check-for-modifications)
-  (setq straight-check-for-modifications '(find-when-checking check-on-save))
-
-  ;;;; Mirrors
-  ;;;;; GNU ELPA
-  (defvar straight-recipes-gnu-elpa-use-mirror)
-  (setq straight-recipes-gnu-elpa-use-mirror t)
-  ;;;;; Emacsmirror
-  ;; TODO
-
-  ;;;; Bootstrap
-  (defvar bootstrap-version)
-  (let ((bootstrap-file
-         (expand-file-name "straight/repos/straight.el/bootstrap.el" user-emacs-directory))
-        (bootstrap-version 5))
-    (unless (file-exists-p bootstrap-file)
-      (with-current-buffer
-          (url-retrieve-synchronously
-           "https://raw.githubusercontent.com/raxod502/straight.el/develop/install.el"
-           'silent 'inhibit-cookies)
-        (goto-char (point-max))
-        (eval-print-last-sexp)))
-    (load bootstrap-file nil 'nomessage)))
-(declare-function cl-delete-if "cl-lib")
-;;;; Built
-(eval-and-compile
-  (defconst my/straight-build-dir (expand-file-name (concat (file-name-as-directory "straight")
-							    (file-name-as-directory "build"))
-						    user-emacs-directory))
-  (let ((straight-built (directory-files my/straight-build-dir
-					 :full-name
-					 "\\`[^.]")))
-    ;;;;; Load path
-    (setq load-path (append straight-built
-			    load-path))
-    ;;;;; Info
-    (setq Info-additional-directory-list straight-built)))
-
 ;;; Autoloads
 (eval-when-compile
-  ;;;;; Generate
   (defun my/package-autoloads--clean-p (func
 					file
 					&optional
@@ -157,6 +107,61 @@ Optional argument FILE-OVERRIDE is a string to be passed as the FILE parameter t
 		     (push sexp autoloads))))
 	      (end-of-file (cons 'progn autoloads)))
 	  (kill-buffer (current-buffer)))))))
+
+;;; Straight.el
+(eval-and-compile
+  ;;;; Constants
+  ;;;;; Paths
+  (defconst my/straight-dir (expand-file-name (file-name-as-directory "straight")
+					      user-emacs-directory))
+
+  (defconst my/straight-build-dir (concat my/straight-dir (file-name-as-directory "build")))
+
+  (defconst my/straight-bootstrap-file (concat my/straight-dir "repos/straight.el/bootstrap.el"))
+
+  ;;;; Build
+  ;;;;; Disable autoloads
+  (setq straight-disable-autoloads t))
+(eval-when-compile
+  ;;;; Develop
+  (defvar straight-repository-branch)
+  (setq straight-repository-branch "develop")
+
+  ;;;; Checking
+  (defvar straight-check-for-modifications)
+  (setq straight-check-for-modifications '(find-when-checking check-on-save))
+
+  ;;;; Mirrors
+  ;;;;; GNU ELPA
+  (defvar straight-recipes-gnu-elpa-use-mirror)
+  (setq straight-recipes-gnu-elpa-use-mirror t)
+  ;;;;; Emacsmirror
+  ;; TODO
+
+  ;;;; Bootstrap
+  (defvar bootstrap-version)
+  (let ((bootstrap-version 5))
+    (unless (file-exists-p my/straight-bootstrap-file)
+      (with-current-buffer
+          (url-retrieve-synchronously
+           "https://raw.githubusercontent.com/raxod502/straight.el/develop/install.el"
+           'silent 'inhibit-cookies)
+        (goto-char (point-max))
+        (eval-print-last-sexp)))
+    (load my/straight-bootstrap-file nil 'nomessage)))
+;;;; Autoloads
+(my/package-autoloads straight my/straight-bootstrap-file)
+(declare-function cl-delete-if "cl-lib")
+;;;; Search paths
+(eval-and-compile
+  (let ((straight-built (directory-files my/straight-build-dir
+					 :full-name
+					 "\\`[^.]")))
+    ;;;;; Load path
+    (setq load-path (append straight-built
+			    load-path))
+    ;;;;; Info
+    (setq Info-additional-directory-list straight-built)))
 
 ;;; p@ck
 (eval-when-compile
