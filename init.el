@@ -46,10 +46,6 @@
   :group 'emacs)
 
 ;;; Start
-;;;; Timing
-(defvar my/init-start nil
-  "")
-(setq my/init-start (current-time))
 
 ;;; GC
 (setq gc-cons-threshold 16777216
@@ -2971,9 +2967,6 @@ If there are multiple matches on  a line, the line is repeated with a different 
 ;;; Finish
 ;;;; Straight.el
 ;; TODO Remove unused and up-to-date straight local-repos
-
-;;;; Timing
-(message "Init took %.3f seconds" (float-time (time-since my/init-start)))
 
 ;; Local Variables:
 ;; byte-compile-warnings: (not make-local)
