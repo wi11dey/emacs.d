@@ -121,6 +121,11 @@
 	    (let (pred symbolp) type))
        t)))
   (defmacro my/package-autoloads (package &optional file-override)
+    "Generate autoloads for PACKAGE, but return a form of only `autoload' calls. This removes any code that may automatically execute when activating a package, and only makes the functions available so that they may be explicitly called by the user.
+
+PACKAGE is a folder name under \"~/.emacs.d/straight/build/\" to generate autoloads for by means of `update-directory-autoloads'. However, as noted above, nothing other than a `progn' consisting of `autoload' calls will ever be evaluated by this macro for security and user-choice-only reasons.
+
+Optional argument FILE-OVERRIDE is a string to be passed as the FILE parameter to all `autoload' calls in place of the generated parameter. This is useful when loading one file will make all the functions in the package available, like in the case of straight.el's \"bootstrap.el\" file."
     (defvar generated-autoload-file)
     (defvar autoload-timestamps)
     (defvar version-control)
