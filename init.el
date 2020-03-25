@@ -2983,7 +2983,10 @@ If there are multiple matches on  a line, the line is repeated with a different 
 ;;; Julia
 (p@ck julia-mode
   ;;;; Build
-  ~(straight-use-package '$))
+  ~(straight-use-package '$)
+
+  ;;;; Auto mode
+  (add-to-list 'auto-mode-alist (cons "\\.jl\\'" @'julia-mode)))
 
 ;; Local Variables:
 ;; byte-compile-warnings: (not make-local)
