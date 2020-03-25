@@ -997,9 +997,9 @@ Hollow mode returns the Telephone Line subseparator using the merged foreground 
 ;;; AUCTeX
 (p@ck auctex
   ;;;; Build
-  ~(straight-use-package '$)
-  !(my/package-autoloads $)
-  ~(require 'tex)
+  ~((straight-use-package '$)
+    (my/package-autoloads $)
+    (require 'tex))
 
   ;;;; Enable
   (require 'tex-site)
