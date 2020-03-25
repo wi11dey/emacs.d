@@ -2318,12 +2318,12 @@ If there are multiple matches on  a line, the line is repeated with a different 
 
 ;;; Org
 (p@ck org
-  ~(straight-use-package '($ :type git
-			     :repo "https://code.orgmode.org/bzg/org-mode.git"
-			     :local-repo "org"
-			     :files (:defaults "contrib/lisp/*.el")))
-  !(my/package-autoloads $)
-  ~^
+  ~((straight-use-package '($ :type git
+			      :repo "https://code.orgmode.org/bzg/org-mode.git"
+			      :local-repo "org"
+			      :files (:defaults "contrib/lisp/*.el")))
+    (my/package-autoloads $)
+    ^)
 
   @$-mode
 
