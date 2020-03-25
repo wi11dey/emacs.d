@@ -151,15 +151,28 @@ Optional argument FILE-OVERRIDE is a string to be passed as the FILE parameter t
 ;;;; Autoloads
 (my/package-autoloads straight (expand-file-name "init.el" user-emacs-directory))
 (declare-function cl-delete-if "cl-lib")
-;;;; Search paths
+
+;;; Paths
 (eval-and-compile
+  ;;;; Site lisp
+  (defvar my/site-lisp (eval-when-compile
+			 (let (site-lisp)
+			   (dolist (path load-path)
+			     (when (and (>= (length path) 9)
+					(equal (substring path -9)
+					       "site-lisp"))
+			       (push path site-lisp)))
+			   (nreverse site-lisp))))
+
   (let ((straight-built (directory-files my/straight-build-dir
 					 :full-name
 					 "\\`[^.]")))
-    ;;;;; Load path
-    (setq load-path (append straight-built
+    ;;;; Load path
+    ;; Pull site-lisp directories to the front of the load path:
+    (setq load-path (append my/site-lisp
+			    straight-built
 			    load-path))
-    ;;;;; Info
+    ;;;; Info
     (setq Info-additional-directory-list straight-built)))
 
 ;;; p@ck
