@@ -45,8 +45,6 @@
   "Customizations for personal Emacs modifications."
   :group 'emacs)
 
-;;; Start
-
 ;;; GC
 (setq gc-cons-threshold 16777216
       gc-cons-percentage 0.1)
@@ -2962,11 +2960,6 @@ If there are multiple matches on  a line, the line is repeated with a different 
 (p@ck julia-mode
   ;;;; Build
   ~(straight-use-package '$))
-
-
-;;; Finish
-;;;; Straight.el
-;; TODO Remove unused and up-to-date straight local-repos
 
 ;; Local Variables:
 ;; byte-compile-warnings: (not make-local)
