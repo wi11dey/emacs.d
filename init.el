@@ -120,10 +120,13 @@
 	    (let (pred symbolp) interactive)
 	    (let (pred symbolp) type))
        t)))
-  (defmacro my/package-autoloads (package)
+  (defmacro my/package-autoloads (package &optional file-override)
     (defvar generated-autoload-file)
     (defvar autoload-timestamps)
     (defvar version-control)
+    (defvar my/straight-build-dir)
+    (when file-override
+      (setq file-override (eval file-override lexical-binding)))
     (let* ((package-name (symbol-name package))
 	   (directory (concat my/straight-build-dir package-name))
 	   (generated-autoload-file (expand-file-name (concat package-name
@@ -144,6 +147,8 @@
 		  (setq sexp (read (current-buffer)))
 		  (pcase sexp
 		    (`(autoload . ,(pred (apply #'my/package-autoloads--clean-p)))
+		     (when file-override
+		       (setf (nth 2 sexp) file-override))
 		     (push sexp autoloads))))
 	      (end-of-file (cons 'progn autoloads)))
 	  (kill-buffer (current-buffer)))))))
