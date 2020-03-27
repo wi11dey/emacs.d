@@ -556,6 +556,20 @@ Optional argument FILE-OVERRIDE is a string to be passed as the FILE parameter t
   (solarized-set-faces
    ($ :inverse-video nil :background base03 :underline base0 :inherit (mode-line))))
 
+;;; Window Divider
+(p@ck window-divider
+  ;;;; Places
+  (setq $-default-places t) ; Both right and bottom.
+
+  ;;;; Width
+  ;;;;; Right
+  (setq $-default-right-width 1)
+  ;;;;; Bottom
+  (setq $-default-bottom-width 1)
+
+  ;;;; Enable
+  ($-mode))
+
 ;;; Mode Line
 ;; TODO organize & cleanup
 ;; TODO heading indentation
