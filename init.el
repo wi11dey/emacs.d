@@ -303,20 +303,21 @@ Optional argument FILE-OVERRIDE is a string to be passed as the FILE parameter t
 
   ;;;; Command error function
   !(defun my/command-error-function (data context function)
-     (message (concat (propertize (concat context
-					  (when (and context
-						     (stringp context)
-						     (not (string-empty-p context)))
-					    " ")
-					  (error-message-string data))
-				  'face 'variable-pitch)
-		      (when function
-			(concat (propertize " ("
-					    'face 'variable-pitch)
-				(propertize (symbol-name function)
-					    'face 'font-lock-function-name-face)
-				(propertize ")"
-					    'face 'variable-pitch))))))
+     (message (when (not (eq (car data) 'quit))
+		(concat (propertize (concat context
+					    (when (and context
+						       (stringp context)
+						       (not (string-empty-p context)))
+					      " ")
+					    (error-message-string data))
+				    'face 'variable-pitch)
+			(when function
+			  (concat (propertize " ("
+					      'face 'variable-pitch)
+				  (propertize (symbol-name function)
+					      'face 'font-lock-function-name-face)
+				  (propertize ")"
+					      'face 'variable-pitch)))))))
   (setq command-error-function #'my/command-error-function))
 
 ;;; Fancy
