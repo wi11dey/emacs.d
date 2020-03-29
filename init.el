@@ -1778,8 +1778,7 @@ Hollow mode returns the Telephone Line subseparator using the merged foreground 
     ;;;;; Faces
     (solarized-set-faces
      ($-outline-default :inherit variable-pitch)
-     ($-outline-1 :height 140
-		  :inherit ($-outline-default title heading-1))
+     ($-outline-1 :inherit ($-outline-default heading-1))
      ($-outline-2 :inherit ($-outline-default heading-2))
      ($-outline-3 :inherit ($-outline-default heading-3))
      ($-outline-4 :inherit ($-outline-default heading-4))
