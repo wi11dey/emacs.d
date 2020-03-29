@@ -176,8 +176,10 @@ Optional argument FILE-OVERRIDE is a string to be passed as the FILE parameter t
 
 ;;; p@ck
 (eval-when-compile
-  (straight-use-package '(p@ck :type git :host github :repo "wi11dey/p-ck")))
-(require 'p@ck)
+  (straight-use-package '(p@ck :type git :host github :repo "wi11dey/p-ck"))
+  (require 'p@ck))
+(p@ck p@ck
+  @$)
 
 ;;; Bytecomp Simplify
 (p@ck bytecomp-simplify
