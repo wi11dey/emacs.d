@@ -1433,8 +1433,8 @@ Hollow mode returns the Telephone Line subseparator using the merged foreground 
   ;;;; Format
   (setq $-format '("%e"
 				 ;;;;; Time
-		   (:eval (propertize (format-time-string "%T %Z")
-				      'face 'bold))
+		   (:propertize (:eval (format-time-string "%T %Z"))
+				face bold)
 		   " "
 				 ;;;;; Date
 		   (:eval (format-time-string "%F %A"))))
