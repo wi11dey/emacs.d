@@ -346,7 +346,7 @@ Optional argument FILE-OVERRIDE is a string to be passed as the FILE parameter t
    (default :background base03 :height 105 :family "DejaVu Sans Mono")
    (variable-pitch :height 110 :family "DejaVu Sans")
    (fringe :foreground base01 :background base03)
-   (header-line :inherit variable-pitch)
+   (header-line :inverse-video nil :background base03 :underline base0 :inherit mode-line)
    (link :inherit variable-pitch)
    (link-visited :inherit variable-pitch)
    (warning :foreground orange :inherit variable-pitch)
@@ -549,12 +549,6 @@ Optional argument FILE-OVERRIDE is a string to be passed as the FILE parameter t
   (defconst my/$-brace-hollow-right
     (make-instance '$-subseparator
 		   :axis-func ($-complement my/$-brace--axis-func))))
-
-;;; Header Line
-(p@ck header-line
-  ;;;; Faces
-  (solarized-set-faces
-   ($ :inverse-video nil :background base03 :underline base0 :inherit (mode-line))))
 
 ;;; Window Divider
 (p@ck window-divider
