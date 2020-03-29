@@ -1260,7 +1260,7 @@ Hollow mode returns the Telephone Line subseparator using the merged foreground 
    (prose :height 110 :family "DejaVu Serif")
    (title :height 2.0 :weight light :inherit heading-1)
    (heading-1 :height 1.2 :weight normal :inherit heading-2)
-   (heading-2 :height 1.1 :weight bold :slant normal :inherit heading-3)
+   (heading-2 :height 1.0 :weight bold :slant normal :inherit heading-3)
    (heading-3 :height 1.2 :width normal :slant italic :inherit heading-4)
    (heading-4 :height 1.1 :width condensed :inherit heading-5)
    (heading-5 :height 1.1 :foreground base1 :inherit variable-pitch)
