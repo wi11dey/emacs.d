@@ -1260,16 +1260,16 @@ Hollow mode returns the Telephone Line subseparator using the merged foreground 
   (add-hook 'text-mode-hook #'prose-mode)
   ;;;;; WoMan
   (add-hook 'woman-mode-hook #'prose-mode)
-  
+
   ;;;; Faces
   (solarized-set-faces
    (prose :height 110 :family "DejaVu Serif")
-   (title :foreground base1 :height 300 :inherit (bold prose))
-   (heading-1 :foreground blue :height 180 :inherit (bold prose))
-   (heading-2 :foreground green :height 0.95 :family "Liberation Sans" :inherit heading-1)
-   (heading-3 :foreground cyan :height 0.9 :weight normal :inherit (italic heading-2))
-   (heading-4 :foreground yellow :height 0.95 :slant normal :inherit heading-3)
-   (heading-5 :foreground base1 :height 130 :inherit (variable-pitch heading-4))
+   (title :height 2.0 :weight light :inherit heading-1)
+   (heading-1 :height 1.2 :weight normal :inherit heading-2)
+   (heading-2 :height 1.1 :weight bold :slant normal :inherit heading-3)
+   (heading-3 :height 1.2 :width normal :slant italic :inherit heading-4)
+   (heading-4 :height 1.1 :width condensed :inherit heading-5)
+   (heading-5 :height 1.1 :foreground base1 :inherit variable-pitch)
    (keyboard :foreground base1 :height 0.9 :box (:line-width 2 :style released-button) :inherit (variable-pitch highlight))
    (keyboard-pressed :box (:line-width 1 :style pressed-button) :inherit keyboard)))
 
@@ -2105,6 +2105,7 @@ If there are multiple matches on  a line, the line is repeated with a different 
    (org-code :foreground base0 :inherit embedded-code)
    (org-date :foreground base3 :underline nil :height 0.95 :inherit (bold variable-pitch))
    (org-default :inherit prose)
+   (org-document-title :inherit title)
    (org-document-info :foreground base1)
    (org-document-info-keyword :foreground base00 :inherit bold)
    (org-formula :inherit org-table)
