@@ -149,7 +149,7 @@ Optional argument FILE-OVERRIDE is a string to be passed as the FILE parameter t
         (eval-print-last-sexp)))
     (load bootstrap-file nil 'nomessage)))
 ;;;; Autoloads
-(my/package-autoloads straight (expand-file-name "init.el" user-emacs-directory))
+(my/package-autoloads straight (expand-file-name "straight-init" user-emacs-directory))
 
 ;;; Paths
 (eval-and-compile
