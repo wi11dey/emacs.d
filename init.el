@@ -2436,7 +2436,8 @@ If there are multiple matches on  a line, the line is repeated with a different 
 ;;; Outline Minor Faces
 (p@ck outline-minor-faces
   ;;;; Build
-  ~((straight-use-package '$)
+  ~((straight-use-package '($ :type git :host github :repo "tarsius/outline-minor-faces"
+			      :fork (:host github :repo "wi11dey/outline-minor-faces")))
     ^)
 
   ;;;; Enable
@@ -2477,9 +2478,7 @@ If there are multiple matches on  a line, the line is repeated with a different 
 	      1))))
   !(defun my/$-set-outline ()
      (setq-local outline-regexp "[ \t]*;;\\(?1:;+\\)[^#]")
-     ;; \x3b is ;
-     ;; It is used here so that the three semicolons in succession do not get highlighted themselves when editing this file.
-     (setq outline-minor-faces-regexp "\x3b\x3b\x3b+[^#].*$")
+     (setq outline-minor-faces-regexp ";;;+[^#].*$")
      (setq-local outline-level #'my/$-outline-level))
   ;; `my/emacs-lisp-set-outline' must come before `outline-minor-mode' in `emacs-lisp-mode-hook' so that `outline-minor-faces' caches the right Outline settings when fontifying the buffer for the first time.
   (add-hook '$-mode-hook #'my/$-set-outline)
