@@ -218,6 +218,19 @@ Optional argument FILE-OVERRIDE is a string to be passed as the FILE parameter t
     ~(straight-use-package '($ :type git :host github :repo "wi11dey/solarized-utils"))
     !^))
 
+;;; Xah Fly Keys
+(p@ck xah-fly-keys
+  ;;;; Build
+  ~(straight-use-package '$)
+
+  ;;;; Control key
+  ;; Disable overriding built-in Emacs control/meta key sequences so they are always available:
+  (setq xah-fly-use-control-key nil)
+  !^
+
+  ($-set-layout "qwerty")
+  ($ 1))
+
 ;;; Hydra
 (p@ck hydra
   ;;;; Build
@@ -1427,17 +1440,31 @@ Hollow mode returns the Telephone Line subseparator using the merged foreground 
   ~(straight-use-package '$)
   !^
 
-  ;;;; Refresh interval
+  ;;;; Refresh
+  ;;;;; Interval
   (setq $-refresh-interval 1)
+  ;;;;; Xah Fly Keys
+  ;; Refresh immediately on any Xah Fly Keys mode change:
+  (add-hook 'xah-fly-command-mode-activate-hook #'$--update)
+  (add-hook 'xah-fly-insert-mode-activate-hook  #'$--update)
 
   ;;;; Format
   (setq $-format '("%e"
-				 ;;;;; Time
+		   ;;;;; Time
 		   (:propertize (:eval (format-time-string "%T %Z"))
 				face bold)
 		   " "
-				 ;;;;; Date
-		   (:eval (format-time-string "%F %A"))))
+		   ;;;;; Date
+		   (:eval (format-time-string "%F %A"))
+		   (:propertize " "
+				display (space :align-to (- right 2)))
+		   (:propertize (:eval (cond ((not (boundp 'xah-fly-insert-state-q))
+					      "")
+					     (xah-fly-insert-state-q
+					      "I")
+					     (t
+					      "C")))
+				face fixed-pitch)))
   
   ;;;; Enable
   ($-mode))
