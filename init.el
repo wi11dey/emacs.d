@@ -2593,7 +2593,10 @@ If there are multiple matches on  a line, the line is repeated with a different 
 ;;; Guix
 (p@ck guix
   ;;;; Build
-  ~(straight-use-package '$))
+  ~(straight-use-package '$)
+
+  ;;;; Autoloads
+  (my/package-autoloads $))
 
 ;;; Which Key
 (p@ck which-key
