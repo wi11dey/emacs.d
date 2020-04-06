@@ -2465,8 +2465,7 @@ If there are multiple matches on  a line, the line is repeated with a different 
 ;;; Outline Minor Faces
 (p@ck outline-minor-faces
   ;;;; Build
-  ~((straight-use-package '($ :type git :host github :repo "tarsius/outline-minor-faces"
-			      :fork (:host github :repo "wi11dey/outline-minor-faces")))
+  ~((straight-use-package '$)
     ^)
 
   ;;;; Enable
