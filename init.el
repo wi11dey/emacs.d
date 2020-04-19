@@ -1458,12 +1458,8 @@ Hollow mode returns the Telephone Line subseparator using the merged foreground 
 		   (:eval (format-time-string "%F %A"))
 		   (:propertize " "
 				display (space :align-to (- right 2)))
-		   (:propertize (:eval (cond ((not (boundp 'xah-fly-insert-state-q))
-					      "")
-					     (xah-fly-insert-state-q
-					      "I")
-					     (t
-					      "C")))
+		   ;;;;; Mode line front space
+		   (:propertize mode-line-front-space
 				face fixed-pitch)))
   
   ;;;; Enable
