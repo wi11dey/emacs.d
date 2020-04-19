@@ -2624,25 +2624,6 @@ If there are multiple matches on  a line, the line is repeated with a different 
   ;;;; Autoloads
   (my/package-autoloads $))
 
-;;; Which Key
-(p@ck which-key
-  ;;;; Build
-  ~(straight-use-package '$)
-  !^
-
-  ;;;; Manual
-  (setq $-show-early-on-C-h t
-	$-idle-delay 10000
-	$-idle-secondary-delay 0.05)
-
-  ;;;; Remaps
-  (setq $-compute-remaps t)
-
-  ;;;; Delight
-  (delight '$-mode nil '$)
-
-  ;;;; Enable
-  ($-mode))
 
 ;;; MMM Mode
 (p@ck mmm-mode
