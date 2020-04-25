@@ -931,6 +931,13 @@ Hollow mode returns the Telephone Line subseparator using the merged foreground 
    (company-preview :foreground base01 :background base02 :inherit underline)
    (company-preview-common :foreground base0 :inherit company-preview)))
 
+;;; Goto Last Change
+(p@ck goto-last-change
+  ;;;; Build
+  ~(straight-use-package '$)
+
+  ;; TODO keybindings
+  )
 
 ;;; Highlight Indent Guides
 ;; TODO Use font-lock "stealth" to add guides to buffers
