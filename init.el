@@ -2632,6 +2632,11 @@ If there are multiple matches on  a line, the line is repeated with a different 
   ;;;; Auto mode
   (add-to-list 'auto-mode-alist (cons "\\.jl\\'" @'julia-mode)))
 
+;;; Variable Pitch Table
+(p@ck vpt
+  ;;;; Build
+  ~(straight-use-package '($ :type git :host github :repo "larsmagne/vpt.el")))
+
 ;; Local Variables:
 ;; byte-compile-warnings: (not make-local)
 ;; End:
