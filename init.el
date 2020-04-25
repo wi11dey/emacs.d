@@ -2523,14 +2523,6 @@ If there are multiple matches on  a line, the line is repeated with a different 
   ;;;; Variable Pitch
   (add-hook '$-mode-hook #'variable-pitch-mode))
 
-;;; Olivetti
-(p@ck olivetti
-  ;;;; Build
-  ~(straight-use-package '$)
-
-  ;; TODO Any buffers launched from an Olivetti buffer take on its margins. Fix, then enable on all prose modes
-  )
-
 ;;; Macrostep
 (p@ck macrostep
   ;;;; Build
