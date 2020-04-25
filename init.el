@@ -931,27 +931,6 @@ Hollow mode returns the Telephone Line subseparator using the merged foreground 
    (company-preview :foreground base01 :background base02 :inherit underline)
    (company-preview-common :foreground base0 :inherit company-preview)))
 
-;;; Demigod
-;; TODO Remove eventually
-;; TODO something keeps disabling Demigod on startup
-(p@ck demigod-mode
-  ;;;; Build
-  ~(straight-use-package '($ :type git :host github :repo "wi11dey/demigod-mode"))
-  !^
-
-  ;;;; Prefix
-  (setq demigod-prefix-format "× %S ")
-
-  ;;;; Faces
-  (solarized-set-faces
-   (demigod-key :inherit keyboard-pressed))
-
-  ;;;; Delight
-  (delight '$ nil '$)
-  
-  ;;;; Enable
-  ;; ($)
-  )
 
 ;;; Highlight Indent Guides
 ;; TODO Use font-lock "stealth" to add guides to buffers
