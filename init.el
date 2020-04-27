@@ -1190,45 +1190,16 @@ Hollow mode returns the Telephone Line subseparator using the merged foreground 
     ;; Do not save the last-dir-ring to disk:
     (setq eshell-last-dir-ring-file-name nil))
   
-  ;;;; Prompt
-  (p@ck em-prompt
-    ~^
-    
-    !(defun my/$ ()
-       ""
-       (let ((current-face 'my/mode-line/buffer-directory)
-	     new-face
-	     elements
-	     (directory (my/mode-line/buffer-directory default-directory)))
-	 (add-face-text-property 0 (length directory) '(:underline nil) nil directory)
-	 (push (propertize " "
-			   'face current-face)
-	       elements)
-	 (push directory elements)
-	 (setq new-face 'default)
-	 (push (my/mode-line-separator-render 'telephone-line-abs 'left
-					      new-face
-					      current-face
-					      nil
-					      new-face)
-  	       elements)
-	 (setq current-face new-face)
-	 (setq elements (nreverse elements))
-	 (string-join elements)))
-    (setq eshell-prompt-function #'my/$
-	  eshell-prompt-regexp "^.*? |+ "))
-
   ;;;; Mode
   (p@ck esh-mode
     (setq eshell-buffer-maximum-lines 10000)
 
     _(add-to-list 'eshell-output-filter-functions @'eshell-truncate-buffer :append))
 
-  ;;;; ls
-  (p@ck em-ls
-    ;;;;; Faces
-    (solarized-set-faces
-     (eshell-ls-directory :inherit diredfl-dir-name))))
+  ;;;; Faces
+  (solarized-set-faces
+   ($-prompt :foreground base1 :inherit (bold variable-pitch))
+   ($-ls-directory :inherit diredfl-dir-name)))
 
 ;;; README.org
 (p@ck readme-org
