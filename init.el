@@ -227,9 +227,6 @@ Optional argument FILE-OVERRIDE is a string to be passed as the FILE parameter t
   ;; Disable overriding built-in Emacs control/meta key sequences so they are always available:
   (setq xah-fly-use-control-key nil)
 
-  ;;;; ESC as C-g
-  (setq xah-fly-use-esc-c-g t)
-
   ;;;; Keyboard layout
   (setq xah-fly-key-current-layout 'qwerty)
 
