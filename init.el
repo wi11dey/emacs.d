@@ -231,7 +231,7 @@ Optional argument FILE-OVERRIDE is a string to be passed as the FILE parameter t
   (setq xah-fly-key-current-layout 'qwerty)
 
   !^
-  ($ 1))
+  ($))
 
 ;;; Hydra
 (p@ck hydra
