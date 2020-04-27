@@ -2332,9 +2332,32 @@ If there are multiple matches on  a line, the line is repeated with a different 
 ;;; Magit
 (p@ck magit
   ;;;; Build
-  ~(straight-use-package '$)
+  ~((straight-use-package '$)
+    ^)
 
-  ;;;; Keybindings
+  ;;;; Section
+  (p@ck $-section
+    ;;;;; Backward
+    !(defun my/$-beginning-of-line-or-section ()
+       (interactive)
+       (if (or (= (point) (line-beginning-position))
+	       (eq last-command this-command))
+	   (@magit-section-backward)
+	 (xah-beginning-of-line-or-block)))
+    (with-eval-after-load 'magit
+      (bind-key [remap xah-beginning-of-line-or-block] #'my/$-beginning-of-line-or-section magit-mode-map))
+
+    ;;;;; Forward
+    !(defun my/$-end-of-line-or-section ()
+       (interactive)
+       (if (or (= (point) (line-end-position))
+	       (eq last-command this-command))
+	   (@magit-section-forward)
+	 (xah-end-of-line-or-block)))
+    (with-eval-after-load 'magit
+      (bind-key [remap xah-end-of-line-or-block] #'my/$-end-of-line-or-section magit-mode-map)))
+
+  ;;;; Status
   (bind-key "C-x g" @'$-status))
 
 ;;; Markdown
