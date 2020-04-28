@@ -1269,42 +1269,74 @@ Hollow mode returns the Telephone Line subseparator using the merged foreground 
     ($-all-mode)
     
     (setq exwm-mode-map ($ '(([remap delete-backward-char] . "<backspace>")
-			     ([remap backward-kill-word] . "<C-backspace>")
-			     ([remap kill-ring-save] . "C-c")
+			     ([remap xah-delete-backward-char-or-bracket-text] . "<backspace>")
+
 			     ([remap delete-char] . "<delete>")
 			     ([remap delete-forward-char] . "<delete>")
+
+			     ([remap backward-kill-word] . "<C-backspace>")
+			     ([remap xah-backward-kill-word] . "<C-backspace>")
+
 			     ([remap kill-word] . "<C-delete>")
+			     ([remap xah-kill-word] . "<C-delete>")
+
 			     ([remap kill-line] . "<S-end> C-x")
+
+			     ([remap kill-ring-save] . "C-c")
+			     ([remap xah-copy-line-or-region] . "C-c")
+
 			     ([remap kill-region] . "C-x")
+			     ([remap xah-cut-line-or-region] . "C-x")
+
+			     ([remap yank] . "C-v")
+			     ([remap xah-paste-or-paste-previous] . "C-v")
+
 			     ([remap newline] . "<return>")
 			     ("<S-return>" . "<S-return>")
 			     ([remap open-line] . "<return> <left>")
-			     ([remap yank] . "C-v")
+
 			     ([remap keyboard-quit] . "<escape>")
 			     ("<escape>" . "<escape>")
+
 			     ([remap next-line] . "<down>")
-			     ([remap move-end-of-line] . "<end>")
+			     ([remap previous-line] . "<up>")
+
 			     ([remap move-beginning-of-line] . "<home>")
+			     ([remap xah-beginning-of-line-or-block] . "<home>")
+
+			     ([remap move-end-of-line] . "<end>")
+			     ([remap xah-end-of-line-or-block] . "<end>")
+
 			     ([remap backward-char] . "<left>")
 			     ([remap left-char] . "<left>")
-			     ([remap backward-word] . "<C-left>")
-			     ([remap scroll-up-command] . "<next>")
-			     ([remap scroll-down-command] . "<prior>")
 			     ([remap forward-char] . "<right>")
 			     ([remap right-char] . "<right>")
+
 			     ([remap forward-word] . "<C-right>")
+			     ([remap backward-word] . "<C-left>")
+
+			     ([remap scroll-up-command] . "<next>")
+			     ([remap scroll-down-command] . "<prior>")
+
 			     ("TAB" . "<tab>")
 			     ("<backtab>" . "<S-tab>")
-			     ([remap previous-line] . "<up>")
+
 			     ([remap save-buffer] . "C-s")
+
 			     ([remap isearch-forward] . "C-f")
 			     ([remap swiper] . "C-f")
 			     ([remap swiper-isearch] . "C-f")
 			     ([remap my/swiper-isearch-region] . "C-f")
+
 			     ([remap mark-whole-buffer] . "C-a")
+
 			     ([remap undo] . "C-z")
 			     ([remap undo-tree-undo] . "C-z")
 			     ([remap undo-tree-redo] . "C-y")
+
+			     ([remap xah-insert-space-before] . "SPC")
+			     ([remap xah-insert-space-after] . "SPC <left>")
+
 			     ("C-@" . "C-@")))))
   
   ;;;; Visual Line
