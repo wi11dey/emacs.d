@@ -218,7 +218,20 @@ Optional argument FILE-OVERRIDE is a string to be passed as the FILE parameter t
   ;;;; Keyboard layout
   (setq xah-fly-key-current-layout 'qwerty)
 
+  ;;;; Load
   !^
+
+  ;;;; Keyboard quit
+  (declare-function minibuffer-keyboard-quit "delsel" ())
+  !(defun my/xah-keyboard-quit ()
+     (interactive)
+     (if (minibufferp (current-buffer))
+	 (minibuffer-keyboard-quit)
+       (keyboard-quit)))
+  (unbind-key "<menu>" xah-fly-shared-map)
+  (bind-key "<menu>" #'xah-fly-command-mode-activate xah-fly-insert-map)
+  (bind-key "<menu>" #'my/xah-keyboard-quit xah-fly-command-map)
+
   ($))
 
 ;;; Hydra
