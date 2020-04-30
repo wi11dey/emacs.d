@@ -3,7 +3,7 @@
 ;; Author: Will Dey
 ;; Maintainer: Will Dey
 ;; Version: 1.0.0
-;; Homepage: 
+;; Homepage:
 
 ;; This file is not part of GNU Emacs
 
@@ -291,7 +291,7 @@ Optional argument FILE-OVERRIDE is a string to be passed as the FILE parameter t
 		 result)
 	   (setq column (1+ column))))
        (string-join (nreverse result))))
-  
+
   ;;;; Faces
   (solarized-set-faces
    (my/$-title :inherit minibuffer-prompt)
@@ -495,7 +495,7 @@ Optional argument FILE-OVERRIDE is a string to be passed as the FILE parameter t
 ;;; Custom
 (p@ck custom
   ~(require 'cus-edit)
-  
+
   (setq $-file (concat user-emacs-directory "custom.el")
 	$-raised-buttons t))
 
@@ -715,7 +715,7 @@ Hollow mode returns the Telephone Line subseparator using the merged foreground 
 			     'face fg-face)))))
 
   (setq-default mode-line-format nil)
-  
+
   ;;;; Faces
   (solarized-set-faces
    ($ :height 0.95 :inverse-video t :inherit variable-pitch)
@@ -765,15 +765,15 @@ Hollow mode returns the Telephone Line subseparator using the merged foreground 
   ;;;; Build
   ~(straight-use-package '$)
   !^
-  
+
   ;;;; Bugfixes
   ;; FIXME BUG!! in aggressive-indent-mode. Change defvar-local to defvar aggressive-indent--idle-timer in aggressive-indent.el
   (add-hook 'org-babel-post-tangle-hook (lambda ()
 					  (cancel-function-timers 'aggressive-indent--indent-if-changed)))
-  
+
   ;;;; Delight
   (delight '$-mode nil '$)
-  
+
   ;;;; Enable
   (global-$-mode))
 
@@ -791,7 +791,7 @@ Hollow mode returns the Telephone Line subseparator using the merged foreground 
 
   ;;;; Enable
   (require 'tex-site)
-  
+
   ;;;; Font lock
   (p@ck tex-font
     ;; Use built-in `tex-mode' syntax highlighting, which highlights all control sequences.
@@ -813,7 +813,7 @@ Hollow mode returns the Telephone Line subseparator using the merged foreground 
 
   ;;;; Delight
   (delight '$-mode nil '$)
-  
+
   ;;;; Enable
   ($-mode)
 
@@ -825,7 +825,7 @@ Hollow mode returns the Telephone Line subseparator using the merged foreground 
 (p@ck avy
   ;;;; Build
   ~(straight-use-package '$)
-  
+
   ;;;; Keybindings
   (bind-key* "C-j"   @'$-goto-char)
   (bind-key* "C-S-j" @'$-goto-char-timer)
@@ -866,7 +866,7 @@ Hollow mode returns the Telephone Line subseparator using the merged foreground 
 
   ;;;; X colors
   (setq rainbow-x-colors nil)
-  
+
   ;;;; Enable
   ;;;;; Programming modes
   (add-hook 'prog-mode-hook @'$)
@@ -896,7 +896,7 @@ Hollow mode returns the Telephone Line subseparator using the merged foreground 
   (p@ck $-quickhelp
     ;;;;; Build
     ~(straight-use-package '$))
-  
+
   ;;;; Frontends
   (setq company-frontends '(company-preview-frontend
 			    company-pseudo-tooltip-unless-just-one-frontend
@@ -913,7 +913,7 @@ Hollow mode returns the Telephone Line subseparator using the merged foreground 
   		  'face 'keyboard)))
   (setq company-show-numbers t
 	company-show-numbers-function #'my/company-show-numbers-function)
-  
+
   ;;;; Enable
   ;;;;; Programming modes
   (add-hook 'prog-mode-hook @'$-mode)
@@ -943,7 +943,7 @@ Hollow mode returns the Telephone Line subseparator using the merged foreground 
   ;;;; Build
   ~((straight-use-package '$)
     ^)
-  
+
   ;;;; Delay
   (setq $-delay 0.05)
 
@@ -1010,7 +1010,7 @@ Hollow mode returns the Telephone Line subseparator using the merged foreground 
 
   ;;;; Auto revert
   (setq $-auto-revert-buffer t)
-  
+
   ;;;; Do what I mean
   ;; Suggest the directory of adjacent Dired windows as default target.
   (setq $-dwim-target t)
@@ -1020,7 +1020,7 @@ Hollow mode returns the Telephone Line subseparator using the merged foreground 
 
   ;;;; Switches
   (setq $-listing-switches "-AlhX")
-  
+
   ;;;; Subtree
   (p@ck $-subtree
     ;;;;; Build
@@ -1106,7 +1106,7 @@ Hollow mode returns the Telephone Line subseparator using the merged foreground 
     ;;;;; Keybindings
     _((bind-key "p" @'$-prev-file $-mode-map)
       (bind-key "n" @'$-next-file $-mode-map))
-    
+
     @$)
   _(bind-key ";" #'peep-$ $-mode-map)
 
@@ -1120,7 +1120,7 @@ Hollow mode returns the Telephone Line subseparator using the merged foreground 
   (p@ck diredfl
     ;;;;; Build
     ~(straight-use-package '$)
-    
+
     ;;;;; Enable
     ;;;;;; Dired
     (add-hook 'dired-mode-hook @'$-mode)
@@ -1175,7 +1175,7 @@ Hollow mode returns the Telephone Line subseparator using the merged foreground 
 				   "less"
 				   "more"
 				   "top")))
-  
+
   ;;;; History
   (p@ck em-hist
     ~^
@@ -1187,7 +1187,7 @@ Hollow mode returns the Telephone Line subseparator using the merged foreground 
     ~^
     ;; Do not save the last-dir-ring to disk:
     (setq eshell-last-dir-ring-file-name nil))
-  
+
   ;;;; Mode
   (p@ck esh-mode
     (setq eshell-buffer-maximum-lines 10000)
@@ -1265,10 +1265,10 @@ Hollow mode returns the Telephone Line subseparator using the merged foreground 
 
     ;;;;; Delight
     (delight '$-all-mode nil '$)
-    
+
     ;;;;; Enable
     ($-all-mode)
-    
+
     (setq exwm-mode-map ($ '(([remap delete-backward-char] . "<backspace>")
 			     ([remap xah-delete-backward-char-or-bracket-text] . "<backspace>")
 
@@ -1339,20 +1339,20 @@ Hollow mode returns the Telephone Line subseparator using the merged foreground 
 			     ([remap xah-insert-space-after] . "SPC <left>")
 
 			     ("C-@" . "C-@")))))
-  
+
   ;;;; Visual Line
   (add-hook 'my/visual-line-ignore-modes #'$-mode)
 
   ;;;; Smartparens
   (add-hook 'sp-ignore-modes-list #'$-mode)
-  
+
   ;;;; Changing major modes
   !(defun my/$-major-mode-change-error ()
      (user-error "Cannot change the major mode of an EXWM window"))
   !(defun my/$-disable-major-mode-change ()
      (add-hook 'change-major-mode-hook #'my/$-major-mode-change-error nil 'local))
   (add-hook '$-mode-hook #'my/$-disable-major-mode-change)
-  
+
   ;;;; Window title buffer name
   !(defun my/$-buffer-name-window-title ()
      "Set buffer name to window title."
@@ -1377,7 +1377,7 @@ Hollow mode returns the Telephone Line subseparator using the merged foreground 
 ;;; Ispell
 (p@ck ispell
   ~^
-  
+
   (setq $-program-name (cond ((executable-find "aspell")
 			      "aspell")
 			     ((executable-find "hunspell")
@@ -1410,10 +1410,10 @@ Hollow mode returns the Telephone Line subseparator using the merged foreground 
   (add-hook 'text-mode-hook @'$-mode)
   ;;;;; Help
   (add-hook 'help-mode-hook @'$-mode)
-  
+
   ;;;; Delight
   (delight '$-mode nil '$)
-  
+
   (solarized-set-faces
    ($-line :strike-through t)))
 
@@ -1453,7 +1453,7 @@ Hollow mode returns the Telephone Line subseparator using the merged foreground 
 		   ;;;;; Mode line front space
 		   (:propertize mode-line-front-space
 				face fixed-pitch)))
-  
+
   ;;;; Enable
   ($-mode))
 
@@ -1464,7 +1464,7 @@ Hollow mode returns the Telephone Line subseparator using the merged foreground 
 ;;; Ibuffer
 (p@ck ibuffer
   ~^
-  
+
   ;;;; Other window
   (setq ibuffer-use-other-window t)
 
@@ -1644,7 +1644,7 @@ Hollow mode returns the Telephone Line subseparator using the merged foreground 
    (my/$-number-shortcuts :inherit keyboard)
    (my/$-mark-prefix :inherit diredfl-flag-mark)
    (my/$-mark :inherit diredfl-flag-mark-line))
-  
+
   ;;;; Delight
   (delight '$-mode nil '$)
 
@@ -1659,7 +1659,7 @@ Hollow mode returns the Telephone Line subseparator using the merged foreground 
 
   ;;;; Done
   (bind-key "M-RET" #'$-immediate-done $-minibuffer-map)
-  
+
   ;;;; Prompt
   !(defun my/ivy-prompt--variable-pitch-number (num-string face)
      (let ((bg (face-attribute face (if (face-attribute face :inverse-video nil 'default)
@@ -1804,7 +1804,7 @@ Hollow mode returns the Telephone Line subseparator using the merged foreground 
 
     ;;;;; Delight
     (delight '$-mode nil '$)
-    
+
     ;;;;; Enable
     ($-mode)
 
@@ -1878,10 +1878,10 @@ If there are multiple matches on  a line, the line is repeated with a different 
 	   (mapconcat #'identity (nreverse lines) "\n"))))
     _((my/ivy-format-function-install)
       (push (cons #'swiper-isearch #'my/$-isearch-format-function) my/ivy-format-functions-alist))
-    
+
     ;;;;; Launch
     (bind-key [remap isearch-forward] #'my/$-isearch-region)
-    
+
     ;;;;; Faces
     (solarized-set-faces
      ($-match-face-1 :inherit ivy-minibuffer-match-face-1)
@@ -1900,7 +1900,7 @@ If there are multiple matches on  a line, the line is repeated with a different 
   			     (1 '(face nil invisible t))
   			     (2 'italic)
   			     (3 '(face nil invisible t)))))
-  
+
   ;;;; Search
   !(defun my/Info-search ()
      (interactive)
@@ -1996,7 +1996,7 @@ If there are multiple matches on  a line, the line is repeated with a different 
 				    user-emacs-directory))))
 
       ~^
-      
+
       ;;;; Autoloads
       @$-import
       @$-export))
@@ -2051,20 +2051,20 @@ If there are multiple matches on  a line, the line is repeated with a different 
   (setq org-goto-interface 'outline-path-completion)
   (setq org-outline-path-complete-in-steps nil)
   (setq org-refile-use-outline-path t)
-  
+
   ;;;; Source editing
   (setq org-edit-src-content-indentation 0)
   (setq org-src-window-setup 'split-window-below)
   (setq org-src-ask-before-returning-to-edit-buffer nil)
   (setq org-src-fontify-natively t)
-  
+
   ;;;; Refile
   (setq org-refile-targets '((nil . (:maxlevel 8))))
 
   ;;;; Move
   _((bind-key "M-p" @'org-metaup   org-mode-map)
     (bind-key "M-n" @'org-metadown org-mode-map))
-  
+
   ;;;; Log
   ;; Log what time an item is marked DONE:
   (setq org-log-done 'time)
@@ -2087,7 +2087,7 @@ If there are multiple matches on  a line, the line is repeated with a different 
     ;;;;; Enable
     ;;;;;; Org
     (add-hook 'org-mode-hook @'$-mode)
-    
+
     ;;;;; Faces
     (solarized-set-faces
      (my/org-bullets :foreground base1 :inherit fixed-pitch)
@@ -2126,7 +2126,7 @@ If there are multiple matches on  a line, the line is repeated with a different 
    (org-table :foreground base0 :inherit fixed-pitch)
    (org-todo :foreground red :background nil :inverse-video t :height 1.1 :inherit fixed-pitch)
    (org-done :foreground green :inverse-video nil :inherit (org-todo highlight)))
-  
+
   ;;;; Tangle
   ;;;;; Message
   !(defun my/org-babel-tangle-message ()
@@ -2137,7 +2137,7 @@ If there are multiple matches on  a line, the line is repeated with a different 
 ;;; Show Paren
 (p@ck show-paren
   !(require 'paren)
-  
+
   ;;;; Delay
   (setq $-delay 0)
 
@@ -2218,10 +2218,10 @@ If there are multiple matches on  a line, the line is repeated with a different 
   ;;;; Keybindings
   (bind-key [remap keyboard-quit] #'$-visualizer-abort $-visualizer-mode-map)
   (bind-key "RET"                 #'$-visualizer-quit  $-visualizer-mode-map)
-  
+
   ;;;; Enable
   (global-$-mode)
-  
+
   ;;;; Faces
   (solarized-set-faces
    (my/$/background :background base3)
@@ -2232,7 +2232,7 @@ If there are multiple matches on  a line, the line is repeated with a different 
 ;;; WoMan
 (p@ck woman
   ~^
-  
+
   ;;;; Fill
   (setq $-fill-column most-positive-fixnum)
 
@@ -2339,7 +2339,7 @@ If there are multiple matches on  a line, the line is repeated with a different 
     (setq gnus-init-file (expand-file-name (concat (file-name-as-directory "gnus")
 						   "gnus.el")
 					   user-emacs-directory)))
-  
+
   ;;;; Select methods
   (setq $-select-method '(nnml ""
 			       (nnml-directory (expand-file-name "~/Mail/"))
@@ -2447,7 +2447,7 @@ If there are multiple matches on  a line, the line is repeated with a different 
 ;;; Whitespace
 (p@ck whitespace
   ~^
-  
+
   ;;;; Display
   (setq whitespace-display-mappings '((space-mark ?\s
 						  [?·]
@@ -2468,7 +2468,7 @@ If there are multiple matches on  a line, the line is repeated with a different 
   ;;;; Build
   ~(straight-use-package '$)
   !^
-  
+
   ;;;; Snippets
   (p@ck $-snippets
     ~(straight-use-package '$)
@@ -2497,7 +2497,7 @@ If there are multiple matches on  a line, the line is repeated with a different 
 ;;; WDired
 (p@ck wdired
   ~^
-  
+
   ;;;; Change permissions
   (setq wdired-allow-to-change-permissions t))
 
@@ -2558,7 +2558,7 @@ If there are multiple matches on  a line, the line is repeated with a different 
 (p@ck macrostep
   ;;;; Build
   ~(straight-use-package '$)
-  
+
   ;; TODO Activate somehow
   )
 
