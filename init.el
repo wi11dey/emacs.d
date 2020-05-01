@@ -659,24 +659,6 @@ Optional argument FILE-OVERRIDE is a string to be passed as the FILE parameter t
 		      suffix ?ᴋ)))
 	 (format "%.1f%c" number suffix))))
 
-  (defvar-local my/$/buffer-size--accessible-cache nil
-    "")
-  (defvar-local my/$/buffer-size--cache nil
-    "")
-  !(defun my/$/buffer-size ()
-     ""
-     (let ((current-accessible (cons (point-min) (point-max))))
-       (when (not (equal my/$/buffer-size--accessible-cache
-			 current-accessible))
-	 (setq my/$/buffer-size--cache nil))
-       (unless my/$/buffer-size--cache
-	 (save-excursion
-	   (goto-char (point-max))
-	   (setq my/$/buffer-size--cache (let ((raw (format-$ "%l")))
-					   (my/$--suffixize (string-to-number raw)))
-		 my/$/buffer-size--accessible-cache current-accessible))))
-     my/$/buffer-size--cache)
-
   !(defun my/$-separator-render (separator-base direction fg-face bg-face &optional inherit-from
 						separator-face no-padding)
      "Merges FG-FACE and BG-FACE backgrounds, switches to hollow mode if they are equal, and returns a propertized string with the rendered SEPARATOR-BASE DIRECTION Telephone Line separator with spacing on either side.
@@ -741,8 +723,7 @@ Hollow mode returns the Telephone Line subseparator using the merged foreground 
    (my/$/character-id :foreground cyan)
    (my/$/region :foreground magenta)
    (my/$/mule-info :foreground base0)
-   (my/$/position :foreground base00)
-   (my/$/buffer-size :foreground violet)))
+   (my/$/position :foreground base00)))
 
 ;;; Adaptive Wrap
 ;; TODO make adaptive wrap better by replacing tabs with a space with an :align-to property that aligns to wherever the last tab ended
@@ -2667,9 +2648,5 @@ If there are multiple matches on  a line, the line is repeated with a different 
 (p@ck vpt
   ;;;; Build
   ~(straight-use-package '($ :type git :host github :repo "larsmagne/vpt.el")))
-
-;; Local Variables:
-;; byte-compile-warnings: (not make-local)
-;; End:
 
 ;;; init.el ends here
