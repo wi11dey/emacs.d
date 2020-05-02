@@ -2644,4 +2644,15 @@ If there are multiple matches on  a line, the line is repeated with a different 
   ;;;; Build
   ~(straight-use-package '($ :type git :host github :repo "larsmagne/vpt.el")))
 
+;;; URL
+(p@ck url
+  ;;;; Cookies
+  (p@ck $-cookie
+    ~^
+
+    (setq $-confirmation t
+	  $-save-interval nil
+	  ;; Reject all cookies for now:
+	  $-untrusted-urls '(".*"))))
+
 ;;; init.el ends here
