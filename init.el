@@ -396,10 +396,6 @@ Optional argument FILE-OVERRIDE is a string to be passed as the FILE parameter t
   (when (boundp 'ns-command-modifier)
     (setq ns-command-modifier 'control)))
 
-;;; Repeat
-(p@ck repeat
-  (bind-key "C-z" #'$))
-
 ;;; Paragraphs
 (p@ck paragraphs
   (setq sentence-end-double-space nil))
