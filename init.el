@@ -1469,15 +1469,10 @@ Hollow mode returns the Telephone Line subseparator using the merged foreground 
   ~((straight-use-package '$)
     ^)
 
-  ;;;; Fast keys
-  (setq $-fast-keys-enabled nil)
-  ;;;;; Hydra
-  (defhydra my/$ (global-map)
-    (concat (my/hydra-docstring "Expand region"
-				("C-=" . "expand")
-				("C-+" . "contract")))
-    ("C-=" @'er/$ nil)
-    ("C-+" @'er/contract-region nil :bind nil)))
+  ;;;; Expand/contract
+  (with-eval-after-load 'xah-fly-keys
+    (bind-key "8" @'er/$ xah-fly-command-map)
+    (bind-key "*" @'er/contract-region xah-fly-command-map)))
 
 ;;; Multiple Cursors
 (p@ck multiple-cursors
