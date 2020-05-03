@@ -1301,10 +1301,10 @@ Hollow mode returns the Telephone Line subseparator using the merged foreground 
 
 			     ([remap save-buffer] . "C-s")
 
-			     ([remap isearch-forward] . "C-f")
-			     ([remap swiper] . "C-f")
-			     ([remap swiper-isearch] . "C-f")
-			     ([remap my/swiper-isearch-region] . "C-f")
+			     ([remap isearch-forward] . [?\C-f xah-fly-insert-mode-activate])
+			     ([remap swiper] . [?\C-f xah-fly-insert-mode-activate])
+			     ([remap swiper-isearch] . [?\C-f xah-fly-insert-mode-activate])
+			     ([remap my/swiper-isearch-region] . [?\C-f xah-fly-insert-mode-activate])
 
 			     ([remap mark-whole-buffer] . "C-a")
 
