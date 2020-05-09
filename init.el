@@ -1465,6 +1465,10 @@ Hollow mode returns the Telephone Line subseparator using the merged foreground 
   ~((straight-use-package '$)
     ^)
 
+  ;;;; Fast keys
+  ;; Disable:
+  (setq $-fast-keys-enabled nil)
+
   ;;;; Expand/contract
   (with-eval-after-load 'xah-fly-keys
     (bind-key "8" @'er/$ xah-fly-command-map)
