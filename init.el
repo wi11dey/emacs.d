@@ -209,7 +209,8 @@ Optional argument FILE-OVERRIDE is a string to be passed as the FILE parameter t
 ;;; Xah Fly Keys
 (p@ck xah-fly-keys
   ;;;; Build
-  ~(straight-use-package '$)
+  ~(straight-use-package '($ :type git :host github :repo "xahlee/xah-fly-keys"
+			     :fork (:host github :repo "wi11dey/xah-fly-keys")))
 
   ;;;; Control key
   ;; Disable overriding built-in Emacs control/meta key sequences so they are always available:
@@ -231,6 +232,9 @@ Optional argument FILE-OVERRIDE is a string to be passed as the FILE parameter t
   (unbind-key "<menu>" xah-fly-shared-map)
   (bind-key "<menu>" #'xah-fly-command-mode-activate xah-fly-insert-map)
   (bind-key "<menu>" #'my/xah-keyboard-quit xah-fly-command-map)
+
+  ;;;; One command
+  (bind-key "DEL" #'xah-fly-one-command xah-fly-command-map)
 
   ($))
 
