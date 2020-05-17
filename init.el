@@ -2479,7 +2479,11 @@ If there are multiple matches on  a line, the line is repeated with a different 
   ~^
 
   ;;;; Change permissions
-  (setq wdired-allow-to-change-permissions t))
+  (setq $-allow-to-change-permissions t)
+
+  ;;;; Remap toggle read-only
+  _(define-key $-mode-map [remap read-only-mode] @'$-exit) ; Was previously only bound directly to C-x C-q.
+  )
 
 ;;; SQLUp
 (p@ck sqlup-mode
