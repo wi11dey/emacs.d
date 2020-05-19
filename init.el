@@ -2056,23 +2056,37 @@ If there are multiple matches on  a line, the line is repeated with a different 
   _(require 'org-tempo)
 
   ;;;; Bullets
-  (p@ck $-bullets
-    ;;;;; Build
-    ~((straight-use-package '$)
-      ^)
-
-    ;;;;; Bullets
-    (setq org-bullets-bullet-list '("◉"  "○"))
-
-    ;;;;; Enable
-    ;;;;;; Org
-    (add-hook 'org-mode-hook @'$-mode)
-
-    ;;;;; Faces
-    (solarized-set-faces
-     (my/org-bullets :foreground base1 :inherit fixed-pitch)
-     (org-hide :inherit my/org-bullets))
-    (setq org-bullets-face-name 'my/org-bullets))
+  !(defun my/$-goto-last-bullet ()
+     (when (search-forward "* "
+			   (line-end-position)
+			   t)
+       (forward-char -2)))
+  !(defun my/$-promote-subtree ()
+     (interactive)
+     (@$-promote-subtree)
+     (my/$-goto-last-bullet))
+  !(defun my/$-demote-subtree ()
+     (interactive)
+     (@$-demote-subtree)
+     (my/$-goto-last-bullet))
+  (font-lock-add-keywords '$-mode
+			  `(("^\\(?1:\\**\\)\\(?2:*\\)\\(?3: \\)"
+			     (1 '$-hide)
+			     (2 (list 'face
+				      'fixed-pitch
+				      'display
+				      (aref ["◉" "○"]
+					    (% (- (match-end       0)
+						  (match-beginning 0))
+					       2))
+				      'keymap
+				      ',(let ((map (make-sparse-keymap)))
+					  (define-key map "i" #'$-metaup)
+					  (define-key map "k" #'$-metadown)
+					  (define-key map "j" #'my/$-promote-subtree)
+					  (define-key map "l" #'my/$-demote-subtree)
+					  map)))
+			     (3 '$-hide))))
 
   ;;;; Expert Todo Selection
   ;; TODO Make this a hydra
@@ -2100,6 +2114,7 @@ If there are multiple matches on  a line, the line is repeated with a different 
    (org-document-info :foreground base1)
    (org-document-info-keyword :foreground base00 :inherit bold)
    (org-formula :inherit org-table)
+   (org-hide :inherit fixed-pitch)
    (org-meta-line :inherit (bold org-document-info-keyword))
    (org-drawer :foreground base00 :slant normal :inherit variable-pitch)
    (org-special-keyword :box t :inherit org-drawer)
