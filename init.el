@@ -2094,8 +2094,7 @@ If there are multiple matches on  a line, the line is repeated with a different 
   ;;;; Insert
   ;;;;; Heading
   (setq $-insert-heading-respect-content t)
-  ;;;;; Subheading
-  _(bind-key "<C-return>" @'$-insert-subheading $-mode-map)
+  _(bind-key "<C-return>" @'$-meta-return $-mode-map)
 
   ;;;; Agenda
   (bind-key "C-c a" @'org-agenda)
