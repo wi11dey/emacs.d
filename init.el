@@ -2103,23 +2103,23 @@ If there are multiple matches on  a line, the line is repeated with a different 
   (setq org-cycle-level-faces nil)
   (setq org-n-level-faces 5)
   (solarized-set-faces
-   (org-block :foreground base0 :inherit embedded-code)
    (org-block-begin-line :height 0.9 :inherit (org-meta-line org-block))
    (org-checkbox :inherit fixed-pitch)
    (org-code :foreground base0 :inherit embedded-code)
    (org-date :foreground base3 :underline nil :height 0.95 :inherit (bold variable-pitch))
    (org-default :inherit prose)
-   (org-document-title :inherit title)
    (org-document-info :foreground base1)
    (org-document-info-keyword :foreground base00 :inherit bold)
+   (org-document-title :inherit title)
+   (org-done :foreground green :inverse-video nil :inherit (org-todo highlight))
+   (org-drawer :foreground base00 :slant normal :inherit variable-pitch)
    (org-formula :inherit org-table)
    (org-hide :inherit fixed-pitch)
    (org-meta-line :inherit (bold org-document-info-keyword))
-   (org-drawer :foreground base00 :slant normal :inherit variable-pitch)
    (org-special-keyword :box t :inherit org-drawer)
    (org-table :foreground base0 :inherit fixed-pitch)
    (org-todo :foreground red :background nil :inverse-video t :height 1.1 :inherit fixed-pitch)
-   (org-done :foreground green :inverse-video nil :inherit (org-todo highlight)))
+   (org-block :foreground base0 :inherit embedded-code))
 
   ;;;; Tangle
   ;;;;; Message
