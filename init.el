@@ -937,7 +937,7 @@ Hollow mode returns the Telephone Line subseparator using the merged foreground 
 
   ;;;; Enable
   ;;;;; Programming modes
-  (add-hook 'prog-mode-hook @'$-mode)
+  ;; (add-hook 'prog-mode-hook @'$-mode)
 
   ;;;; Delight
   (delight '$-mode nil '$)
