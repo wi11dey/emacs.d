@@ -209,8 +209,7 @@ Optional argument FILE-OVERRIDE is a string to be passed as the FILE parameter t
 ;;; Xah Fly Keys
 (p@ck xah-fly-keys
   ;;;; Build
-  ~(straight-use-package '($ :type git :host github :repo "xahlee/xah-fly-keys"
-			     :fork (:host github :repo "wi11dey/xah-fly-keys")))
+  ~(straight-use-package '$)
 
   ;;;; Control key
   ;; Disable overriding built-in Emacs control/meta key sequences so they are always available:
@@ -234,7 +233,29 @@ Optional argument FILE-OVERRIDE is a string to be passed as the FILE parameter t
   (bind-key "<menu>" #'my/xah-keyboard-quit xah-fly-command-map)
 
   ;;;; One command
-  (bind-key "DEL" #'xah-fly-one-command xah-fly-command-map)
+  !(defun my/xah-fly-one-command-2 ()
+     ;; Re-enter command-mode, unless a different transient map has been set in the meantime or we entered a minibuffer.
+     (unless (and overriding-terminal-local-map
+		  xah-fly-insert-state-q)
+       (remove-hook 'post-command-hook #'my/xah-fly-one-command-2)
+       (when (and xah-fly-insert-state-q
+		  (not (minibufferp)))
+	 (xah-fly-command-mode-activate))))
+  !(defun my/xah-fly-one-command-1 ()
+     ;; Register a hook to possibly re-enable command mode after the next function completes.
+     (remove-hook 'post-command-hook #'my/xah-fly-one-command-1)
+     (add-hook 'post-command-hook #'my/xah-fly-one-command-2))
+  !(defun my/xah-fly-one-command ()
+     "Go into insert mode for the duration of one command.
+
+Very useful for utilizing both Xah Fly Keys' fast navigation commands and
+a mode's own keymaps."
+     (interactive)
+     (xah-fly-insert-mode-activate)
+     (add-hook 'post-command-hook #'my/xah-fly-one-command-1))
+  (bind-key "DEL" #'my/xah-fly-one-command xah-fly-command-map)
+
+  ;; TODO modify xfk to accept a list to try for movement with "h" and ";"
 
   ($))
 
