@@ -1461,6 +1461,10 @@ Hollow mode returns the Telephone Line subseparator using the merged foreground 
 
 ;;; HL Line
 (p@ck hl-line
+  ;;;; Enable
+  ;;;;; Compilation
+  (add-hook 'compilation-mode-hook #'$-mode)
+  ;;;;; Programming modes
   (add-hook 'prog-mode-hook #'$-mode))
 
 ;;; Ibuffer
