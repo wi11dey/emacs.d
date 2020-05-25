@@ -1869,7 +1869,7 @@ If there are multiple matches on  a line, the line is repeated with a different 
 		   (when (= start offset)
 		     (swiper--add-properties swiper-faces
 					     (lambda (beg end face _priority)
-					       (ivy-add-face-text-property beg end face line)))))
+					       (add-face-text-property beg end face nil line)))))
                  (when (= i ivy--window-index)
 		   (font-lock-append-text-property 0 (length line)
 						   'face 'swiper-line-face
