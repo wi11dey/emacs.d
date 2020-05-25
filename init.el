@@ -2699,4 +2699,13 @@ If there are multiple matches on  a line, the line is repeated with a different 
 	  ;; Reject all cookies for now:
 	  $-untrusted-urls '(".*"))))
 
+;;; TypeScript
+(p@ck typescript-mode
+  ;; TODO use https://github.com/ananthakumaran/tide? Seems like it has a hard dependency on tsserver though
+  ;;;; Build
+  ~(straight-use-package '$)
+
+  ;;;; Auto mode
+  (add-to-list 'auto-mode-alist (cons "\\.ts\\'" @'$)))
+
 ;;; init.el ends here
