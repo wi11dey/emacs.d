@@ -40,6 +40,7 @@
 ;; TODO defvar+setq -> defconst where possible
 ;; TODO Go through and reorganize
 ;; TODO Break up "Keybindings" headings
+;; TODO remove bind-key
 
 (defgroup my nil
   "Customizations for personal Emacs modifications."
@@ -562,6 +563,7 @@ a mode's own keymaps."
   ($-mode -1))
 
 ;;; Telephone Line
+;; TODO remove entirely
 ;; TODO Arithmetic overflows when this is run immediately on `after-init-hook'
 (p@ck telephone-line
   ;;;; Build
@@ -1362,6 +1364,9 @@ Hollow mode returns the Telephone Line subseparator using the merged foreground 
 					    events)))
 			      commands)))))
 	   map))
+
+  ;;;; Passthrough
+  (setq $-input-line-mode-passthrough t)
 
   ;;;; Visual Line
   (add-hook 'my/visual-line-ignore-modes #'$-mode)
@@ -2381,12 +2386,7 @@ If there are multiple matches on  a line, the line is repeated with a different 
 					   user-emacs-directory)))
 
   ;;;; Select methods
-  (setq $-select-method '(nnml ""
-			       (nnml-directory (expand-file-name "~/Mail/"))
-			       (nnml-use-compressed-files ".bz2")
-			       (nnml-nov-file-name ".mail")
-			       (nnml-get-new-mail t))
-	$-secondary-select-methods '((nnreddit ""))))
+  (setq $-select-method '(nnnil "")))
 
 ;;; Ledger
 (p@ck ledger-mode
