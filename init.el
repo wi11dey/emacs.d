@@ -1244,103 +1244,124 @@ Hollow mode returns the Telephone Line subseparator using the merged foreground 
    (keyboard :foreground base1 :height 0.9 :box (:line-width 2 :style released-button) :inherit (variable-pitch highlight))
    (keyboard-pressed :box (:line-width 1 :style pressed-button) :inherit keyboard)))
 
-;;; Passthru
-(p@ck passthru
-  ;;;; Build
-  ~(straight-use-package '($ :type git :host github :repo "wi11dey/passthru.el"))
-
-  (solarized-set-faces
-   ($-keyboard :inherit keyboard-pressed)))
-
 ;;; EXWM
 (p@ck exwm
   ;;;; Build
   ~(straight-use-package '$)
-  !^
 
   ;;;; No suspend frame
   (unbind-key [remap suspend-frame])
 
-  ;;;; Passthru
-  (p@ck passthru-$
-    !^
+  ;;;; Global keys
+  (setq $-input-global-keys (list (cons [menu] #'xah-fly-command-mode-activate)))
 
-    ;;;;; Delight
-    (delight '$-all-mode nil '$)
+  !^
 
-    ;;;;; Enable
-    ($-all-mode)
+  ;;;; Local keys
+  (setq $-mode-map
+	~(let ((map (make-sparse-keymap))
+	       (commands (make-hash-table :test #'equal :weakness 'value))
+	       events
+	       lexical-binding)
+	   ;; TODO document this simulation key format:
+	   ;; TODO upstream it to EXWM for easier configuration for everyone?
+	   ;; TODO make subheadings for every section:
+	   (dolist (pair '(([remap delete-backward-char] . "<backspace>")
+			   ([remap xah-delete-backward-char-or-bracket-text] . "<backspace>")
 
-    (setq exwm-mode-map ($ '(([remap delete-backward-char] . "<backspace>")
-			     ([remap xah-delete-backward-char-or-bracket-text] . "<backspace>")
+			   ([remap delete-char] . "<delete>")
+			   ([remap delete-forward-char] . "<delete>")
 
-			     ([remap delete-char] . "<delete>")
-			     ([remap delete-forward-char] . "<delete>")
+			   ([remap backward-kill-word] . "<C-backspace>")
+			   ([remap xah-backward-kill-word] . "<C-backspace>")
 
-			     ([remap backward-kill-word] . "<C-backspace>")
-			     ([remap xah-backward-kill-word] . "<C-backspace>")
+			   ([remap kill-word] . "<C-delete>")
+			   ([remap xah-kill-word] . "<C-delete>")
 
-			     ([remap kill-word] . "<C-delete>")
-			     ([remap xah-kill-word] . "<C-delete>")
+			   ([remap kill-line] . "<S-end> C-x")
 
-			     ([remap kill-line] . "<S-end> C-x")
+			   ([remap kill-ring-save] . "C-c")
+			   ([remap xah-copy-line-or-region] . "C-c")
 
-			     ([remap kill-ring-save] . "C-c")
-			     ([remap xah-copy-line-or-region] . "C-c")
+			   ([remap kill-region] . "C-x")
+			   ([remap xah-cut-line-or-region] . "C-x")
 
-			     ([remap kill-region] . "C-x")
-			     ([remap xah-cut-line-or-region] . "C-x")
+			   ([remap yank] . "C-v")
+			   ([remap xah-paste-or-paste-previous] . "C-v")
 
-			     ([remap yank] . "C-v")
-			     ([remap xah-paste-or-paste-previous] . "C-v")
+			   ([remap newline] . "<return>")
+			   ("<S-return>" . "<S-return>")
+			   ([remap open-line] . "<return> <left>")
 
-			     ([remap newline] . "<return>")
-			     ("<S-return>" . "<S-return>")
-			     ([remap open-line] . "<return> <left>")
+			   ([remap keyboard-quit] . "<escape>")
+			   ("<escape>" . "<escape>")
 
-			     ([remap keyboard-quit] . "<escape>")
-			     ("<escape>" . "<escape>")
+			   ([remap next-line] . "<down>")
+			   ([remap previous-line] . "<up>")
 
-			     ([remap next-line] . "<down>")
-			     ([remap previous-line] . "<up>")
+			   ([remap move-beginning-of-line] . "<home>")
+			   ([remap xah-beginning-of-line-or-block] . "<home>")
 
-			     ([remap move-beginning-of-line] . "<home>")
-			     ([remap xah-beginning-of-line-or-block] . "<home>")
+			   ([remap move-end-of-line] . "<end>")
+			   ([remap xah-end-of-line-or-block] . "<end>")
 
-			     ([remap move-end-of-line] . "<end>")
-			     ([remap xah-end-of-line-or-block] . "<end>")
+			   ([remap backward-char] . "<left>")
+			   ([remap left-char] . "<left>")
+			   ([remap forward-char] . "<right>")
+			   ([remap right-char] . "<right>")
 
-			     ([remap backward-char] . "<left>")
-			     ([remap left-char] . "<left>")
-			     ([remap forward-char] . "<right>")
-			     ([remap right-char] . "<right>")
+			   ([remap forward-word] . "<C-right>")
+			   ([remap backward-word] . "<C-left>")
 
-			     ([remap forward-word] . "<C-right>")
-			     ([remap backward-word] . "<C-left>")
+			   ([remap scroll-up-command] . "<next>")
+			   ([remap scroll-down-command] . "<prior>")
 
-			     ([remap scroll-up-command] . "<next>")
-			     ([remap scroll-down-command] . "<prior>")
+			   ("TAB" . "<tab>")
+			   ("<backtab>" . "<S-tab>")
 
-			     ("TAB" . "<tab>")
-			     ("<backtab>" . "<S-tab>")
+			   ([remap save-buffer] . "C-s")
 
-			     ([remap save-buffer] . "C-s")
+			   ([remap isearch-forward] . [?\C-f #'xah-fly-insert-mode-activate #'exwm-input-release-keyboard])
+			   ([remap swiper] . [?\C-f #'xah-fly-insert-mode-activate #'exwm-input-release-keyboard])
+			   ([remap swiper-isearch] . [?\C-f #'xah-fly-insert-mode-activate #'exwm-input-release-keyboard])
+			   ([remap my/swiper-isearch-region] . [?\C-f #'xah-fly-insert-mode-activate #'exwm-input-release-keyboard])
 
-			     ([remap isearch-forward] . [?\C-f xah-fly-insert-mode-activate])
-			     ([remap swiper] . [?\C-f xah-fly-insert-mode-activate])
-			     ([remap swiper-isearch] . [?\C-f xah-fly-insert-mode-activate])
-			     ([remap my/swiper-isearch-region] . [?\C-f xah-fly-insert-mode-activate])
+			   ([remap mark-whole-buffer] . "C-a")
 
-			     ([remap mark-whole-buffer] . "C-a")
+			   ([remap undo] . "C-z")
+			   ([remap undo-tree-undo] . "C-z")
+			   ([remap undo-tree-redo] . "C-y")
 
-			     ([remap undo] . "C-z")
-			     ([remap undo-tree-undo] . "C-z")
-			     ([remap undo-tree-redo] . "C-y")
+			   ([remap xah-insert-space-before] . "SPC")
+			   ([remap xah-insert-space-after] . "SPC <left>")
 
-			     ([remap xah-insert-space-before] . "SPC")
-			     ([remap xah-insert-space-after] . "SPC <left>")
+			   ("C-@" . "C-@")
 
-			     ("C-@" . "C-@")))))
+			   ([remap xah-fly-command-mode-activate] . [#'exwm-reset #'xah-fly-command-mode-activate])
+			   ([remap xah-fly-insert-mode-activate] . [#'xah-fly-insert-mode-activate #'exwm-input-release-keyboard])))
+	     (define-key map
+	       (if (stringp (car pair))
+		   (kbd (car pair))
+		 (car pair))
+	       (if (commandp (cdr pair) :for-call-interactively)
+		   (cdr pair)
+		 (setq events (listify-key-sequence (if (stringp (cdr pair))
+							(kbd (cdr pair))
+						      (cdr pair))))
+		 (or (gethash events commands)
+		     (puthash events
+			      (byte-compile
+			       `(lambda ()
+				  ,(format-message "Simulate the sequence %s."
+						   (cdr pair))
+				  (interactive)
+				  ,@(mapcar (lambda (event)
+					      (if (eq (car-safe event) 'function)
+						  `(call-interactively ,event)
+						`(@$-input--fake-key ',event)))
+					    events)))
+			      commands)))))
+	   map))
 
   ;;;; Visual Line
   (add-hook 'my/visual-line-ignore-modes #'$-mode)
