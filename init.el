@@ -1365,9 +1365,6 @@ Hollow mode returns the Telephone Line subseparator using the merged foreground 
 			      commands)))))
 	   map))
 
-  ;;;; Passthrough
-  (setq $-input-line-mode-passthrough t)
-
   ;;;; Visual Line
   (add-hook 'my/visual-line-ignore-modes #'$-mode)
 
@@ -2479,6 +2476,11 @@ If there are multiple matches on  a line, the line is repeated with a different 
 (p@ck perspective
   ;;;; Build
   ~(straight-use-package '$))
+
+;;; Grep
+(p@ck grep
+  ;;;; Ignored directories
+  _(add-to-list '$-find-ignored-directories "node_modules"))
 
 ;;; WGrep
 (p@ck wgrep
