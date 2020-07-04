@@ -33,6 +33,8 @@
 ;; heading-1 is All Capitalized.
 ;; All headings below are Sentence case.
 
+;; TODO xah-fly-keys doesn't set keyboard layout correctly on first installation
+;; TODO straight.el can't find nadvice on first installation
 ;; TODO Outline-minor-mode C-ret and M-ret keybindings
 ;; TODO Outline minor mode heading indentation
 ;; TODO Use $ whenever possible
