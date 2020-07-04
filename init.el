@@ -2737,4 +2737,9 @@ If there are multiple matches on  a line, the line is repeated with a different 
   ;;;; Auto mode
   (add-to-list 'auto-mode-alist (cons "\\.ts\\'" @'$)))
 
+;;; EJIRA
+(p@ck ejira
+  ;;;; Build
+  ~(straight-use-package '($ :type git :host github :repo "nyyManni/ejira")))
+
 ;;; init.el ends here
