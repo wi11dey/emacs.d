@@ -2481,6 +2481,8 @@ If there are multiple matches on  a line, the line is repeated with a different 
 
 ;;; Grep
 (p@ck grep
+  ~^
+
   ;;;; Ignored directories
   _(add-to-list '$-find-ignored-directories "node_modules"))
 
