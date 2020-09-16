@@ -2484,7 +2484,8 @@ If there are multiple matches on  a line, the line is repeated with a different 
   ~^
 
   ;;;; Ignored directories
-  _(add-to-list '$-find-ignored-directories "node_modules"))
+  _((add-to-list '$-find-ignored-directories "node_modules")
+    (add-to-list '$-find-ignored-directories ".venv")))
 
 ;;; WGrep
 (p@ck wgrep
