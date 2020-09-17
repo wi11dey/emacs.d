@@ -367,7 +367,10 @@ a mode's own keymaps."
 					      'face 'font-lock-function-name-face)
 				  (propertize ")"
 					      'face 'variable-pitch)))))))
-  (setq command-error-function #'my/command-error-function))
+  (setq command-error-function #'my/command-error-function)
+
+  ;;;; No bell
+  (setq ring-bell-function #'ignore))
 
 ;;; Fancy
 (p@ck fancy
