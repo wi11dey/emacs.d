@@ -734,7 +734,7 @@ Hollow mode returns the Telephone Line subseparator using the merged foreground 
 	       ;;                        #b10000))
 	       )
    (my/$/eldoc :background base03 :inherit fixed-pitch)
-   ($-buffer-id :font "Liberation Sans" :height 120 :foreground base0 :background base03 :inverse-video nil :underline base0)
+   ;; ($-buffer-id :font "Liberation Sans" :height 120 :foreground base0 :background base03 :inverse-video nil :underline base0)
    (my/$/buffer-id-inactive :inherit (auto-dim-other-buffers-face $-buffer-id))
    (my/$/buffer-id-special :foreground cyan)
    (my/$/buffer-id-exwm-active :background "#ffffff" :inherit $-buffer-id)
