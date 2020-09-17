@@ -234,6 +234,9 @@ Optional argument FILE-OVERRIDE is a string to be passed as the FILE parameter t
   (unbind-key "<menu>" xah-fly-shared-map)
   (bind-key "<menu>" #'xah-fly-command-mode-activate xah-fly-insert-map)
   (bind-key "<menu>" #'my/xah-keyboard-quit xah-fly-command-map)
+  (unbind-key "<home>" xah-fly-shared-map)
+  (bind-key "<home>" #'xah-fly-command-mode-activate xah-fly-insert-map)
+  (bind-key "<home>" #'my/xah-keyboard-quit xah-fly-command-map)
 
   ;;;; One command
   !(defun my/xah-fly-one-command-2 ()
