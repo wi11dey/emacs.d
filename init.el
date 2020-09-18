@@ -2413,6 +2413,10 @@ If there are multiple matches on  a line, the line is repeated with a different 
   ~((straight-use-package '$)
     ^)
 
+  ;;;; Git executable
+  ;; Magit will set this to an absolute path on Windows, but then it won't find the right exectuable over TRAMP.
+  (setq $-git-executable "git")
+
   ;;;; Section
   (p@ck $-section
     ;;;;; Backward
