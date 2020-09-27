@@ -2443,13 +2443,16 @@ If there are multiple matches on  a line, the line is repeated with a different 
   (bind-key "C-x g" @'$-status))
 
 ;;; Markdown
-(p@ck markdown-mode
+(p@ck markdown
   ;;;; Build
-  ~((straight-use-package '$)
-    ^)
+  ~((straight-use-package '$-mode)
+    (require '$-mode))
 
   ;;;; Auto mode
-  (add-to-list 'auto-mode-alist (cons "\\.md\\'" @'$))
+  (add-to-list 'auto-mode-alist (cons "\\.md\\'" @'$-mode))
+
+  ;;;; Fontify code blocks natively
+  (setq $-fontify-code-blocks-natively t)
 
   ;;;; Faces
   (solarized-set-faces
