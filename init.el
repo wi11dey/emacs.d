@@ -2726,7 +2726,10 @@ If there are multiple matches on  a line, the line is repeated with a different 
   ~(straight-use-package '$)
 
   ;;;; Auto mode
-  (add-to-list 'auto-mode-alist (cons "\\.jl\\'" @'julia-mode)))
+  (add-to-list 'auto-mode-alist (cons "\\.jl\\'" @'$))
+
+  ;;;; Markdown
+  (add-to-list 'markdown-code-lang-modes (cons "julia" @'$)))
 
 ;;; Variable Pitch Table
 (p@ck vpt
