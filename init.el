@@ -2449,7 +2449,7 @@ If there are multiple matches on  a line, the line is repeated with a different 
     (require '$-mode))
 
   ;;;; Auto mode
-  (add-to-list 'auto-mode-alist (cons "\\.md\\'" @'$-mode))
+  (add-to-list 'auto-mode-alist (cons "\\.j?md\\'" @'$-mode))
 
   ;;;; Fontify code blocks natively
   (setq $-fontify-code-blocks-natively t)
