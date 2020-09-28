@@ -2448,11 +2448,15 @@ If there are multiple matches on  a line, the line is repeated with a different 
   ~((straight-use-package '$-mode)
     (require '$-mode))
 
+  ;;;; Fontify code blocks natively
+  (setq $-fontify-code-blocks-natively t)
+
   ;;;; Auto mode
   (add-to-list 'auto-mode-alist (cons "\\.j?md\\'" @'$-mode))
 
-  ;;;; Fontify code blocks natively
-  (setq $-fontify-code-blocks-natively t)
+  ;;;; Code lang modes
+  ;;;;; Julia
+  _(add-to-list '$-code-lang-modes (cons "julia" @'julia-mode))
 
   ;;;; Faces
   (solarized-set-faces
@@ -2723,13 +2727,11 @@ If there are multiple matches on  a line, the line is repeated with a different 
 ;;; Julia
 (p@ck julia-mode
   ;;;; Build
-  ~(straight-use-package '$)
+  ~((straight-use-package '$)
+    ^)
 
   ;;;; Auto mode
-  (add-to-list 'auto-mode-alist (cons "\\.jl\\'" @'$))
-
-  ;;;; Markdown
-  (add-to-list 'markdown-code-lang-modes (cons "julia" @'$)))
+  (add-to-list 'auto-mode-alist (cons "\\.jl\\'" @'$)))
 
 ;;; Variable Pitch Table
 (p@ck vpt
