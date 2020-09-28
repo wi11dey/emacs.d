@@ -2443,20 +2443,20 @@ If there are multiple matches on  a line, the line is repeated with a different 
   (bind-key "C-x g" @'$-status))
 
 ;;; Markdown
-(p@ck markdown
+(p@ck markdown-mode
   ;;;; Build
-  ~((straight-use-package '$-mode)
-    (require '$-mode))
+  ~((straight-use-package '$)
+    ^)
 
   ;;;; Fontify code blocks natively
-  (setq $-fontify-code-blocks-natively t)
+  (setq markdown-fontify-code-blocks-natively t)
 
   ;;;; Auto mode
-  (add-to-list 'auto-mode-alist (cons "\\.j?md\\'" @'$-mode))
+  (add-to-list 'auto-mode-alist (cons "\\.j?md\\'" @'$))
 
   ;;;; Code lang modes
   ;;;;; Julia
-  _(add-to-list '$-code-lang-modes (cons "julia" @'julia-mode))
+  _(add-to-list 'markdown-code-lang-modes (cons "julia" @'julia-mode))
 
   ;;;; Faces
   (solarized-set-faces
