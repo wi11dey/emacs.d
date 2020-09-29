@@ -435,47 +435,54 @@ a mode's own keymaps."
 (p@ck paragraphs
   (setq sentence-end-double-space nil))
 
-;;; Recovery
-(p@ck recovery
-  (let (($-directory (file-name-as-directory (expand-file-name "recovery"
-							       user-emacs-directory))))
-    (mkdir $-directory :parents)
+;;; Files
+(p@ck files
+  ;;;; Windows
+  ;;;;; File attributes
+  ;; Don't make extra system calls to get accurate attribute information every time, which causes a very noticeable slowdown on some machines:
+  (setq w32-get-true-file-attributes nil)
 
-    ;;;; Auto-save
-    (p@ck auto-save
-      (let (($-directory (file-name-as-directory (concat recovery-directory
-							 "auto-save"))))
+  ;;;; Recovery
+  (p@ck recovery
+    (let (($-directory (file-name-as-directory (expand-file-name "recovery"
+								 user-emacs-directory))))
+      (mkdir $-directory :parents)
 
-	(mkdir $-directory :parents)
+      ;;;;; Auto-save
+      (p@ck auto-save
+	(let (($-directory (file-name-as-directory (concat recovery-directory
+							   "auto-save"))))
 
-	;;;;; Directory
-	(setq $-file-name-transforms `((".*"
-					,$-directory
-					t)))
+	  (mkdir $-directory :parents)
 
-	;;;;; List file
-	(setq $-list-file-prefix (concat (file-name-as-directory (concat $-directory
-									 "lists"))
-					 "saves-"))
-	(mkdir (file-name-directory $-list-file-prefix) :parents)))
+	  ;;;;;; Directory
+	  (setq $-file-name-transforms `((".*"
+					  ,$-directory
+					  t)))
 
-    ;;;; Backup
-    (p@ck backup
-      (let (($-directory (file-name-as-directory (concat recovery-directory
-							 "backup"))))
-	(mkdir $-directory :parents)
+	  ;;;;;; List file
+	  (setq $-list-file-prefix (concat (file-name-as-directory (concat $-directory
+									   "lists"))
+					   "saves-"))
+	  (mkdir (file-name-directory $-list-file-prefix) :parents)))
 
-	;;;;; Directory
-	(setq $-directory-alist `(("." . ,$-directory)))
+      ;;;;; Backup
+      (p@ck backup
+	(let (($-directory (file-name-as-directory (concat recovery-directory
+							   "backup"))))
+	  (mkdir $-directory :parents)
 
-	;;;;; Copying
-	(setq $-by-copying t)
+	  ;;;;;; Directory
+	  (setq $-directory-alist `(("." . ,$-directory)))
 
-	;;;;; Versions
-	(setq version-control t
-	      kept-old-versions 1
-	      kept-new-versions 3
-	      delete-old-versions t)))))
+	  ;;;;;; Copying
+	  (setq $-by-copying t)
+
+	  ;;;;;; Versions
+	  (setq version-control t
+		kept-old-versions 1
+		kept-new-versions 3
+		delete-old-versions t))))))
 
 ;;; Font Lock
 (p@ck font-lock
