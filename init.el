@@ -266,6 +266,7 @@ a mode's own keymaps."
   ($))
 
 ;;; Hydra
+;; TODO remove entirely
 (p@ck hydra
   ;;;; Build
   ~(straight-use-package '$)
