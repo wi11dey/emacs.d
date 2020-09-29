@@ -193,7 +193,7 @@ Optional argument FILE-OVERRIDE is a string to be passed as the FILE parameter t
   ;;;; Build
   ~(straight-use-package 'color-theme-$)
 
-  ;;;; Mac
+  ;;;; macOS
   ;;;;; Color space
   (when (boundp 'ns-use-srgb-colorspace)
     ;; Consistenly use Apple RGB across faces and XPM images, so use altered Solarized values intended for Apple RGB:
@@ -425,7 +425,7 @@ a mode's own keymaps."
 
 ;;; Keyboard
 (p@ck keyboard
-  ;;;; Mac
+  ;;;; macOS
   ;;;;; Command key
   ;; Command key is control:
   (when (boundp 'ns-command-modifier)
