@@ -219,7 +219,7 @@ Optional argument FILE-OVERRIDE is a string to be passed as the FILE parameter t
   (setq xah-fly-use-control-key nil)
 
   ;;;; Keyboard layout
-  (setq xah-fly-key-current-layout "qwerty")
+  (setq xah-fly-key-current-layout 'qwerty)
 
   ;;;; Load
   !^
