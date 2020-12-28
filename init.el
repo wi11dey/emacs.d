@@ -1518,8 +1518,12 @@ Hollow mode returns the Telephone Line subseparator using the merged foreground 
 
 ;;; VC
 (p@ck vc
-  ;; Make backups of files even if under version control:
-  (setq vc-make-backup-files t))
+  ;;;; Backup files
+  ;; Backup files are stored in .emacs.d, not in the original directory, so make backups of files even under version control:
+  (setq $-make-backup-files t)
+
+  ;;;; Follow symbolic links
+  (setq $-follow-symlinks t))
 
 ;;; Auto Save Visited Minor Mode
 (p@ck auto-save-visited-minor-mode
