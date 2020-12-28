@@ -440,7 +440,8 @@ a mode's own keymaps."
   ;;;; Windows
   ;;;;; File attributes
   ;; Don't make extra system calls to get accurate attribute information every time, which causes a very noticeable slowdown on some machines:
-  (setq w32-get-true-file-attributes nil)
+  (when (boundp 'w32-get-true-file-attributes)
+    (setq w32-get-true-file-attributes nil))
 
   ;;;; Recovery
   (p@ck recovery
