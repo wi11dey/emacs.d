@@ -2765,12 +2765,8 @@ If there are multiple matches on  a line, the line is repeated with a different 
 
 ;;; TypeScript
 (p@ck typescript-mode
-  ;; TODO use https://github.com/ananthakumaran/tide? Seems like it has a hard dependency on tsserver though
   ;;;; Build
-  ~(straight-use-package '$)
-
-  ;;;; Auto mode
-  (add-to-list 'auto-mode-alist (cons "\\.ts\\'" @'$)))
+  ~(straight-use-package '$))
 
 ;;; EJIRA
 (p@ck ejira
@@ -2780,5 +2776,26 @@ If there are multiple matches on  a line, the line is repeated with a different 
 ;;; SGML
 (p@ck sgml
   (put '$-basic-offset 'safe-local-variable #'integerp))
+
+;;; JS2
+(p@ck js2-mode
+  ;;;; Build
+  ~(straight-use-package '$)
+
+  ;;;; Auto mode
+  (add-to-list 'auto-mode-alist (cons "\\.[jt]s\\'" @'$)))
+
+;;; RJSX
+(p@ck rjsx-mode
+  ;;;; Build
+  ~(straight-use-package '$)
+
+  ;;;; Auto mode
+  (add-to-list 'auto-mode-alist (cons "\\.[jt]sx\\'" @'$))
+
+  ;;;; Faces
+  (solarized-set-faces
+   (rjsx-text :inherit default ; TODO: This is only so that indentation becomes fixed-width. In a perfect world, everything would be variable-width and indentation would be with elastic-tabs.
+	      )))
 
 ;;; init.el ends here
