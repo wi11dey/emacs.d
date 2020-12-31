@@ -2777,4 +2777,8 @@ If there are multiple matches on  a line, the line is repeated with a different 
   ;;;; Build
   ~(straight-use-package '($ :type git :host github :repo "nyyManni/ejira")))
 
+;;; SGML
+(p@ck sgml
+  (put '$-basic-offset 'safe-local-variable #'integerp))
+
 ;;; init.el ends here
