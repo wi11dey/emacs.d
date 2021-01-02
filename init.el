@@ -2763,11 +2763,6 @@ If there are multiple matches on  a line, the line is repeated with a different 
 	  ;; Reject all cookies for now:
 	  $-untrusted-urls '(".*"))))
 
-;;; TypeScript
-(p@ck typescript-mode
-  ;;;; Build
-  ~(straight-use-package '$))
-
 ;;; EJIRA
 (p@ck ejira
   ;;;; Build
@@ -2783,7 +2778,7 @@ If there are multiple matches on  a line, the line is repeated with a different 
   ~(straight-use-package '$)
 
   ;;;; Auto mode
-  (add-to-list 'auto-mode-alist (cons "\\.[jt]s\\'" @'$)))
+  (add-to-list 'auto-mode-alist (cons "\\.js\\'" @'$)))
 
 ;;; RJSX
 (p@ck rjsx-mode
@@ -2791,11 +2786,22 @@ If there are multiple matches on  a line, the line is repeated with a different 
   ~(straight-use-package '$)
 
   ;;;; Auto mode
-  (add-to-list 'auto-mode-alist (cons "\\.[jt]sx\\'" @'$))
+  (add-to-list 'auto-mode-alist (cons "\\.jsx\\'" @'$))
 
   ;;;; Faces
   (solarized-set-faces
    (rjsx-text :inherit default ; TODO: This is only so that indentation becomes fixed-width. In a perfect world, everything would be variable-width and indentation would be with elastic-tabs.
 	      )))
+
+;;; TypeScript
+(p@ck typescript-mode
+  ;;;; Build
+  ~(straight-use-package '$)
+
+  ;;;; Auto mode
+  (add-to-list 'auto-mode-alist (cons "\\.ts\\'" @'$))
+  ;;;;; TSX
+  ;; RJSX can't handle Typescript annotations:
+  (add-to-list 'auto-mode-alist (cons "\\.tsx" #'js-jsx-mode)))
 
 ;;; init.el ends here
