@@ -2751,6 +2751,8 @@ If there are multiple matches on  a line, the line is repeated with a different 
   ;;;; Auto mode
   ;;;;; TSX
   ;; Nothing handles TypeScripted JSX better:
-  (add-to-list 'auto-mode-alist (cons "\\.tsx" @'$)))
+  (add-to-list 'auto-mode-alist (cons "\\.tsx" @'$))
+  ;;;;; HTML
+  (add-to-list 'auto-mode-alist (cons "\\.html?\\'" @'$)))
 
 ;;; init.el ends here
