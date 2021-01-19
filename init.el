@@ -333,12 +333,6 @@ a mode's own keymaps."
    (my/$-hint-symbol :inherit font-lock-function-name-face)
    (my/$-hint-string :inherit (variable-pitch my/$-hint-symbol))))
 
-;;; Delight
-(p@ck delight
-  ;;;; Build
-  ~(straight-use-package '$)
-  !^)
-
 ;;; Novice
 (p@ck novice
   ;;;; Disable
@@ -776,10 +770,7 @@ Hollow mode returns the Telephone Line subseparator using the merged foreground 
   ;;;;; Visual Line
   !(defun my/$-on-visual-line-mode ()
      (@$-prefix-mode (if visual-line-mode 1 -1)))
-  (add-hook 'visual-line-mode-hook #'my/$-on-visual-line-mode)
-
-  ;;;; Delight
-  (delight '$-mode nil '$))
+  (add-hook 'visual-line-mode-hook #'my/$-on-visual-line-mode))
 
 ;;; Aggressive Indent
 ;; TODO keeps messing with `swiper-query-replace' while it's running
@@ -792,9 +783,6 @@ Hollow mode returns the Telephone Line subseparator using the merged foreground 
   ;; FIXME BUG!! in aggressive-indent-mode. Change defvar-local to defvar aggressive-indent--idle-timer in aggressive-indent.el
   (add-hook 'org-babel-post-tangle-hook (lambda ()
 					  (cancel-function-timers 'aggressive-indent--indent-if-changed)))
-
-  ;;;; Delight
-  (delight '$-mode nil '$)
 
   ;;;; Enable
   (global-$-mode))
@@ -833,9 +821,6 @@ Hollow mode returns the Telephone Line subseparator using the merged foreground 
   ~(straight-use-package '$)
   !^
 
-  ;;;; Delight
-  (delight '$-mode nil '$)
-
   ;;;; Enable
   ($-mode)
 
@@ -858,11 +843,6 @@ Hollow mode returns the Telephone Line subseparator using the merged foreground 
    ($-lead-face-0 :background blue    :inherit avy-lead-face)
    ($-lead-face-1 :background magenta :inherit avy-lead-face)
    ($-lead-face-2 :background violet  :inherit avy-lead-face)))
-
-;;; Buffer Face
-(p@ck buffer-face
-  ;;;; Delight
-  (delight '$-mode nil 'face-remap))
 
 ;;; Text Scale
 (p@ck text-scale
@@ -891,10 +871,7 @@ Hollow mode returns the Telephone Line subseparator using the merged foreground 
 
   ;;;; Enable
   ;;;;; Programming modes
-  (add-hook 'prog-mode-hook @'$)
-
-  ;;;; Delight
-  (delight '$ nil '$))
+  (add-hook 'prog-mode-hook @'$))
 
 ;;; Company
 (p@ck company
@@ -979,9 +956,6 @@ Hollow mode returns the Telephone Line subseparator using the merged foreground 
   ;;;; Enable
   ;;;;; Programming modes
   ;; (add-hook 'prog-mode-hook @'$-mode)
-
-  ;;;; Delight
-  (delight '$-mode nil '$)
 
   ;;;; Faces
   ;; Don't automatically calculate face colors:
@@ -1178,9 +1152,6 @@ Hollow mode returns the Telephone Line subseparator using the merged foreground 
 
 ;;; ElDoc
 (p@ck eldoc
-  ;;;; Delight
-  (delight '$-mode nil '$)
-
   ;;;; Faces
   (solarized-set-faces
    (eldoc-highlight-function-argument :inherit (bold fixed-pitch))))
@@ -1229,9 +1200,6 @@ Hollow mode returns the Telephone Line subseparator using the merged foreground 
 
   ;;;; Title format
   (setq $-title-format "#+title: \\1")
-
-  ;;;; Delight
-  (delight '$-mode nil '$)
 
   ;;;; Enable
   (readme-org-mode))
@@ -1434,10 +1402,7 @@ Hollow mode returns the Telephone Line subseparator using the merged foreground 
   ;;;;; Programming modes
   (add-hook 'prog-mode-hook #'$-prog-mode)
   ;;;;; Text modes
-  (add-hook 'text-mode-hook #'$-mode)
-
-  ;;;; Delight
-  (delight '$-mode nil '$))
+  (add-hook 'text-mode-hook #'$-mode))
 
 ;;; Form Feed
 (p@ck form-feed
@@ -1453,9 +1418,6 @@ Hollow mode returns the Telephone Line subseparator using the merged foreground 
   (add-hook 'text-mode-hook @'$-mode)
   ;;;;; Help
   (add-hook 'help-mode-hook @'$-mode)
-
-  ;;;; Delight
-  (delight '$-mode nil '$)
 
   (solarized-set-faces
    ($-line :strike-through t)))
@@ -1695,9 +1657,6 @@ Hollow mode returns the Telephone Line subseparator using the merged foreground 
    (my/$-mark-prefix :inherit diredfl-flag-mark)
    (my/$-mark :inherit diredfl-flag-mark-line))
 
-  ;;;; Delight
-  (delight '$-mode nil '$)
-
   ;;;; Count format
   (setq ivy-count-format "%d/%d ")
 
@@ -1851,9 +1810,6 @@ Hollow mode returns the Telephone Line subseparator using the merged foreground 
      ($-outline-6 :inherit ($-outline-default heading-6))
      ($-outline-7 :inherit ($-outline-default heading-7))
      ($-outline-8 :inherit ($-outline-default heading-8)))
-
-    ;;;;; Delight
-    (delight '$-mode nil '$)
 
     ;;;;; Enable
     ($-mode)
@@ -2229,10 +2185,7 @@ If there are multiple matches on  a line, the line is repeated with a different 
 
   ;;;; Enable
   ;;;;; Text modes
-  (add-hook 'text-mode-hook @'turn-on-smart-quotes)
-
-  ;;;; Delight
-  (delight '$-mode nil '$))
+  (add-hook 'text-mode-hook @'turn-on-smart-quotes))
 
 ;;; Syscontrol
 (p@ck syscontrol
@@ -2275,9 +2228,6 @@ If there are multiple matches on  a line, the line is repeated with a different 
      (face-remap-add-relative 'default 'my/$/background)
      (face-remap-add-relative 'fringe 'my/$/background))
   (add-hook '$-visualizer-mode-hook #'my/$-set-background)
-
-  ;;;; Delight
-  (delight '$-mode nil '$)
 
   ;;;; Keybindings
   (bind-key [remap keyboard-quit] #'$-visualizer-abort $-visualizer-mode-map)
@@ -2553,9 +2503,6 @@ If there are multiple matches on  a line, the line is repeated with a different 
     ~(straight-use-package '$)
     ^)
 
-  ;;;; Delight
-  (delight 'yas-minor-mode nil '$)
-
   ;;;; Enable
   (yas-global-mode))
 
@@ -2717,12 +2664,6 @@ If there are multiple matches on  a line, the line is repeated with a different 
   ;;;; Autoloads
   (my/package-autoloads $))
 
-
-;;; MMM Mode
-(p@ck mmm-mode
-  ;;;; Build
-  ~(straight-use-package '$))
-
 ;;; Pwdgen
 (p@ck pwdgen
   ;;;; Build
@@ -2799,9 +2740,17 @@ If there are multiple matches on  a line, the line is repeated with a different 
   ~(straight-use-package '$)
 
   ;;;; Auto mode
-  (add-to-list 'auto-mode-alist (cons "\\.ts\\'" @'$))
+  (add-to-list 'auto-mode-alist (cons "\\.ts\\'" @'$)))
+
+;;; Web
+;; TODO use this for more use cases?
+(p@ck web-mode
+  ;;;; Build
+  ~(straight-use-package '$)
+
+  ;;;; Auto mode
   ;;;;; TSX
-  ;; RJSX can't handle Typescript annotations:
-  (add-to-list 'auto-mode-alist (cons "\\.tsx" #'js-jsx-mode)))
+  ;; Nothing handles TypeScripted JSX better:
+  (add-to-list 'auto-mode-alist (cons "\\.tsx" @'$)))
 
 ;;; init.el ends here
