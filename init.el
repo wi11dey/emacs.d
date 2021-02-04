@@ -239,19 +239,6 @@ Optional argument FILE-OVERRIDE is a string to be passed as the FILE parameter t
   (bind-key "<home>" #'xah-fly-command-mode-activate xah-fly-insert-map)
   (bind-key "<home>" #'my/xah-keyboard-quit xah-fly-command-map)
 
-  ;;;; Forward right bracket
-  !(defun my/xah-fly-forward-right-bracket ()
-     "Move point before the next right bracket.
-
-The list of brackets to jump to is defined by `xah-right-brackets'."
-     (interactive)
-     (when (looking-at-p "\\s)")
-       ;; Move point after the current right bracket if there is one so `xah-forward-right-bracket' can find the next one.
-       (forward-char 1))
-     (xah-forward-right-bracket)
-     (backward-char 1))
-  (bind-key [remap xah-forward-right-bracket] #'my/xah-fly-forward-right-bracket xah-fly-command-map)
-
   ;; TODO modify xfk to accept a list to try for movement with "h" and ";"
 
   ($))
