@@ -219,25 +219,76 @@ Optional argument FILE-OVERRIDE is a string to be passed as the FILE parameter t
   ;; Disable overriding built-in Emacs control/meta key sequences so they are always available:
   (setq xah-fly-use-control-key nil)
 
-  ;;;; Keyboard layout
-  (setq xah-fly-key-current-layout 'qwerty)
-
   ;;;; Load
   !^
 
-  ;;;; Keyboard quit
-  (declare-function minibuffer-keyboard-quit "delsel" ())
-  !(defun my/xah-keyboard-quit ()
-     (interactive)
-     (if (minibufferp (current-buffer))
-	 (minibuffer-keyboard-quit)
-       (keyboard-quit)))
-  (unbind-key "<menu>" xah-fly-shared-map)
-  (bind-key "<menu>" #'xah-fly-command-mode-activate xah-fly-insert-map)
-  (bind-key "<menu>" #'my/xah-keyboard-quit xah-fly-command-map)
-  (unbind-key "<home>" xah-fly-shared-map)
-  (bind-key "<home>" #'xah-fly-command-mode-activate xah-fly-insert-map)
-  (bind-key "<home>" #'my/xah-keyboard-quit xah-fly-command-map)
+  ;;;; Keyboard layout
+  ;;;;; Custom symbol layout
+  (push '("Z" . "?") xah--dvorak-to-qwerty-kmap)
+  (push '("_" . "\"") xah--dvorak-to-qwerty-kmap)
+  (push '("{" . "_") xah--dvorak-to-qwerty-kmap)
+  (push '("+" . "}") xah--dvorak-to-qwerty-kmap)
+  (push '("?" . "{") xah--dvorak-to-qwerty-kmap)
+  (push '("+" . "}") xah--dvorak-to-qwerty-kmap)
+  (defvar xah--dvorak-to-custom-qwerty-kmap
+    (nconc '(;; Numbers:
+	     ("1" . "*")
+	     ("!" . "1")
+	     ("2" . "$")
+	     ("@" . "2")
+	     ("3" . "<menu>")
+	     ("#" . "3")
+	     ("4" . "{")
+	     ("$" . "4")
+	     ("5" . "}")
+	     ("%" . "5")
+	     ("6" . "_")
+	     ("^" . "6")
+	     ("7" . "\\")
+	     ("&" . "7")
+	     ("8" . "(")
+	     ("*" . "8")
+	     ("9" . ")")
+	     ("(" . "9")
+	     ("0" . "&")
+	     (")" . "0")
+	     ;; Miscellaneous:
+	     ("{" . "%")
+	     ("~" . "#")
+	     ("/" . "?")
+	     ("?" . "[")
+	     ("=" . "!")
+	     ("+" . "]")
+	     ("\\" . "^")
+	     ("-" . "\"")
+	     ("_" . "'")
+	     ("Z" . "@")
+	     ("<escape>" . "~")
+	     ("<home>" . "C-g")
+	     ("<menu>" . "C-g"))
+	   xah--dvorak-to-qwerty-kmap))
+  (let ((current xah--dvorak-to-custom-qwerty-kmap))
+    (while (not (eq current xah--dvorak-to-qwerty-kmap))
+      (bind-key (or (cdr (assoc (caar current) xah--dvorak-to-qwerty-kmap))
+		    (caar current))
+		(kbd (cdar current))
+		input-decode-map)
+      (setq current (cdr current))))
+  (setq xah-fly-key-current-layout 'custom-qwerty)
+  ;; Reload with new layout:
+  (load "xah-fly-keys")
+
+  !(defun my/function-key-self-insert-command (n)
+     (interactive "p")
+     (let ((key-name (symbol-name last-command-event)))
+       (if (eq (aref key-name 0) ?f)
+	   (self-insert-command n (+ ?0 (% (string-to-number (substring-no-properties key-name 1)) 10)))
+	 (user-error "%s is not a function key" key-name))))
+  (dotimes (i 10)
+    (bind-key (format "<f%d>" (1+ i))
+	      #'my/function-key-self-insert-command
+	      xah-fly-insert-map))
+  (bind-key "<f11>" "." xah-fly-insert-map)
 
   ;; TODO modify xfk to accept a list to try for movement with "h" and ";"
 
@@ -1484,8 +1535,8 @@ Hollow mode returns the Telephone Line subseparator using the merged foreground 
 
   ;;;; Expand/contract
   (with-eval-after-load 'xah-fly-keys
-    (bind-key "8" @'er/$ xah-fly-command-map)
-    (bind-key "*" @'er/contract-region xah-fly-command-map)))
+    (bind-key "(" @'er/$ xah-fly-command-map)
+    (bind-key "8" @'er/contract-region xah-fly-command-map)))
 
 ;;; Multiple Cursors
 (p@ck multiple-cursors
