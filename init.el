@@ -1261,6 +1261,7 @@ Hollow mode returns the Telephone Line subseparator using the merged foreground 
    (keyboard-pressed :box (:line-width 1 :style pressed-button) :inherit keyboard)))
 
 ;;; EXWM
+;; TODO Always do key translation before sending to X windows. Currently `exwm-input-release-keyboard' is commented out
 (p@ck exwm
   ;;;; Build
   ~(straight-use-package '$)
