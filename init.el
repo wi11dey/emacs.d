@@ -1951,6 +1951,15 @@ If there are multiple matches on  a line, the line is repeated with a different 
    (info-menu-star :inherit default)
    (info-node :foreground orange :inherit (bold italic))))
 
+;;; Asemantic Stickyfunc
+(p@ck asemantic-stickyfunc
+  ;;;; Build
+  ~(straight-use-package '($ :type git :host github :repo "wi11dey/asemantic-stickyfunc"))
+
+  ;;;; Enable
+  ;;;;; Programming modes
+  (add-hook 'prog-mode-hook @'$-mode))
+
 ;;; Semantic
 (p@ck semantic
   )
