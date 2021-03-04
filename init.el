@@ -1449,7 +1449,7 @@ Hollow mode returns the Telephone Line subseparator using the merged foreground 
   (add-hook 'help-mode-hook @'$-mode)
 
   (solarized-set-faces
-   ($-line :strike-through t)))
+   ($-line :strike-through base01)))
 
 ;;; Free Keys
 (p@ck free-keys
