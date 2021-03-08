@@ -2785,6 +2785,9 @@ If there are multiple matches on  a line, the line is repeated with a different 
   ;;;; Build
   ~(straight-use-package '$)
 
+  ;;;; SQL
+  (setq $-enable-sql-detection t)
+
   ;;;; Auto mode
   ;;;;; TSX
   ;; Nothing handles TypeScripted JSX better:
