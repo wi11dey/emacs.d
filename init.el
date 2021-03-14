@@ -2783,7 +2783,8 @@ If there are multiple matches on  a line, the line is repeated with a different 
 ;; TODO use this for more use cases?
 (p@ck web-mode
   ;;;; Build
-  ~(straight-use-package '$)
+  ~((straight-use-package '$)
+    ^)
 
   ;;;; SQL
   (setq $-enable-sql-detection t)
