@@ -998,6 +998,9 @@ Hollow mode returns the Telephone Line subseparator using the merged foreground 
   ~((straight-use-package '$)
     ^)
 
+  ;;;; Auto mode
+  (add-to-list 'auto-mode-alist (cons "\\.http\\'" @'$))
+
   @$-mode)
 
 ;;; Text
