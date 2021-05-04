@@ -110,7 +110,7 @@ Optional argument FILE-OVERRIDE is a string to be passed as the FILE parameter t
 		       (setf (nth 2 sexp) file-override))
 		     (push sexp autoloads))))
 	      (end-of-file (cons 'progn autoloads)))
-	  (kill-buffer (current-buffer)))))))
+	  (kill-buffer))))))
 
 ;;; Straight.el
 (eval-and-compile
