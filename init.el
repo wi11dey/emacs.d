@@ -281,9 +281,10 @@ Optional argument FILE-OVERRIDE is a string to be passed as the FILE parameter t
   !(defun my/function-key-self-insert-command (n)
      (interactive "p")
      (let ((key-name (symbol-name last-command-event)))
-       (if (eq (aref key-name 0) ?f)
-	   (self-insert-command n (+ ?0 (% (string-to-number (substring-no-properties key-name 1)) 10)))
-	 (user-error "%s is not a function key" key-name))))
+       (if (not (eq (aref key-name 0) ?f))
+	   (user-error "%s is not a function key" key-name)
+	 (setq last-command-event (+ ?0 (% (string-to-number (substring-no-properties key-name 1)) 10)))
+	 (self-insert-command n))))
   (dotimes (i 10)
     (bind-key (format "<f%d>" (1+ i))
 	      #'my/function-key-self-insert-command
