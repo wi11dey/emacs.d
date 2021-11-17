@@ -161,9 +161,7 @@ Optional argument FILE-OVERRIDE is a string to be passed as the FILE parameter t
   (defvar my/site-lisp (eval-when-compile
 			 (let (site-lisp)
 			   (dolist (path load-path)
-			     (when (and (>= (length path) 9)
-					(equal (substring path -9)
-					       "site-lisp"))
+			     (when (string-match-p "site-lisp" path)
 			       (push path site-lisp)))
 			   (nreverse site-lisp))))
 
