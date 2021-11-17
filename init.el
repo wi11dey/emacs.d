@@ -157,11 +157,23 @@ Optional argument FILE-OVERRIDE is a string to be passed as the FILE parameter t
 
 ;;; Paths
 (eval-and-compile
+  ;;;; Site lisp
+  (defvar my/site-lisp (eval-when-compile
+			 (let (site-lisp)
+			   (dolist (path load-path)
+			     (when (and (>= (length path) 9)
+					(equal (substring path -9)
+					       "site-lisp"))
+			       (push path site-lisp)))
+			   (nreverse site-lisp))))
+
   (let ((straight-built (directory-files my/straight-build-dir
 					 :full-name
 					 "\\`[^.]")))
     ;;;; Load path
-    (setq load-path (append straight-built
+    ;; Pull site-lisp directories to the front of the load path:
+    (setq load-path (append my/site-lisp
+			    straight-built
 			    load-path))
     ;;;; Info
     (setq Info-additional-directory-list straight-built)))
@@ -2478,12 +2490,6 @@ If there are multiple matches on  a line, the line is repeated with a different 
 (p@ck pdf-tools
   ;;;; Build
   ~(straight-use-package '($ :type git :host github :repo "vedang/pdf-tools"))
-
-  ;;;; epdfinfo
-  (p@ck pdf-info
-    ;; Use system epdfinfo executable if it is available:
-    (setq $-epdfinfo-program (or (locate-file "epdfinfo" exec-path)
-				 $-epdfinfo-program)))
 
   ;;;; Install
   !^
