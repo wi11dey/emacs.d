@@ -2804,4 +2804,13 @@ If there are multiple matches on  a line, the line is repeated with a different 
   ;;;;; HTML
   (add-to-list 'auto-mode-alist (cons "\\.html?\\'" @'$)))
 
+;;; Rust
+(p@ck rust-mode
+  ;;;; Build
+  ~(straight-use-package '$)
+
+  ;;;; Auto mode
+  (add-to-list 'auto-mode-alist (cons "\\.rs\\'" @'$)))
+
+
 ;;; init.el ends here
