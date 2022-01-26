@@ -246,7 +246,7 @@ Optional argument FILE-OVERRIDE is a string to be passed as the FILE parameter t
 	     ("!" . "1")
 	     ("2" . "$")
 	     ("@" . "2")
-	     ("3" . "<menu>")
+	     ("3" . "<S-menu>") ; <S-menu> instead of <menu> so it becomes <menu> when input methods strip the shift modifier, and falls back to menu automatically when such input methods are active.
 	     ("#" . "3")
 	     ("4" . "{")
 	     ("$" . "4")
