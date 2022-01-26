@@ -2812,5 +2812,20 @@ If there are multiple matches on  a line, the line is repeated with a different 
   ;;;; Auto mode
   (add-to-list 'auto-mode-alist (cons "\\.rs\\'" @'$)))
 
+;;; DjVu
+(p@ck djvu
+  ;;;; Build
+  ~(straight-use-package '$)
+
+  ;;;; DjVu3
+  (p@ck djvu3
+    ;;;;; Build
+    ~(straight-use-package '($ :type git :host github :repo "dalanicolai/djvu3"))
+
+    (with-eval-after-load 'djvu
+      ^))
+
+  ;;;; Auto mode
+  (add-to-list 'auto-mode-alist (cons "\\.djvu\\'" @'$-dummy-mode)))
 
 ;;; init.el ends here
