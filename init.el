@@ -663,38 +663,26 @@ Optional argument FILE-OVERRIDE is a string to be passed as the FILE parameter t
     ^)
 
   ;;;; Lighter
-  (setq company-lighter nil)
+  (setq $-lighter nil)
 
   ;;;; Delay
-  (setq company-idle-delay 0.25)
+  (setq $-idle-delay 0.25)
 
   ;;;; Prefix length
-  (setq company-minimum-prefix-length 2)
+  (setq $-minimum-prefix-length 2)
 
   ;;;; Wrap around
-  (setq company-selection-wrap-around t)
+  (setq $-selection-wrap-around t)
 
   ;;;; Quickhelp
+  ;; TODO
   (p@ckage $-quickhelp
     ;;;;; Build
     ~(straight-use-package '$))
 
   ;;;; Frontends
-  (setq company-frontends '(company-preview-frontend
-			    company-pseudo-tooltip-unless-just-one-frontend
-			    ;; TODO Company QuickHelp
-			    company-echo-metadata-frontend))
-
-  ;;;; Show keyboard shortcuts
-  !(defun my/company-show-numbers-function (numbered)
-     (concat
-      ;; Adjusting for the extra space the `keyboard' face takes up:
-      (propertize "  "
-  		  'display '(space :width (12)))
-      (propertize (format "M-%d" (mod numbered 10))
-  		  'face 'keyboard)))
-  (setq company-show-numbers t
-	company-show-numbers-function #'my/company-show-numbers-function)
+  (setq $-frontends (list @'$-preview-frontend
+			  @'$-echo-strip-common-frontend))
 
   ;;;; Enable
   ;;;;; Programming modes
@@ -918,7 +906,7 @@ Optional argument FILE-OVERRIDE is a string to be passed as the FILE parameter t
     ;;;;; Faces
     (solarized-set-faces
      ;; TODO fix the buffer-directory shared system
-     ($-dir-heading :height 1.1 :background base03 :inherit (my/mode-line/buffer-directory mode-line-buffer-id))
+     ($-dir-heading :inherit heading-4)
      ($-dir-priv :foreground blue :inherit bold)
      ($-read-priv :foreground cyan :inverse-video t)
      ($-write-priv :foreground yellow :inverse-video t)
@@ -1324,33 +1312,8 @@ Optional argument FILE-OVERRIDE is a string to be passed as the FILE parameter t
    (mc/cursor-face :box nil :inherit cursor)
    (mc/region-face :box nil :inherit region)))
 
-;;; Orderless
-(p@ckage orderless
-  ;;;; Build
-  ~((straight-use-package '$)
-    ^)
-
-  ;;;; Register style
-  (add-to-list 'completion-styles-alist
-               (list '$
-		     @'$-try-completion
-		     @'$-all-completions
-		     "Completion of multiple components, in any order."))
-
-  ;;;; Enable
-  (setq completion-styles '($)
-	;; completion-category-defaults nil
-	;;;;; Except for files
-        ;; completion-category-overrides '((file (styles partial-completion)))
-	)
-
-  ;;;; Matching styles
-  (setq $-matching-styles (list #'orderless-literal
-				#'orderless-prefixes
-				#'orderless-regexp)))
-
 ;;; Ivy
-;; TODO make fonts consistent
+;; TODO make fonts consistent (current match highlights whole line, commands shown in different color but not highlighted, count function keeps spacing consistent, orderless matches use normal fonts, match required font consistency, counsel-find-file uses dired fonts)
 (p@ckage ivy
   ;;;; Build
   ~(straight-use-package '$)
@@ -1404,8 +1367,8 @@ Optional argument FILE-OVERRIDE is a string to be passed as the FILE parameter t
   ;;;; Count format
   (setq ivy-count-format "[%d/%d] ")
 
-  ;;;; Orderless
-  (setq $-re-builders-alist '((t . orderless-ivy-re-builder)))
+  ;;;; Ignore order
+  (setq $-re-builders-alist '((t . ivy--regex-ignore-order)))
 
   ;;;; Wrap
   (setq ivy-wrap t)
@@ -1429,6 +1392,7 @@ Optional argument FILE-OVERRIDE is a string to be passed as the FILE parameter t
   ($-mode)
 
   ;;;; Counsel
+  ;; TODO write equivalent of consult-grep
   (p@ckage counsel
     ;;;;; Build
     ~(straight-use-package '$)
