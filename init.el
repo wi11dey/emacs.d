@@ -23,7 +23,7 @@
 ;; Generate README:
 ;;; Commentary:
 
-;; p@ck
+;; Using p@ckage
 ;; Starts in 0.7s on good days, 2s on bad
 
 ;;; Code:
@@ -34,12 +34,11 @@
 ;; All headings below are Sentence case.
 
 ;; TODO https://github.com/emacscollective/no-littering
-;; TODO xah-fly-keys doesn't set keyboard layout correctly on first installation
-;; TODO straight.el can't find nadvice on first installation
+;; TODO make first installation idempotent, reliable, and reproducible
 ;; TODO Outline-minor-mode C-ret and M-ret keybindings
 ;; TODO Outline minor mode heading indentation
 ;; TODO Use $ whenever possible
-;; TODO Search for (require) and try to make a nested p@ck
+;; TODO Search for (require) and try to make a nested p@ckage
 ;; TODO defvar+setq -> defconst where possible
 ;; TODO Go through and reorganize
 ;; TODO Break up "Keybindings" headings
@@ -176,15 +175,15 @@ Optional argument FILE-OVERRIDE is a string to be passed as the FILE parameter t
     ;;;; Info
     (setq Info-additional-directory-list straight-built)))
 
-;;; p@ck
+;;; p@ckage
 (eval-when-compile
-  (straight-use-package '(p@ck :type git :host github :repo "wi11dey/p-ck"))
-  (require 'p@ck))
-(p@ck p@ck
+  (straight-use-package '(p@ckage :type git :host github :repo "wi11dey/p-ckage"))
+  (require 'p@ckage))
+(p@ckage p@ckage
   @$)
 
 ;;; Bytecomp Simplify
-(p@ck bytecomp-simplify
+(p@ckage bytecomp-simplify
   ~((straight-use-package '$)
     ^)
 
@@ -194,13 +193,13 @@ Optional argument FILE-OVERRIDE is a string to be passed as the FILE parameter t
 
 
 ;;; Bind Key
-(p@ck bind-key
+(p@ckage bind-key
   ;;;; Build
   ~(straight-use-package '$)
   !^)
 
 ;;; Solarized
-(p@ck solarized
+(p@ckage solarized
   ;;;; Build
   ~(straight-use-package 'color-theme-$)
 
@@ -216,12 +215,12 @@ Optional argument FILE-OVERRIDE is a string to be passed as the FILE parameter t
   (load-theme '$ :no-confirm)
 
   ;;;; Utils
-  (p@ck $-utils
+  (p@ckage $-utils
     ~(straight-use-package '($ :type git :host github :repo "wi11dey/solarized-utils"))
     !^))
 
 ;;; Xah Fly Keys
-(p@ck xah-fly-keys
+(p@ckage xah-fly-keys
   ;;;; Build
   ~(straight-use-package '$)
 
@@ -305,81 +304,14 @@ Optional argument FILE-OVERRIDE is a string to be passed as the FILE parameter t
 
   ($))
 
-;;; Hydra
-;; TODO remove entirely
-(p@ck hydra
-  ;;;; Build
-  ~(straight-use-package '$)
-  !^
-
-  ;;;; Hint
-  ;;;;; Display
-  !(defun my/$-message (&optional string)
-     (let (message-log-max)
-       (when string
-	 (message "%s" string))))
-  (add-to-list '$-hint-display-alist '(my/$-message
-				       my/$-message
-				       my/$-message))
-  (setq $-hint-display-type #'my/$-message)
-  ;;;;; Default
-  (setq $-default-hint nil)
-
-  ;;;; Docstring
-  ~(defmacro my/$-docstring (title &optional columns &rest keys)
-     (unless (integerp columns)
-       (push columns keys)
-       (setq columns 2))
-     (setq keys (vconcat keys))
-     (let ((result (list (propertize (concat title
-					     (propertize "\n"
-							 'display '(space :align-to right))
-					     "\n")
-				     'face 'my/$-title)))
-	   (rows (ceiling (length keys) columns))
-	   column
-	   index
-	   key)
-       (dotimes (row rows)
-	 (when (> row 0)
-	   (push "\n" result))
-	 (setq column 0)
-	 (while (and (< column columns)
-		     (< (setq index (+ (* column rows) row)) (length keys)))
-	   (when (> column 0)
-	     (push (propertize "\t"
-			       'display `(space :align-to (,(/ (float column) columns) . text)))
-		   result))
-	   (setq key (aref keys index))
-	   (push (concat (propertize (car key)
-				     'face 'my/$-key)
-			 (propertize " → "
-				     'face 'my/$-separator)
-			 (if (stringp (cdr key))
-			     (propertize (cdr key)
-					 'face 'my/$-hint-string)
-			   (propertize (symbol-name (cdr key))
-				       'face 'my/$-hint-symbol)))
-		 result)
-	   (setq column (1+ column))))
-       (string-join (nreverse result))))
-
-  ;;;; Faces
-  (solarized-set-faces
-   (my/$-title :inherit minibuffer-prompt)
-   (my/$-key :inherit keyboard)
-   (my/$-separator :foreground blue)
-   (my/$-hint-symbol :inherit font-lock-function-name-face)
-   (my/$-hint-string :inherit (variable-pitch my/$-hint-symbol))))
-
 ;;; Novice
-(p@ck novice
+(p@ckage novice
   ;;;; Disable
   ;; Enable all commands:
   (setq disabled-command-function nil))
 
 ;;; Emacs
-(p@ck emacs
+(p@ckage emacs
   ;;;; Graphical display
   ;; xdisp
   (setq x-underline-at-descent-line t ; Line up underline with `telephone-line' separators.
@@ -408,24 +340,24 @@ Optional argument FILE-OVERRIDE is a string to be passed as the FILE parameter t
   (setq ring-bell-function #'ignore))
 
 ;;; Fancy
-(p@ck fancy
+(p@ckage fancy
   ;;;; Startup screen
   ;; TODO Is this the best way?
   ;; Show the fancy startup screen even on client frames:
   (add-hook 'server-after-make-frame-hook #'$-startup-screen))
 
 ;;; Minibuffer
-(p@ck minibuffer
+(p@ckage minibuffer
   ;;;; Variable Pitch
   (add-hook '$-inactive-mode-hook #'variable-pitch-mode))
 
 ;;; Blink Cursor
-(p@ck blink-cursor
+(p@ckage blink-cursor
   ;;;; Disable
   ($-mode -1))
 
 ;;; Faces
-(p@ck faces
+(p@ckage faces
   ;; TODO fontsets
   ;; (set-face-attribute FACE nil :fontset "x") works on everything but default face
   (solarized-set-faces
@@ -440,9 +372,9 @@ Optional argument FILE-OVERRIDE is a string to be passed as the FILE parameter t
    (minibuffer-prompt :foreground base1 :height 0.95 :inherit variable-pitch)))
 
 ;;; Save
-(p@ck save
+(p@ckage save
   ;;;; Final newline
-  (p@ck require-final-newline
+  (p@ckage require-final-newline
     (setq $ nil)
     (setq mode-$ :ask))
 
@@ -458,7 +390,7 @@ Optional argument FILE-OVERRIDE is a string to be passed as the FILE parameter t
   (add-hook 'kill-buffer-query-functions #'my/prompt-before-killing-buffer))
 
 ;;; Keyboard
-(p@ck keyboard
+(p@ckage keyboard
   ;;;; macOS
   ;;;;; Command key
   ;; Command key is control:
@@ -466,11 +398,11 @@ Optional argument FILE-OVERRIDE is a string to be passed as the FILE parameter t
     (setq ns-command-modifier 'control)))
 
 ;;; Paragraphs
-(p@ck paragraphs
+(p@ckage paragraphs
   (setq sentence-end-double-space nil))
 
 ;;; Files
-(p@ck files
+(p@ckage files
   ;;;; Windows
   ;;;;; File attributes
   ;; Don't make extra system calls to get accurate attribute information every time, which causes a very noticeable slowdown on some machines:
@@ -478,13 +410,13 @@ Optional argument FILE-OVERRIDE is a string to be passed as the FILE parameter t
     (setq w32-get-true-file-attributes nil))
 
   ;;;; Recovery
-  (p@ck recovery
+  (p@ckage recovery
     (let (($-directory (file-name-as-directory (expand-file-name "recovery"
 								 user-emacs-directory))))
       (mkdir $-directory :parents)
 
       ;;;;; Auto-save
-      (p@ck auto-save
+      (p@ckage auto-save
 	(let (($-directory (file-name-as-directory (concat recovery-directory
 							   "auto-save"))))
 
@@ -502,7 +434,7 @@ Optional argument FILE-OVERRIDE is a string to be passed as the FILE parameter t
 	  (mkdir (file-name-directory $-list-file-prefix) :parents)))
 
       ;;;;; Backup
-      (p@ck backup
+      (p@ckage backup
 	(let (($-directory (file-name-as-directory (concat recovery-directory
 							   "backup"))))
 	  (mkdir $-directory :parents)
@@ -520,7 +452,7 @@ Optional argument FILE-OVERRIDE is a string to be passed as the FILE parameter t
 		delete-old-versions t))))))
 
 ;;; Font Lock
-(p@ck font-lock
+(p@ckage font-lock
   ;;;; Faces
   (solarized-set-faces
    ($-comment-face :foreground base00 :height 105 :inherit prose)
@@ -533,7 +465,7 @@ Optional argument FILE-OVERRIDE is a string to be passed as the FILE parameter t
    ($-variable-name-face :foreground yellow :inherit fixed-pitch)))
 
 ;;; Menu Bar
-(p@ck menu-bar
+(p@ckage menu-bar
   ;;;; Disable
   ($-mode -1))
 
@@ -550,6 +482,7 @@ Optional argument FILE-OVERRIDE is a string to be passed as the FILE parameter t
 ;;;;; Empty lines
 (setq-default indicate-empty-lines t)
 ;;;;; Paragraph
+;; TODO
 ;; (define-fringe-bitmap 'paragraph
 ;;   [#b00111111
 ;;    #b01111101
@@ -566,14 +499,14 @@ Optional argument FILE-OVERRIDE is a string to be passed as the FILE parameter t
    #b11111100])
 
 ;;; Custom
-(p@ck custom
+(p@ckage custom
   ~(require 'cus-edit)
 
   (setq $-file (concat user-emacs-directory "custom.el")
 	$-raised-buttons t))
 
 ;;; Tool Bar
-(p@ck tool-bar
+(p@ckage tool-bar
   ;;;; Disable
   ($-mode -1))
 
@@ -586,7 +519,7 @@ Optional argument FILE-OVERRIDE is a string to be passed as the FILE parameter t
       echo-keystrokes 0.5)
 
 ;;; Visual Line
-(p@ck visual-line
+(p@ckage visual-line
   ;;;; Ignore modes
   (defvar my/$-ignore-modes nil
     "List of major modes for which Visual Line mode should never be enabled.")
@@ -606,44 +539,15 @@ Optional argument FILE-OVERRIDE is a string to be passed as the FILE parameter t
   (global-$-mode))
 
 ;;; Scroll Bar
-(p@ck scroll-bar
+(p@ckage scroll-bar
   ;;;; Width
   (set-frame-parameter nil '$-width 12)
 
   ;;;; Disable
   ($-mode -1))
 
-;;; Telephone Line
-;; TODO remove entirely
-;; TODO Arithmetic overflows when this is run immediately on `after-init-hook'
-(p@ck telephone-line
-  ;;;; Build
-  ~(straight-use-package '$)
-  !^
-
-  ;;;; Separator height
-  (setq $-height 20)
-
-  ;;;; Brace
-  !(defun my/$-brace--axis-func (x)
-     "|sin(1.8x) + 1.8x|"
-     (setq x (* x 1.8))
-     (abs (+ x (sin x))))
-  (defconst my/$-brace-left
-    (make-instance '$-separator
-		   :axis-func #'my/$-brace--axis-func))
-  (defconst my/$-brace-right
-    (make-instance '$-separator
-		   :axis-func ($-complement my/$-brace--axis-func)))
-  (defconst my/$-brace-hollow-left
-    (make-instance '$-subseparator
-		   :axis-func #'my/$-brace--axis-func))
-  (defconst my/$-brace-hollow-right
-    (make-instance '$-subseparator
-		   :axis-func ($-complement my/$-brace--axis-func))))
-
 ;;; Window Divider
-(p@ck window-divider
+(p@ckage window-divider
   ;;;; Places
   (setq $-default-places t) ; Both right and bottom.
 
@@ -656,152 +560,9 @@ Optional argument FILE-OVERRIDE is a string to be passed as the FILE parameter t
   ;;;; Enable
   ($-mode))
 
-;;; Mode Line
-;; TODO remove this code entirely
-(p@ck mode-line
-  (defface my/$--unspecified
-    '((t))
-    "Helper face from `my/mode-line--face-attribute'. Never set any attributes for this face."
-    :group 'my
-    :group '$)
-  !(defun my/$--face-attribute (face-list attribute)
-     "Merges the value of ATTRIBUTE from the named faces in FACE-LIST."
-     (when (and (memq attribute '(:foreground :background))
-		(face-attribute 'my/$--unspecified :inverse-video nil face-list))
-       (setq attribute (if (eq attribute :foreground)
-			   :background
-			 :foreground)))
-     (face-attribute 'my/$--unspecified attribute nil face-list))
-
-  ;; TODO remove and change face direct in code based on `active' var
-  !(defun my/$--no-inverse-background (face-name inherit-from)
-     (let ((inverse (my/$--face-attribute inherit-from :inverse-video)))
-       (list (when inverse
-  	       (list :foreground
-		     (my/$--face-attribute inherit-from :background)
-  		     :background
-		     (my/$--face-attribute inherit-from :foreground)))
-  	     face-name
-	     inherit-from)))
-
-  ;; TODO all-the icons
-  !(defun my/$/buffer-directory (directory &optional inactive initials)
-     (let* ((active (not inactive))
-	    (current-face (list 'my/$/buffer-directory
-				(if active
-				    '$-buffer-id
-				  'my/$/buffer-id-inactive))))
-       (when directory
-	 (setq directory (abbreviate-file-name directory))
-	 (when (directory-name-p directory)
-	   (setq directory (directory-file-name directory)))
-	 (when initials
-	   (setq directory (replace-regexp-in-string "\\(?1:[^[:alnum:]]+.\\)[[:alnum:]]*" "\\1" directory)))
-	 (setq directory (propertize directory
-  				     'face current-face)
-	       directory (replace-regexp-in-string "[/\\]"
-  						   (propertize "/"
-  							       'face (my/$--no-inverse-background 'my/$/buffer-directory/separator current-face))
-  						   directory)
-	       directory (replace-regexp-in-string "~"
-  						   (propertize "~"
-  							       'face (my/$--no-inverse-background 'my/$/buffer-directory/tilde current-face))
-  						   directory)))))
-
-  ;; TODO like buffer directory
-  (defun my/$/vc (&optional inactive)
-    (let* ((_active (not inactive))
-	   (file (or buffer-file-name
-  		     default-directory))
-	   (state (or (vc-state file)
-  		      (when (fboundp 'vc-git-state)
-			(vc-git-state file)))))
-      (when state)))
-
-  !(defun my/$--suffixize (number)
-     (if (< number 1000)
-	 (number-to-string number)
-       (let (suffix)
-	 (cond ((>= number 1000000000)
-		(setq number (/ number 1000000000.0)
-		      suffix ?ɢ))
-	       ((>= number 1000000)
-		(setq number (/ number 1000000.0)
-		      suffix ?ᴍ))
-	       (t ;; Must be >= 1000.
-		(setq number (/ number 1000.0)
-		      suffix ?ᴋ)))
-	 (format "%.1f%c" number suffix))))
-
-  !(defun my/$-separator-render (separator-base direction fg-face bg-face &optional inherit-from
-						separator-face no-padding)
-     "Merges FG-FACE and BG-FACE backgrounds, switches to hollow mode if they are equal, and returns a propertized string with the rendered SEPARATOR-BASE DIRECTION Telephone Line separator with spacing on either side.
-
-Hollow mode returns the Telephone Line subseparator using the merged foreground from BG-FACE without spacing, because subseparators already include spacing"
-     (setq inherit-from (if inherit-from
-			    (list inherit-from 'default)
-			  (list 'default)))
-     (let* ((bg-face (cons bg-face inherit-from))
-	    (fg-face (cons fg-face inherit-from))
-	    (bg (my/$--face-attribute bg-face :background))
-	    (fg (my/$--face-attribute fg-face :background))
-	    (hollow (equal bg fg)))
-       (when hollow
-	 (setq bg (my/$--face-attribute bg-face :foreground)))
-       (concat (unless (or hollow
-			   no-padding)
-		 (propertize (concat " ")
-			     'face bg-face))
-	       (cond (window-system
-		      (propertize (telephone-line-separator-render-image (symbol-value (intern (concat (symbol-name separator-base)
-												       (when hollow "-hollow")
-												       "-"
-												       (symbol-name direction))))
-									 fg bg)
-				  'face (or separator-face
-					    bg-face)))
-		     ((or hollow
-			  no-padding)
-		      (propertize "|"
-				  'face (or separator-face
-					    bg-face))))
-	       (unless (or hollow
-			   no-padding)
-		 (propertize " "
-			     'face fg-face)))))
-
-  (setq-default mode-line-format nil)
-
-  ;;;; Faces
-  (solarized-set-faces
-   ($ :height 0.95 :inverse-video t :inherit variable-pitch)
-   ($-inactive :inverse-video nil :background base03 :inherit $
- 	       ;; :stipple (5 5 ,(string #b00001
-	       ;;                        #b00010
-	       ;;                        #b00100
-	       ;;                        #b01000
-	       ;;                        #b10000))
-	       )
-   (my/$/eldoc :background base03 :inherit fixed-pitch)
-   ;; ($-buffer-id :font "Liberation Sans" :height 120 :foreground base0 :background base03 :inverse-video nil :underline base0)
-   (my/$/buffer-id-inactive :inherit (auto-dim-other-buffers-face $-buffer-id))
-   (my/$/buffer-id-special :foreground cyan)
-   (my/$/buffer-id-exwm-active :background "#ffffff" :inherit $-buffer-id)
-   (my/$/buffer-id-uniquify :foreground yellow)
-   (my/$/buffer-directory :height 0.95 :background base02)
-   (my/$/buffer-directory/separator :height 110 :foreground blue :inherit (bold fixed-pitch))
-   (my/$/buffer-directory/tilde :height 120 :foreground yellow :inherit my/$/buffer-directory/separator)
-   (my/$/vc :weight bold :foreground green)
-   (my/$/major-mode :weight bold :foreground blue)
-   (my/$/minor-mode :foreground base1)
-   (my/$/character-id :foreground cyan)
-   (my/$/region :foreground magenta)
-   (my/$/mule-info :foreground base0)
-   (my/$/position :foreground base00)))
-
 ;;; Adaptive Wrap
 ;; TODO make adaptive wrap better by replacing tabs with a space with an :align-to property that aligns to wherever the last tab ended
-(p@ck adaptive-wrap
+(p@ckage adaptive-wrap
   ;;;; Build
   ~(straight-use-package '$)
 
@@ -812,14 +573,13 @@ Hollow mode returns the Telephone Line subseparator using the merged foreground 
   (add-hook 'visual-line-mode-hook #'my/$-on-visual-line-mode))
 
 ;;; Aggressive Indent
-;; TODO keeps messing with `swiper-query-replace' while it's running
-(p@ck aggressive-indent
+(p@ckage aggressive-indent
   ;;;; Build
   ~(straight-use-package '$)
   !^
 
   ;;;; Bugfixes
-  ;; FIXME BUG!! in aggressive-indent-mode. Change defvar-local to defvar aggressive-indent--idle-timer in aggressive-indent.el
+  ;; FIXME: Bug in aggressive-indent-mode. Change defvar-local to defvar aggressive-indent--idle-timer in aggressive-indent.el
   (add-hook 'org-babel-post-tangle-hook (lambda ()
 					  (cancel-function-timers 'aggressive-indent--indent-if-changed)))
 
@@ -827,12 +587,12 @@ Hollow mode returns the Telephone Line subseparator using the merged foreground 
   (global-$-mode))
 
 ;;; All The Icons
-(p@ck all-the-icons
+(p@ckage all-the-icons
   ;;;; Build
   ~(straight-use-package '$))
 
 ;;; AUCTeX
-(p@ck auctex
+(p@ckage auctex
   ;;;; Build
   ~((straight-use-package '$)
     (my/package-autoloads $)
@@ -842,7 +602,7 @@ Hollow mode returns the Telephone Line subseparator using the merged foreground 
   (require 'tex-site)
 
   ;;;; Font lock
-  (p@ck tex-font
+  (p@ckage tex-font
     ;; Use built-in `tex-mode' syntax highlighting, which highlights all control sequences.
     (setq TeX-install-font-lock @'tex-font-setup))
 
@@ -850,12 +610,12 @@ Hollow mode returns the Telephone Line subseparator using the merged foreground 
   (setq TeX-view-program-selection '((output-pdf "PDF Tools")))
 
   ;;;; Buffer
-  (p@ck tex-buf
+  (p@ckage tex-buf
     ;;;;; Revert
     (add-hook 'TeX-after-compilation-finished-functions @'TeX-revert-document-buffer)))
 
 ;;; Auto Dim Other Buffers
-(p@ck auto-dim-other-buffers
+(p@ckage auto-dim-other-buffers
   ;;;; Build
   ~(straight-use-package '$)
   !^
@@ -867,24 +627,8 @@ Hollow mode returns the Telephone Line subseparator using the merged foreground 
   (solarized-set-faces
    ($-face :background base02)))
 
-;;; Avy
-(p@ck avy
-  ;;;; Build
-  ~(straight-use-package '$)
-
-  ;;;; Keybindings
-  (bind-key* "C-j"   @'$-goto-char)
-  (bind-key* "C-S-j" @'$-goto-char-timer)
-
-  ;;;; Faces
-  (solarized-set-faces
-   ($-lead-face :foreground base03 :background red :weight medium :slant normal)
-   ($-lead-face-0 :background blue    :inherit avy-lead-face)
-   ($-lead-face-1 :background magenta :inherit avy-lead-face)
-   ($-lead-face-2 :background violet  :inherit avy-lead-face)))
-
 ;;; Text Scale
-(p@ck text-scale
+(p@ckage text-scale
   !((autoload '$-mode "face-remap" nil t)
     (defun my/$-reset ()
       (interactive)
@@ -896,11 +640,11 @@ Hollow mode returns the Telephone Line subseparator using the merged foreground 
   (bind-key "C-x C-0" #'my/$-reset))
 
 ;;; Calculator
-(p@ck calculator
+(p@ckage calculator
   (bind-key "<XF86Calculator>" #'calculator))
 
 ;;; Rainbow
-(p@ck rainbow-mode
+(p@ckage rainbow-mode
   ;;;; Build
   ~((straight-use-package '$)
     ^)
@@ -913,7 +657,7 @@ Hollow mode returns the Telephone Line subseparator using the merged foreground 
   (add-hook 'prog-mode-hook @'$))
 
 ;;; Company
-(p@ck company
+(p@ckage company
   ;;;; Build
   ~((straight-use-package '$)
     ^)
@@ -931,7 +675,7 @@ Hollow mode returns the Telephone Line subseparator using the merged foreground 
   (setq company-selection-wrap-around t)
 
   ;;;; Quickhelp
-  (p@ck $-quickhelp
+  (p@ckage $-quickhelp
     ;;;;; Build
     ~(straight-use-package '$))
 
@@ -968,7 +712,7 @@ Hollow mode returns the Telephone Line subseparator using the merged foreground 
    (company-preview-common :foreground base0 :inherit company-preview)))
 
 ;;; Goto Last Change
-(p@ck goto-last-change
+(p@ckage goto-last-change
   ;;;; Build
   ~(straight-use-package '$)
 
@@ -977,7 +721,7 @@ Hollow mode returns the Telephone Line subseparator using the merged foreground 
 
 ;;; Highlight Indent Guides
 ;; TODO Use font-lock "stealth" to add guides to buffers
-(p@ck highlight-indent-guides
+(p@ckage highlight-indent-guides
   ;;;; Build
   ~((straight-use-package '$)
     ^)
@@ -987,7 +731,7 @@ Hollow mode returns the Telephone Line subseparator using the merged foreground 
 
   ;;;; Character
   (setq $-method 'character
-	$-character ?┊)
+	$-character ?|)
 
   ;;;; Responsive
   (setq $-responsive 'top)
@@ -1004,7 +748,7 @@ Hollow mode returns the Telephone Line subseparator using the merged foreground 
    ($-top-character-face :foreground magenta :inherit (bold $-character-face))))
 
 ;;; REST Client
-(p@ck restclient
+(p@ckage restclient
   ;;;; Build
   ~((straight-use-package '$)
     ^)
@@ -1015,13 +759,13 @@ Hollow mode returns the Telephone Line subseparator using the merged foreground 
   @$-mode)
 
 ;;; Text
-(p@ck text
+(p@ckage text
   ;;;; Auto mode
   ;; Try Text mode for files with all-uppercase filenames:
   (add-to-list 'auto-mode-alist (cons "\\(/\\|\\`\\)[A-Z]+\\'" #'$-mode) :append))
 
 ;;; LS Lisp
-(p@ck ls-lisp
+(p@ckage ls-lisp
   !^
 
   ;;;; Lisp only
@@ -1043,7 +787,7 @@ Hollow mode returns the Telephone Line subseparator using the merged foreground 
   !(setq dired-hacks-datetime-regexp my/ls-lisp-time-regexp))
 
 ;;; Dired
-(p@ck dired
+(p@ckage dired
   ~^
 
   ;;;; Auto revert
@@ -1060,7 +804,7 @@ Hollow mode returns the Telephone Line subseparator using the merged foreground 
   (setq $-listing-switches "-AlhX")
 
   ;;;; Subtree
-  (p@ck $-subtree
+  (p@ckage $-subtree
     ;;;;; Build
     ~((straight-use-package '$)
       ^)
@@ -1077,7 +821,7 @@ Hollow mode returns the Telephone Line subseparator using the merged foreground 
   _(bind-key "i" #'$-subtree-toggle $-mode-map)
 
   ;;;; Rainbow
-  (p@ck $-rainbow
+  (p@ckage $-rainbow
     ;;;;; Build
     ~((straight-use-package '$)
       ^)
@@ -1119,7 +863,7 @@ Hollow mode returns the Telephone Line subseparator using the merged foreground 
      (dired-rainbow-prose-face :inherit prose)))
 
   ;;;; Collapse
-  (p@ck $-collapse
+  (p@ckage $-collapse
     ;;;;; Build
     ~(straight-use-package '$)
 
@@ -1130,7 +874,7 @@ Hollow mode returns the Telephone Line subseparator using the merged foreground 
 
   ;;;; Peep
   ;; TODO Don't delete peeped buffers that already existed before peeping
-  (p@ck peep-$
+  (p@ckage peep-$
     ;;;;; Build
     ~((straight-use-package '$)
       ^)
@@ -1155,7 +899,7 @@ Hollow mode returns the Telephone Line subseparator using the merged foreground 
   (add-hook 'my/visual-line-ignore-modes #'$-mode)
 
   ;;;; Font Lock
-  (p@ck diredfl
+  (p@ckage diredfl
     ;;;;; Build
     ~(straight-use-package '$)
 
@@ -1193,15 +937,15 @@ Hollow mode returns the Telephone Line subseparator using the merged foreground 
      ($-deletion-file-name :foreground red :background base02 :inverse-video nil))))
 
 ;;; ElDoc
-(p@ck eldoc
+(p@ckage eldoc
   ;;;; Faces
   (solarized-set-faces
    (eldoc-highlight-function-argument :inherit (bold fixed-pitch))))
 
 ;;; Eshell
-(p@ck eshell
+(p@ckage eshell
   ;;;; Terminal
-  (p@ck em-term
+  (p@ckage em-term
     ~^
     ;;;;; Visual commands
     ;; Commands that need to be run in a ANSI terminal emulator:
@@ -1212,19 +956,19 @@ Hollow mode returns the Telephone Line subseparator using the merged foreground 
 				   "top")))
 
   ;;;; History
-  (p@ck em-hist
+  (p@ckage em-hist
     ~^
     ;; Do not save history. (`nil' would tell Eshell to use the HISTFILE environment variable):
     (setq eshell-history-file-name ""))
 
   ;;;; Directories
-  (p@ck em-dirs
+  (p@ckage em-dirs
     ~^
     ;; Do not save the last-dir-ring to disk:
     (setq eshell-last-dir-ring-file-name nil))
 
   ;;;; Mode
-  (p@ck esh-mode
+  (p@ckage esh-mode
     (setq eshell-buffer-maximum-lines 10000)
 
     _(add-to-list 'eshell-output-filter-functions @'eshell-truncate-buffer :append))
@@ -1235,7 +979,7 @@ Hollow mode returns the Telephone Line subseparator using the merged foreground 
    ($-ls-directory :inherit diredfl-dir-name)))
 
 ;;; README.org
-(p@ck readme-org
+(p@ckage readme-org
   ;;;; Build
   ~(straight-use-package '($ :type git :host github :repo "wi11dey/README.org.el"))
   !^
@@ -1247,7 +991,7 @@ Hollow mode returns the Telephone Line subseparator using the merged foreground 
   (readme-org-mode))
 
 ;;; Xtended Faces
-(p@ck xtended-faces
+(p@ckage xtended-faces
   ;;;; Build
   ~(straight-use-package '($ :type git :host github :repo "wi11dey/xtended-faces"))
   !^
@@ -1276,7 +1020,7 @@ Hollow mode returns the Telephone Line subseparator using the merged foreground 
 
 ;;; EXWM
 ;; TODO Always do key translation before sending to X windows. Currently `exwm-input-release-keyboard' is commented out
-(p@ck exwm
+(p@ckage exwm
   ;;;; Build
   ~(straight-use-package '$)
 
@@ -1417,7 +1161,7 @@ Hollow mode returns the Telephone Line subseparator using the merged foreground 
 
   ;; TODO Plug and play new screens
   ;;;; RandR
-  ;; (p@ck $-randr
+  ;; (p@ckage $-randr
   ;;   !^
 
   ;;   ;;;;; Workspaces
@@ -1429,7 +1173,7 @@ Hollow mode returns the Telephone Line subseparator using the merged foreground 
   ($-enable))
 
 ;;; Ispell
-(p@ck ispell
+(p@ckage ispell
   ~^
 
   (setq $-program-name (cond ((executable-find "aspell")
@@ -1440,7 +1184,7 @@ Hollow mode returns the Telephone Line subseparator using the merged foreground 
 			      "ispell"))))
 
 ;;; Flyspell
-(p@ck flyspell
+(p@ckage flyspell
   ;;;; Enable
   ;;;;; Programming modes
   (add-hook 'prog-mode-hook #'$-prog-mode)
@@ -1448,7 +1192,7 @@ Hollow mode returns the Telephone Line subseparator using the merged foreground 
   (add-hook 'text-mode-hook #'$-mode))
 
 ;;; Form Feed
-(p@ck form-feed
+(p@ckage form-feed
   ;;;; Build
   ~(straight-use-package '$)
 
@@ -1466,7 +1210,7 @@ Hollow mode returns the Telephone Line subseparator using the merged foreground 
    ($-line :strike-through base01)))
 
 ;;; Free Keys
-(p@ck free-keys
+(p@ckage free-keys
   ;;;; Build
   ~((straight-use-package '$)
     ^)
@@ -1474,8 +1218,7 @@ Hollow mode returns the Telephone Line subseparator using the merged foreground 
   @$)
 
 ;;; Minibuffer Line
-;; TODO
-(p@ck minibuffer-line
+(p@ckage minibuffer-line
   ;;;; Build
   ~(straight-use-package '$)
   !^
@@ -1503,10 +1246,19 @@ Hollow mode returns the Telephone Line subseparator using the merged foreground 
 				face fixed-pitch)))
 
   ;;;; Enable
-  ($-mode))
+  ($-mode)
+
+  ;;;; Faces
+  (solarized-set-faces
+   ($ :inverse-video nil :background base03)))
+
+;;; Mode Line
+(p@ckage mode-line
+  ;;;; Disable
+  (setq-default $-format nil))
 
 ;;; HL Line
-(p@ck hl-line
+(p@ckage hl-line
   ;;;; Enable
   ;;;;; Compilation
   (add-hook 'compilation-mode-hook #'$-mode)
@@ -1514,7 +1266,7 @@ Hollow mode returns the Telephone Line subseparator using the merged foreground 
   (add-hook 'prog-mode-hook #'$-mode))
 
 ;;; Ibuffer
-(p@ck ibuffer
+(p@ckage ibuffer
   ~^
 
   ;;;; Other window
@@ -1524,7 +1276,7 @@ Hollow mode returns the Telephone Line subseparator using the merged foreground 
   (bind-key "C-x C-b" #'ibuffer))
 
 ;;; VC
-(p@ck vc
+(p@ckage vc
   ;;;; Backup files
   ;; Backup files are stored in .emacs.d, not in the original directory, so make backups of files even under version control:
   (setq $-make-backup-files t)
@@ -1533,13 +1285,13 @@ Hollow mode returns the Telephone Line subseparator using the merged foreground 
   (setq $-follow-symlinks t))
 
 ;;; Auto Save Visited Minor Mode
-(p@ck auto-save-visited-minor-mode
+(p@ckage auto-save-visited-minor-mode
   ~(straight-use-package '($ :type git :host github :repo "wi11dey/auto-save-visited-minor-mode"))
 
   @$)
 
 ;;; Expand Region
-(p@ck expand-region
+(p@ckage expand-region
   ;;;; Build
   ~((straight-use-package '$)
     ^)
@@ -1554,7 +1306,7 @@ Hollow mode returns the Telephone Line subseparator using the merged foreground 
     (bind-key "8" @'er/contract-region xah-fly-command-map)))
 
 ;;; Multiple Cursors
-(p@ck multiple-cursors
+(p@ckage multiple-cursors
   ;;;; Build
   ~((straight-use-package '$)
     ^)
@@ -1563,7 +1315,7 @@ Hollow mode returns the Telephone Line subseparator using the merged foreground 
   (setq mc/always-run-for-all t)
 
   ;;;; Rectangular region
-  (p@ck rectangular-region-mode
+  (p@ckage rectangular-region-mode
     ;;;;; Keybindings
     (bind-key "C-x SPC" @'set-rectangular-region-anchor))
 
@@ -1572,30 +1324,37 @@ Hollow mode returns the Telephone Line subseparator using the merged foreground 
    (mc/cursor-face :box nil :inherit cursor)
    (mc/region-face :box nil :inherit region)))
 
+;;; Orderless
+(p@ckage orderless
+  ;;;; Build
+  ~((straight-use-package '$)
+    ^)
+
+  ;;;; Register style
+  (add-to-list 'completion-styles-alist
+               (list '$
+		     @'$-try-completion
+		     @'$-all-completions
+		     "Completion of multiple components, in any order."))
+
+  ;;;; Enable
+  (setq completion-styles '($)
+	;; completion-category-defaults nil
+	;;;;; Except for files
+        ;; completion-category-overrides '((file (styles partial-completion)))
+	)
+
+  ;;;; Matching styles
+  (setq $-matching-styles (list #'orderless-literal
+				#'orderless-prefixes
+				#'orderless-regexp)))
+
 ;;; Ivy
-(p@ck ivy
+;; TODO make fonts consistent
+(p@ckage ivy
   ;;;; Build
   ~(straight-use-package '$)
   !^
-
-  ;;;; Number shortcuts
-  !(defun my/$-number-shortcut ()
-     (interactive)
-     (let* ((number (- (event-basic-type last-command-event) ?0))
-	    (half-height (/ ivy-height 2))
-	    (start (max 0 (- ivy--index half-height)))
-	    (end (min (+ start (1- ivy-height)) ivy--length))
-	    (start (max 0 (min start (- end (1- ivy-height))))))
-       (when (<= 0 number 9)
-	 ;; The `%' function doesn't handle negatives correctly in this context.
-	 (ivy-set-index (+ (mod (1- number) ivy-height) start))
-	 (ivy--exhibit)
-	 (ivy-done)
-	 (ivy-call))))
-  (dotimes (i 10)
-    (bind-key (format "M-%d" i)
-	      #'my/$-number-shortcut
-	      $-minibuffer-map))
 
   ;;;; Mark
   (setq ivy-mark-prefix "")
@@ -1642,66 +1401,11 @@ Hollow mode returns the Telephone Line subseparator using the merged foreground 
        (setq ivy-marked-candidates (cdr new-candidates))))
   (bind-key "C-M->" #'my/$-toggle-marks $-minibuffer-map)
 
-  ;;;; Format
-  (defconst my/$-format-functions-alist (list (cons t #'ivy-format-function-default)))
-  !(defun my/$-format-function (candidates)
-     (let ((i 0)
-	   lines
-	   current-lines
-	   strings)
-       (dolist (candidate candidates)
-	 (setq lines (split-string (let (($--window-index (if (= i $--window-index) 0 -1)))
-				     (funcall (ivy-alist-setting my/$-format-functions-alist)
-					      (list candidate)))
-				   "\n"
-				   t))
-	 (if (member candidate $-marked-candidates)
-             ;;;;; Mark
-	     (progn
-	       (setq current-lines lines)
-	       (while current-lines
-		 (setcar current-lines
-			 (concat (propertize " "
-					     'display '(space :align-to 2))
-				 (propertize "*"
-					     'face 'my/$-mark-prefix)
-				 (propertize " "
-					     'face 'my/$-mark
-					     'display '(space :align-to 4))
-				 (ivy--add-face (car lines) 'my/$-mark)))
-		 (setq current-lines (cdr current-lines))))
-           ;;;;; Number shortcuts
-	   (setq current-lines lines)
-	   (while current-lines
-	     (setcar current-lines
-		     (concat (propertize " "
-					 'display '(space :align-to 4))
-			     (car current-lines)))
-	     (setq current-lines (cdr current-lines)))
-	   (when lines
-	     (setcar lines
-		     (concat (when (and (< i 10)
-					(null ivy-marked-candidates))
-			       (let ((number (% (1+ i) 10)))
-				 ;; Propertize a single character with a longer display property so if `ivy-avy' runs, the entire prefix is replaced.
-				 (propertize " "
-					     'display (propertize (format "M-%d" number)
-								  'face 'my/$-number-shortcuts))))
-			     (car lines)))))
-	 (push (mapconcat #'identity lines "\n") strings)
-	 (setq i (1+ i)))
-       (mapconcat #'identity (nreverse strings) "\n")))
-  !(defun my/$-format-function-install ()
-     (setq $-format-functions-alist (list (cons t #'my/$-format-function))))
-  _(my/$-format-function-install)
-  ;;;;; Faces
-  (solarized-set-faces
-   (my/$-number-shortcuts :inherit keyboard)
-   (my/$-mark-prefix :inherit diredfl-flag-mark)
-   (my/$-mark :inherit diredfl-flag-mark-line))
-
   ;;;; Count format
-  (setq ivy-count-format "%d/%d ")
+  (setq ivy-count-format "[%d/%d] ")
+
+  ;;;; Orderless
+  (setq $-re-builders-alist '((t . orderless-ivy-re-builder)))
 
   ;;;; Wrap
   (setq ivy-wrap t)
@@ -1712,116 +1416,20 @@ Hollow mode returns the Telephone Line subseparator using the merged foreground 
   ;;;; Done
   (bind-key "M-RET" #'$-immediate-done $-minibuffer-map)
 
-  ;;;; Prompt
-  !(defun my/ivy-prompt--variable-pitch-number (num-string face)
-     (let ((bg (face-attribute face (if (face-attribute face :inverse-video nil 'default)
-					:foreground
-				      :background)
-			       nil 'default)))
-       (replace-regexp-in-string " "
-				 (propertize "0"
-					     'face `((:foreground  ,bg :background ,bg)
-						     ,face))
-				 (propertize num-string
-					     'face face))))
-
-  !(defun my/ivy-prompt (prompt props)
-     (save-match-data
-       (string-match "\\`\\(?1:[ [:digit:]]+\\)/\\(?2:[[:digit:]]+ *\\) \\(?3:.*?\\)\\(?4: (.*?)\\)?\\(?5: (.*?)\\)?\\(?6:[ :]*\\)\\'" prompt)
-       (let ((index        (match-string 1 prompt))
-	     (count        (match-string 2 prompt))
-	     (text         (match-string 3 prompt))
-	     (extras (list (match-string 4 prompt)
-			   (match-string 5 prompt)))
-	     (suffix       (match-string 6 prompt))
-	     extras-p
-	     elements
-	     current-face new-face)
-	 (setq current-face 'my/ivy-prompt/index)
-         (push (my/ivy-prompt--variable-pitch-number index current-face) elements)
-	 (setq new-face 'my/ivy-prompt/count)
-	 (push (my/mode-line-separator-render 'telephone-line-identity 'left
-					      new-face
-					      current-face
-					      nil
-					      nil
-					      :no-padding)
-	       elements)
-	 (setq current-face new-face)
-	 (push (my/ivy-prompt--variable-pitch-number count current-face) elements)
-	 (setq new-face 'minibuffer-prompt)
-	 (push (my/mode-line-separator-render 'my/telephone-line-brace 'right new-face current-face) elements)
-	 (setq current-face new-face)
-	 (setq text (propertize text
-				'face (if (string= text "M-x")
-					  'keyboard-pressed
-					current-face))
-	       text (replace-regexp-in-string "/"
-  					      (propertize "/"
-  							  'face 'my/mode-line/buffer-directory/separator)
-  					      text)
-	       text (replace-regexp-in-string "\\\\"
-  					      (propertize "\\\\"
-  							  'face 'my/mode-line/buffer-directory/separator)
-  					      text)
-	       text (replace-regexp-in-string "~"
-  					      (propertize "~"
-  							  'face 'my/mode-line/buffer-directory/tilde)
-					      text))
-	 (push text elements)
-	 (push (propertize (string-trim suffix)
-			   'face 'minibuffer-prompt)
-	       elements)
-	 (dolist (extra extras)
-	   (when extra
-	     (setq extra (substring extra 2 -1)
-		   new-face (pcase extra
-			      ("confirm"
-			       'my/ivy-prompt/confirm)
-			      ("match required"
-			       'my/ivy-prompt/match-required)
-			      (_
-			       'my/ivy-prompt/extra)))
-	     (push (my/mode-line-separator-render 'telephone-line-abs 'left new-face current-face) elements)
-	     (setq current-face new-face)
-	     (push (propertize extra
-			       'face current-face)
-		   elements)
-	     (setq extras-p t)))
-	 (when extras-p
-	   (setq new-face 'minibuffer-prompt)
-	   (push (my/mode-line-separator-render 'telephone-line-abs 'left new-face current-face) elements)
-	   (setq current-face new-face))
-	 (when (and (not extras-p)
-		    ;; TODO remove this
-		    (string-suffix-p " " suffix))
-	   (push (propertize " "
-			     'face current-face)
-		 elements))
-	 (setq elements (string-join (nreverse elements)))
-	 (add-text-properties 0 (length elements) props elements)
-	 elements)))
-  (setq ivy-set-prompt-text-properties-function #'my/ivy-prompt)
-
   ;;;; Faces
   (solarized-set-faces
-   (ivy-current-match :foreground base2 :background base03 :inverse-video t)
+   (ivy-current-match :inherit highlight)
    (ivy-minibuffer-match-face-1 :underline base0)
    (ivy-minibuffer-match-face-2 :foreground back :background orange)
    (ivy-minibuffer-match-face-3 :foreground back :background cyan)
    (ivy-minibuffer-match-face-4 :foreground back :background yellow)
-   (ivy-cursor :inherit cursor)
-   (my/ivy-prompt/index :height 0.95 :foreground violet :inherit variable-pitch)
-   (my/ivy-prompt/count :foreground violet :inverse-video t :inherit my/ivy-prompt/index)
-   (my/ivy-prompt/extra :foreground yellow :inverse-video t :weight normal :inherit minibuffer-prompt)
-   (my/ivy-prompt/confirm :foreground green :inherit (bold my/ivy-prompt/extra))
-   (my/ivy-prompt/match-required :foreground red :inherit (bold my/ivy-prompt/extra)))
+   (ivy-cursor :inherit cursor))
 
   ;;;; Enable
   ($-mode)
 
   ;;;; Counsel
-  (p@ck counsel
+  (p@ckage counsel
     ;;;;; Build
     ~(straight-use-package '$)
     !^
@@ -1838,9 +1446,6 @@ Hollow mode returns the Telephone Line subseparator using the merged foreground 
     ;;;;; Find file
     ;; Hide dotfiles:
     (setq $-find-file-ignore-regexp "\\(?:\\`\\|[/\\]\\)\\.")
-
-    ;;;;; Format
-    _(my/ivy-format-function-install)
 
     ;;;;; Faces
     (solarized-set-faces
@@ -1863,86 +1468,31 @@ Hollow mode returns the Telephone Line subseparator using the merged foreground 
 
   ;;;; Initial input
   ;; None:
-  (setq $-initial-inputs-alist nil)
+  (setq $-initial-inputs-alist nil))
 
-  ;;;; Swiper
-  (p@ck swiper
-    ;;;;; Build
-    ~(straight-use-package '$)
+;;; CTRL+F
+(p@ckage ctrlf
+  ;;;; Build
+  ~((straight-use-package '$)
+    ^)
 
-    ;;;;; Region
-    !(defun my/$-isearch-region ()
-       (interactive)
-       (let (beginning end)
-	 (if (and (region-active-p)
-		  (> (setq end       (region-end))
-		     (setq beginning (region-beginning))))
-	     (progn
-	       (setq mark-active nil)
-	       (if (save-excursion
-		     (goto-char beginning)
-		     (or (/= (forward-line) 0) ; End of buffer.
-			 (> (point) end) ; Moving forward a line moved past the region, so it's single-line.
-			 ))
-		   (@swiper-isearch (buffer-substring-no-properties beginning end))
-		 (save-restriction
-		   (narrow-to-region beginning end)
-		   (@swiper-isearch))))
-	   (@swiper-isearch))))
+  ;;;; Search style
+  (setq $-default-search-style   'fuzzy
+	$-alternate-search-style 'fuzzy-regexp)
 
-    ;;;;; Format
-    !(defun my/$-isearch-format-function (candidates)
-       "Format function for `swiper-isearch' that displays one line per match.
+  ;;;; Auto recenter
+  (setq $-auto-recenter t)
 
-If there are multiple matches on  a line, the line is repeated with a different match highlighted with `swiper-faces' each time."
-       (if (not (numberp (car-safe candidates)))
-	   (ivy-format-function-default candidates)
-	 (let ((i 0)
-	       line
-	       lines
-	       bol
-	       offset
-	       start)
-	   (save-excursion
-	     (with-current-buffer (ivy-state-buffer ivy-last)
-	       (dolist (candidate candidates)
-		 (setq start 0
-		       line (ivy-cleanup-string (progn
-						  (goto-char candidate)
-						  (buffer-substring (setq bol (line-beginning-position))
-								    (line-end-position))))
-		       offset (- candidate bol))
-		 (while (string-match ivy--old-re line start)
-		   (setq start (match-end 0))
-		   (when (= start offset)
-		     (swiper--add-properties swiper-faces
-					     (lambda (beg end face _priority)
-					       (add-face-text-property beg end face nil line)))))
-                 (when (= i ivy--window-index)
-		   (font-lock-append-text-property 0 (length line)
-						   'face 'swiper-line-face
-						   line))
-		 (push line lines)
-		 (setq i (1+ i)))))
-	   (mapconcat #'identity (nreverse lines) "\n"))))
-    _((my/ivy-format-function-install)
-      (push (cons #'swiper-isearch #'my/$-isearch-format-function) my/ivy-format-functions-alist))
-
-    ;;;;; Launch
-    (bind-key [remap isearch-forward] #'my/$-isearch-region)
-
-    ;;;;; Faces
-    (solarized-set-faces
-     ($-match-face-1 :inherit ivy-minibuffer-match-face-1)
-     ($-match-face-2 :inherit ivy-minibuffer-match-face-2)
-     ($-match-face-3 :inherit ivy-minibuffer-match-face-3)
-     ($-match-face-4 :inherit ivy-minibuffer-match-face-4)
-     ($-background-match-face-2 :foreground base02 :inverse-video t :box t :inherit ($-match-face-2))
-     ($-background-match-face-3 :foreground base02 :inverse-video t :box t :inherit ($-match-face-3))
-     ($-background-match-face-4 :foreground base02 :inverse-video t :box t :inherit ($-match-face-4)))))
+  ;;;; Enable
+  (bind-key [remap isearch-forward] @'$-forward-default)
+  (bind-key [remap isearch-forward] @'$-forward-alternate)
+  (bind-key [remap isearch-backward] @'$-backward-default)
+  (bind-key [remap isearch-backward] @'$-backward-alternate)
+  (bind-key [remap isearch-symbol] @'$-forward-symbol)
+  (bind-key [remap isearch-symbol-at-point] @'$-forward-symbol-at-point))
 
 ;;; Info
-(p@ck info
+(p@ckage info
   ;;;; Italics
   (font-lock-add-keywords 'Info-mode
   			  '(("\\(_\\)\\(.+?\\)\\(_\\)"
@@ -1951,12 +1501,13 @@ If there are multiple matches on  a line, the line is repeated with a different 
   			     (3 '(face nil invisible t)))))
 
   ;;;; Search
+  ;; TODO advise search command instead to check if Info buffer
   !(defun my/Info-search ()
      (interactive)
      (unwind-protect
 	 (progn
 	   (widen)
-	   (my/swiper-isearch-region))
+	   (ctrlf-forward-default))
        (@Info-select-node)))
   _(bind-key [remap isearch-forward] #'my/Info-search Info-mode-map)
 
@@ -1966,7 +1517,7 @@ If there are multiple matches on  a line, the line is repeated with a different 
    (info-node :foreground orange :inherit (bold italic))))
 
 ;;; Asemantic Stickyfunc
-(p@ck asemantic-stickyfunc
+(p@ckage asemantic-stickyfunc
   ;;;; Build
   ~(straight-use-package '($ :type git :host github :repo "wi11dey/asemantic-stickyfunc"))
 
@@ -1975,11 +1526,11 @@ If there are multiple matches on  a line, the line is repeated with a different 
   (add-hook 'prog-mode-hook @'$-mode))
 
 ;;; Semantic
-(p@ck semantic
+(p@ckage semantic
   )
 
 ;;; Smartparens
-(p@ck smartparens
+(p@ckage smartparens
   ;;;; Build
   ~(straight-use-package '$)
   !^
@@ -2009,12 +1560,12 @@ If there are multiple matches on  a line, the line is repeated with a different 
   (bind-key "C-M-e" #'sp-up-sexp            smartparens-mode-map))
 
 ;;; Major Extension
-(p@ck major-extension
+(p@ckage major-extension
   ;;;; Build
   ~(straight-use-package '($ :type git :host github :repo "wi11dey/major-extension")))
 
 ;;; Notes
-(p@ck notes
+(p@ckage notes
   ;;;; Build
   ~((straight-use-package '($ :type git :host github :repo "wi11dey/notes.el"))
     ^)
@@ -2025,7 +1576,7 @@ If there are multiple matches on  a line, the line is repeated with a different 
   @note)
 
 ;;; Org
-(p@ck org
+(p@ckage org
   ~((straight-use-package '($ :type git
 			      :repo "https://code.orgmode.org/bzg/org-mode.git"
 			      :local-repo "org"
@@ -2036,9 +1587,9 @@ If there are multiple matches on  a line, the line is repeated with a different 
   @$-mode
 
   ;;;; Contacts
-  (p@ck $-contacts
+  (p@ckage $-contacts
     ;;;; vCard
-    (p@ck org-vcard
+    (p@ckage org-vcard
       ~(straight-use-package '($ :type git :host github :repo "flexibeast/org-vcard"
 				 :fork (:host github :repo "wi11dey/org-vcard")))
 
@@ -2072,7 +1623,7 @@ If there are multiple matches on  a line, the line is repeated with a different 
 			     "DONE(d)")))
 
   ;;;; Capture
-  (p@ck $-capture
+  (p@ckage $-capture
     ~^
     ;;;;; Templates
     (setq $-templates '(("a"
@@ -2166,9 +1717,6 @@ If there are multiple matches on  a line, the line is repeated with a different 
 					  map)))
 			     (3 '$-hide))))
 
-  ;;;; Expert Todo Selection
-  ;; TODO Make this a hydra
-
   ;;;; Insert
   ;;;;; Heading
   (setq $-insert-heading-respect-content t)
@@ -2207,7 +1755,7 @@ If there are multiple matches on  a line, the line is repeated with a different 
   (add-hook 'org-babel-pre-tangle-hook #'my/org-babel-tangle-message :append))
 
 ;;; Show Paren
-(p@ck show-paren
+(p@ckage show-paren
   !(require 'paren)
 
   ;;;; Delay
@@ -2226,7 +1774,7 @@ If there are multiple matches on  a line, the line is repeated with a different 
   (add-function :around show-paren-data-function #'my/show-paren-data-function))
 
 ;;; Smart Quotes
-(p@ck smart-quotes
+(p@ckage smart-quotes
   ;;;; Build
   ~(straight-use-package '$)
 
@@ -2240,25 +1788,10 @@ If there are multiple matches on  a line, the line is repeated with a different 
   (add-hook 'text-mode-hook @'turn-on-smart-quotes))
 
 ;;; Syscontrol
-(p@ck syscontrol
+(p@ckage syscontrol
   ;;;; Build
   ~(straight-use-package '($ :type git :host github :repo "wi11dey/syscontrol.el"))
 
-  !(defhydra my/$ ()
-     (concat (my/hydra-docstring "System" 1
-				 ("l" . "lock")
-				 ("s" . "suspend")
-				 ("r" . "reboot")
-				 ("p" . "shutdown")))
-     ("l"   @'$-lock nil :exit t)
-     ("C-l" @'$-lock nil :exit t)
-     ("s"   @'$-suspend nil :exit t)
-     ("C-s" @'$-suspend nil :exit t)
-     ("r"   @'$-reboot nil :exit t)
-     ("C-r" @'$-reboot nil :exit t)
-     ("p"   @'$-shutdown nil :exit t)
-     ("C-p" @'$-shutdown nil :exit t))
-  (bind-key "C-c s" #'my/syscontrol/body)
   ;;;; Keybindings
   (bind-key "<f5>"                   @'syscontrol-lock)
   (bind-key "<f6>"                   @'syscontrol-suspend)
@@ -2267,7 +1800,7 @@ If there are multiple matches on  a line, the line is repeated with a different 
   (bind-key "<XF86AudioMute>"        @'syscontrol-volume-mute))
 
 ;;; Undo Tree
-(p@ck undo-tree
+(p@ckage undo-tree
   ;;;; Build
   ~(straight-use-package '$)
   !^
@@ -2296,7 +1829,7 @@ If there are multiple matches on  a line, the line is repeated with a different 
    ($-visualizer-current-face :foreground yellow :background base02 :inverse-video t :inherit bold)))
 
 ;;; WoMan
-(p@ck woman
+(p@ckage woman
   ~^
 
   ;;;; Fill
@@ -2330,7 +1863,7 @@ If there are multiple matches on  a line, the line is repeated with a different 
   (add-hook '$-post-format-hook #'my/$-untabify))
 
 ;;; CalFW
-(p@ck calfw
+(p@ckage calfw
   ;;;; Build
   ~((straight-use-package '$)
     ^)
@@ -2348,13 +1881,13 @@ If there are multiple matches on  a line, the line is repeated with a different 
   (bind-key "C-c c C-m" @'cfw:open-calendar-buffer))
 
 ;;; Chess
-(p@ck chess
+(p@ckage chess
   ;;;; Build
   ~((straight-use-package '$)
     ^)
 
   ;;;; Plain display
-  (p@ck chess-plain
+  (p@ckage chess-plain
     ~^
     (setq $-border-style [?\s
 			  ?\s
@@ -2385,20 +1918,20 @@ If there are multiple matches on  a line, the line is repeated with a different 
      ($-white-face :foreground base3))))
 
 ;;; Fontfile
-(p@ck fontfile
+(p@ckage fontfile
   ~(straight-use-package '($ :type git :host github :repo "wi11dey/fontfile.el")))
 
 ;;; NNReddit
-(p@ck nnreddit
+(p@ckage nnreddit
   ;;;; Build
   ~(straight-use-package '($ :type git :host github :repo "paul-issartel/nnreddit")))
 
 ;;; Gnus
-(p@ck gnus
+(p@ckage gnus
   ~^
 
   ;;;; Start
-  (p@ck $-start
+  (p@ckage $-start
     ~^
 
     ;;;;; Init file
@@ -2410,12 +1943,12 @@ If there are multiple matches on  a line, the line is repeated with a different 
   (setq $-select-method '(nnnil "")))
 
 ;;; Ledger
-(p@ck ledger-mode
+(p@ckage ledger-mode
   ;;;; Build
   ~(straight-use-package '$))
 
 ;;; Transient
-(p@ck transient
+(p@ckage transient
   ;;;; Build
   ~((straight-use-package '$)
     ^)
@@ -2424,7 +1957,7 @@ If there are multiple matches on  a line, the line is repeated with a different 
   (setq $-save-history nil))
 
 ;;; Magit
-(p@ck magit
+(p@ckage magit
   ;;;; Build
   ~((straight-use-package '$)
     ^)
@@ -2434,7 +1967,7 @@ If there are multiple matches on  a line, the line is repeated with a different 
   (setq $-git-executable "git")
 
   ;;;; Section
-  (p@ck $-section
+  (p@ckage $-section
     ;;;;; Backward
     !(defun my/$-beginning-of-line-or-section ()
        (interactive)
@@ -2459,7 +1992,7 @@ If there are multiple matches on  a line, the line is repeated with a different 
   (bind-key "C-x g" @'$-status))
 
 ;;; Markdown
-(p@ck markdown-mode
+(p@ckage markdown-mode
   ;;;; Build
   ~((straight-use-package '$)
     ^)
@@ -2480,12 +2013,12 @@ If there are multiple matches on  a line, the line is repeated with a different 
    (markdown-inline-code-face :inherit embedded-code)))
 
 ;;; Org CalDAV
-(p@ck org-caldav
+(p@ckage org-caldav
   ;;;; Build
   ~(straight-use-package '$))
 
 ;;; PDF Tools
-(p@ck pdf-tools
+(p@ckage pdf-tools
   ;;;; Build
   ~(straight-use-package '($ :type git :host github :repo "vedang/pdf-tools"))
 
@@ -2494,19 +2027,19 @@ If there are multiple matches on  a line, the line is repeated with a different 
   ($-install-noverify)
 
   ;;;; Isearch
-  (p@ck pdf-isearch
+  (p@ckage pdf-isearch
     ~^
 
     ;; Inhibit any later remappings of `isearch-forward'.
     _(bind-key [remap isearch-forward] #'isearch-forward $-minor-mode-map)))
 
 ;;; Perspective
-(p@ck perspective
+(p@ckage perspective
   ;;;; Build
   ~(straight-use-package '$))
 
 ;;; Grep
-(p@ck grep
+(p@ckage grep
   ~^
 
   ;;;; Ignored directories
@@ -2514,12 +2047,12 @@ If there are multiple matches on  a line, the line is repeated with a different 
     (add-to-list '$-find-ignored-directories ".venv")))
 
 ;;; WGrep
-(p@ck wgrep
+(p@ckage wgrep
   ;;;; Build
   ~(straight-use-package '$))
 
 ;;; Whitespace
-(p@ck whitespace
+(p@ckage whitespace
   ~^
 
   ;;;; Display
@@ -2538,13 +2071,13 @@ If there are multiple matches on  a line, the line is repeated with a different 
 						[?\\    ?\C-i]))))
 
 ;;; YASnippet
-(p@ck yasnippet
+(p@ckage yasnippet
   ;;;; Build
   ~(straight-use-package '$)
   !^
 
   ;;;; Snippets
-  (p@ck $-snippets
+  (p@ckage $-snippets
     ~(straight-use-package '$)
     ^)
 
@@ -2552,7 +2085,7 @@ If there are multiple matches on  a line, the line is repeated with a different 
   (yas-global-mode))
 
 ;;; Outline Minor Faces
-(p@ck outline-minor-faces
+(p@ckage outline-minor-faces
   ;;;; Build
   ~((straight-use-package '$)
     ^)
@@ -2566,7 +2099,7 @@ If there are multiple matches on  a line, the line is repeated with a different 
    (outline-minor-0)))
 
 ;;; WDired
-(p@ck wdired
+(p@ckage wdired
   ~^
 
   ;;;; Change permissions
@@ -2577,7 +2110,7 @@ If there are multiple matches on  a line, the line is repeated with a different 
   )
 
 ;;; SQLUp
-(p@ck sqlup-mode
+(p@ckage sqlup-mode
   ;;;; Build
   ~(straight-use-package '$)
 
@@ -2587,8 +2120,12 @@ If there are multiple matches on  a line, the line is repeated with a different 
   ;;;;; SQLi
   (add-hook 'sql-interactive-mode-hook @'sqlup-mode))
 
+;;; Compile
+(p@ckage compile
+  (bind-key "C-c C-a" @'recompile))
+
 ;;; Emacs Lisp
-(p@ck emacs-lisp
+(p@ckage emacs-lisp
   !(defun my/$-outline-level ()
      (let ((match (match-string 1)))
        (cond (match
@@ -2614,12 +2151,11 @@ If there are multiple matches on  a line, the line is repeated with a different 
   (add-hook '$-mode-hook #'my/$-set-compile-command)
 
   ;;;; Completion
-  ;; Disable:
-  (setq elisp--local-variables-completion-table nil) ; Completing local variables causes macro expansion which can have side-effects on the editor.
+  (setq elisp--local-variables-completion-table nil) ; Disable: Completing local variables causes macro expansion which can have side-effects on the editor.
   )
 
 ;;; Tabulated List
-(p@ck tabulated-list
+(p@ckage tabulated-list
   ;;;; Truncate lines
   !(defun my/$-truncate-lines ()
      (setq truncate-lines t))
@@ -2630,7 +2166,7 @@ If there are multiple matches on  a line, the line is repeated with a different 
   (add-hook '$-mode-hook #'variable-pitch-mode))
 
 ;;; Macrostep
-(p@ck macrostep
+(p@ckage macrostep
   ;;;; Build
   ~(straight-use-package '$)
 
@@ -2638,7 +2174,7 @@ If there are multiple matches on  a line, the line is repeated with a different 
   )
 
 ;;; Font Lock Studio
-(p@ck font-lock-studio
+(p@ckage font-lock-studio
   ;;;; Build
   ~(straight-use-package '$)
 
@@ -2646,7 +2182,7 @@ If there are multiple matches on  a line, the line is repeated with a different 
   )
 
 ;;; Diff HL
-(p@ck diff-hl
+(p@ckage diff-hl
   ;;;; Build
   ~(straight-use-package '$)
   !^
@@ -2684,25 +2220,25 @@ If there are multiple matches on  a line, the line is repeated with a different 
   (add-hook 'magit-post-refresh-hook #'$-magit-post-refresh))
 
 ;;; Geiser
-(p@ck geiser
+(p@ckage geiser
   ;;;; Build
   ~(straight-use-package '$)
 
   @run-geiser)
 
 ;;; Debian.el
-(p@ck debian-el
+(p@ckage debian-el
   ;;;; Buid
   ~((straight-use-package '$)
     ^)
 
   ;;;; APT Sources
-  (p@ck apt-sources
+  (p@ckage apt-sources
     (add-to-list 'auto-mode-alist (cons "sources\\.list\\'" @'apt-sources-mode))
     (add-to-list 'auto-mode-alist (cons "sources\\.list\\.d/.*\\.list\\'" @'apt-sources-mode))))
 
 ;;; Guix
-(p@ck guix
+(p@ckage guix
   ;;;; Build
   ~(straight-use-package '$)
 
@@ -2710,14 +2246,14 @@ If there are multiple matches on  a line, the line is repeated with a different 
   (my/package-autoloads $))
 
 ;;; Pwdgen
-(p@ck pwdgen
+(p@ckage pwdgen
   ;;;; Build
   ~(straight-use-package '($ :type git :host github :repo "wi11dey/pwdgen.el"))
 
   @pwdgen)
 
 ;;; Nov.el
-(p@ck nov
+(p@ckage nov
   ;;;; Build
   ~(straight-use-package '$)
 
@@ -2725,7 +2261,7 @@ If there are multiple matches on  a line, the line is repeated with a different 
   (add-to-list 'auto-mode-alist (cons "\\.epub\\'" @'$-mode)))
 
 ;;; Julia
-(p@ck julia-mode
+(p@ckage julia-mode
   ;;;; Build
   ~((straight-use-package '$)
     ^)
@@ -2734,14 +2270,14 @@ If there are multiple matches on  a line, the line is repeated with a different 
   (add-to-list 'auto-mode-alist (cons "\\.jl\\'" @'$)))
 
 ;;; Variable Pitch Table
-(p@ck vpt
+(p@ckage vpt
   ;;;; Build
   ~(straight-use-package '($ :type git :host github :repo "larsmagne/vpt.el")))
 
 ;;; URL
-(p@ck url
+(p@ckage url
   ;;;; Cookies
-  (p@ck $-cookie
+  (p@ckage $-cookie
     ~^
 
     (setq $-confirmation t
@@ -2750,16 +2286,16 @@ If there are multiple matches on  a line, the line is repeated with a different 
 	  $-untrusted-urls '(".*"))))
 
 ;;; EJIRA
-(p@ck ejira
+(p@ckage ejira
   ;;;; Build
   ~(straight-use-package '($ :type git :host github :repo "nyyManni/ejira")))
 
 ;;; SGML
-(p@ck sgml
+(p@ckage sgml
   (put '$-basic-offset 'safe-local-variable #'integerp))
 
 ;;; JS2
-(p@ck js2-mode
+(p@ckage js2-mode
   ;;;; Build
   ~(straight-use-package '$)
 
@@ -2767,7 +2303,7 @@ If there are multiple matches on  a line, the line is repeated with a different 
   (add-to-list 'auto-mode-alist (cons "\\.js\\'" @'$)))
 
 ;;; RJSX
-(p@ck rjsx-mode
+(p@ckage rjsx-mode
   ;;;; Build
   ~(straight-use-package '$)
 
@@ -2780,7 +2316,7 @@ If there are multiple matches on  a line, the line is repeated with a different 
 	      )))
 
 ;;; TypeScript
-(p@ck typescript-mode
+(p@ckage typescript-mode
   ;;;; Build
   ~(straight-use-package '$)
 
@@ -2789,7 +2325,7 @@ If there are multiple matches on  a line, the line is repeated with a different 
 
 ;;; Web
 ;; TODO use this for more use cases?
-(p@ck web-mode
+(p@ckage web-mode
   ;;;; Build
   ~((straight-use-package '$)
     ^)
@@ -2805,7 +2341,7 @@ If there are multiple matches on  a line, the line is repeated with a different 
   (add-to-list 'auto-mode-alist (cons "\\.html?\\'" @'$)))
 
 ;;; Rust
-(p@ck rust-mode
+(p@ckage rust-mode
   ;;;; Build
   ~(straight-use-package '$)
 
@@ -2813,12 +2349,12 @@ If there are multiple matches on  a line, the line is repeated with a different 
   (add-to-list 'auto-mode-alist (cons "\\.rs\\'" @'$)))
 
 ;;; DjVu
-(p@ck djvu
+(p@ckage djvu
   ;;;; Build
   ~(straight-use-package '$)
 
   ;;;; DjVu3
-  (p@ck djvu3
+  (p@ckage djvu3
     ;;;;; Build
     ~(straight-use-package '($ :type git :host github :repo "dalanicolai/djvu3"))
 
