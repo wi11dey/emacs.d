@@ -680,7 +680,7 @@ Optional argument FILE-OVERRIDE is a string to be passed as the FILE parameter t
     ;;;;; Build
     ~(straight-use-package '$))
 
-  ;;;; Frontends
+  ;;;; Frontend
   (setq $-frontends (list @'$-preview-frontend
 			  @'$-echo-strip-common-frontend))
 
@@ -1381,12 +1381,12 @@ Optional argument FILE-OVERRIDE is a string to be passed as the FILE parameter t
 
   ;;;; Faces
   (solarized-set-faces
-   (ivy-current-match :inherit highlight)
-   (ivy-minibuffer-match-face-1 :underline base0)
-   (ivy-minibuffer-match-face-2 :foreground back :background orange)
-   (ivy-minibuffer-match-face-3 :foreground back :background cyan)
-   (ivy-minibuffer-match-face-4 :foreground back :background yellow)
-   (ivy-cursor :inherit cursor))
+   ($-current-match :inherit highlight)
+   ($-minibuffer-match-face-1 :underline base0)
+   ($-minibuffer-match-face-2 :foreground back :background orange)
+   ($-minibuffer-match-face-3 :foreground back :background cyan)
+   ($-minibuffer-match-face-4 :foreground back :background yellow)
+   ($-cursor :inherit cursor))
 
   ;;;; Enable
   ($-mode)
@@ -1433,6 +1433,31 @@ Optional argument FILE-OVERRIDE is a string to be passed as the FILE parameter t
   ;;;; Initial input
   ;; None:
   (setq $-initial-inputs-alist nil))
+
+;;; CTRLF
+(p@ckage ctrlf
+  ;;;; Build
+  ~((straight-use-package '$)
+    ^)
+
+  ;;;; Search style
+  (setq $-default-search-style   'fuzzy
+	$-alternate-search-style 'fuzzy-regexp)
+
+  ;;;; Auto recenter
+  (setq $-auto-recenter t)
+
+  ;;;; Movement
+  _((bind-key [remap next-line]     #'$-next-match     $-minibuffer-mode-map)
+    (bind-key [remap previous-line] #'$-previous-match $-minibuffer-mode-map))
+
+  ;;;; Enable
+  (bind-key [remap isearch-forward] @'$-forward-default)
+  (bind-key [remap isearch-forward] @'$-forward-alternate)
+  (bind-key [remap isearch-backward] @'$-backward-default)
+  (bind-key [remap isearch-backward] @'$-backward-alternate)
+  (bind-key [remap isearch-symbol] @'$-forward-symbol)
+  (bind-key [remap isearch-symbol-at-point] @'$-forward-symbol-at-point))
 
 ;;; Info
 (p@ckage info
