@@ -1468,6 +1468,10 @@ Optional argument FILE-OVERRIDE is a string to be passed as the FILE parameter t
   			     (2 'italic)
   			     (3 '(face nil invisible t)))))
 
+  ;;;; Isearch
+  ;; Inhibit any later remappings of `isearch-forward'.
+  _(bind-key [remap isearch-forward] #'isearch-forward Info-mode-map)
+
   ;;;; Faces
   (solarized-set-faces
    (info-menu-star :inherit default)
