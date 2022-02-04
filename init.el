@@ -2335,4 +2335,17 @@ Optional argument FILE-OVERRIDE is a string to be passed as the FILE parameter t
   ;;;; Magic mode
   (add-to-list 'magic-mode-alist (cons "^%YAML\\s-+[0-9]+\\.[0-9]+\\(\\s-+#\\|\\s-*$\\)" @'yaml-mode)))
 
+;;; Tuareg
+(p@ckage tuareg
+  ;;;; Build
+  ~(straight-use-package '$)
+
+  ;;;; Auto mode
+  (add-to-list 'auto-mode-alist (cons "\\.ml[ip]?\\'" @'$-mode))
+  (add-to-list 'auto-mode-alist (cons "\\.eliomi?\\'" @'$-mode))
+
+  ;;;; Interpreter mode
+  (add-to-list 'interpreter-mode-alist (cons "ocamlrun" @'$-mode))
+  (add-to-list 'interpreter-mode-alist (cons "ocaml" @'$-mode)))
+
 ;;; init.el ends here
