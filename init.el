@@ -2324,4 +2324,15 @@ Optional argument FILE-OVERRIDE is a string to be passed as the FILE parameter t
   ;;;; Auto mode
   (add-to-list 'auto-mode-alist (cons "\\.djvu\\'" @'$-dummy-mode)))
 
+;;; YAML
+(p@ckage yaml-mode
+  ;;;; Build
+  ~(straight-use-package '$)
+
+  ;;;; Auto mode
+  (add-to-list 'auto-mode-alist (cons "\\.\\(e?ya?\\|ra\\)ml\\'" @'yaml-mode))
+
+  ;;;; Magic mode
+  (add-to-list 'magic-mode-alist (cons "^%YAML\\s-+[0-9]+\\.[0-9]+\\(\\s-+#\\|\\s-*$\\)" @'yaml-mode)))
+
 ;;; init.el ends here
