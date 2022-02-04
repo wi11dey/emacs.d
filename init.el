@@ -681,8 +681,7 @@ Optional argument FILE-OVERRIDE is a string to be passed as the FILE parameter t
     ~(straight-use-package '$))
 
   ;;;; Frontend
-  (setq $-frontends (list @'$-preview-frontend
-			  @'$-echo-strip-common-frontend))
+  (setq $-frontends (list @'$-preview-frontend))
 
   ;;;; Enable
   ;;;;; Programming modes
