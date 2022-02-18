@@ -606,6 +606,9 @@ Optional argument FILE-OVERRIDE is a string to be passed as the FILE parameter t
     ;; Use built-in `tex-mode' syntax highlighting, which highlights all control sequences.
     (setq TeX-install-font-lock @'tex-font-setup))
 
+  ;;;; Engines
+  (setq TeX-engine-alist '((optex "OpTeX" "luatex -fmt optex" "" "")))
+
   ;;;; Viewer
   (setq TeX-view-program-selection '((output-pdf "PDF Tools")))
 
