@@ -239,7 +239,7 @@ Optional argument FILE-OVERRIDE is a string to be passed as the FILE parameter t
   (push '("+" . "}") xah--dvorak-to-qwerty-kmap)
   (push '("?" . "{") xah--dvorak-to-qwerty-kmap)
   (push '("+" . "}") xah--dvorak-to-qwerty-kmap)
-  (defvar xah--dvorak-to-custom-qwerty-kmap
+  (defconst xah--dvorak-to-custom-qwerty-kmap
     (nconc '(;; Numbers:
 	     ("1" . "*")
 	     ("!" . "1")
@@ -269,8 +269,8 @@ Optional argument FILE-OVERRIDE is a string to be passed as the FILE parameter t
 	     ("=" . "]")
 	     ("+" . "!")
 	     ("\\" . "^")
-	     ("-" . "\"")
-	     ("_" . "'")
+	     ;; ("-" . "\"")
+	     ;; ("_" . "'")
 	     ("Z" . "@")
 	     ("<escape>" . "~")
 	     ("<home>" . "C-g")
@@ -1995,7 +1995,13 @@ Optional argument FILE-OVERRIDE is a string to be passed as the FILE parameter t
     ~^
 
     ;; Inhibit any later remappings of `isearch-forward'.
-    _(bind-key [remap isearch-forward] #'isearch-forward $-minor-mode-map)))
+    _(bind-key [remap isearch-forward] #'isearch-forward $-minor-mode-map))
+
+  ;;;; Annotations
+  (p@ckage pdf-annot
+    ~^
+
+    _(bind-key "C-c C-k" #'$-edit-contents-abort $-edit-contents-minor-mode-map)))
 
 ;;; Perspective
 (p@ckage perspective
