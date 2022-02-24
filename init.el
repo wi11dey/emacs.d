@@ -2001,6 +2001,7 @@ Optional argument FILE-OVERRIDE is a string to be passed as the FILE parameter t
   (p@ckage pdf-annot
     ~^
 
+    ;; Be consistent with Magit comment editing.
     _(bind-key "C-c C-k" #'$-edit-contents-abort $-edit-contents-minor-mode-map)))
 
 ;;; Perspective
