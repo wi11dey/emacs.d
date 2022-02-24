@@ -1451,8 +1451,8 @@ Optional argument FILE-OVERRIDE is a string to be passed as the FILE parameter t
   (setq $-auto-recenter nil)
 
   ;;;; Movement
-  _((bind-key [remap next-line]     #'$-next-match     $-minibuffer-mode-map)
-    (bind-key [remap previous-line] #'$-previous-match $-minibuffer-mode-map))
+  _((bind-key [remap next-line]     @'$-next-match     $-minibuffer-mode-map)
+    (bind-key [remap previous-line] @'$-previous-match $-minibuffer-mode-map))
 
   ;;;; Enable
   (bind-key [remap isearch-forward] @'$-forward-default)
