@@ -1423,7 +1423,8 @@ Optional argument FILE-OVERRIDE is a string to be passed as the FILE parameter t
      ($-outline-5 :inherit ($-outline-default heading-5))
      ($-outline-6 :inherit ($-outline-default heading-6))
      ($-outline-7 :inherit ($-outline-default heading-7))
-     ($-outline-8 :inherit ($-outline-default heading-8)))
+     ($-outline-8 :inherit ($-outline-default heading-8))
+     ($-key-binding :inherit keyboard))
 
     ;;;;; Enable
     ($-mode)
