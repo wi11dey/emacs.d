@@ -4,4 +4,4 @@
 export DBUS_SESSION_BUS_ADDRESS="invalid address"
 
 #exec emacsclient --create-frame --alternate-editor="" # Currently not loading `default' face correctly.
-exec emacs
+exec emacs -geometry 212x60 > emacs.log 2>&1
