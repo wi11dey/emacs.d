@@ -123,7 +123,10 @@ Optional argument FILE-OVERRIDE is a string to be passed as the FILE parameter t
 
   ;;;; Build
   ;;;;; Disable autoloads
-  (setq straight-disable-autoloads t))
+  (setq straight-disable-autoloads t)
+
+  ;;;;; Shallow clones
+  (setq straight-vc-git-default-clone-depth 1))
 (eval-when-compile
   ;;;; Develop
   (defvar straight-repository-branch)
