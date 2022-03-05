@@ -232,6 +232,9 @@ Optional argument FILE-OVERRIDE is a string to be passed as the FILE parameter t
   ;; Disable overriding built-in Emacs control/meta key sequences so they are always available:
   (setq xah-fly-use-control-key nil)
 
+  ;;;; Recently closed
+  (setq xah-recently-closed-buffers-max 0)
+
   ;;;; Load
   !^
 
