@@ -83,7 +83,7 @@
 (define emacs-latest
   (if (access? (string-append (local-file-absolute-file-name (package-source emacs-local)) "/.git") R_OK)
       emacs-local
-      emacs-next-pgtk ;; Source submodule not yet cloned.
+      emacs-next ;; Source submodule not yet cloned.
       ))
 
 (define emacs-initialized
