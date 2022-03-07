@@ -1163,10 +1163,12 @@ Optional argument FILE-OVERRIDE is a string to be passed as the FILE parameter t
   ;;   !^
 
   ;;   ;;;;; Workspaces
-  ;;   (setq $-workspace-monitor-plist '(0 "VGA-1")))
+  ;;   (setq $-workspace-monitor-plist '(0 "VGA-1"))
+
+  ;;   (add-hook 'after-init-hook #'$-enable :append))
 
   ;;;; Enable
-  (add-hook 'after-init-hook #'$-enable :append))
+  ($-enable))
 
 ;;; Ispell
 (p@ckage ispell
