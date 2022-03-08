@@ -1419,7 +1419,7 @@ Optional argument FILE-OVERRIDE is a string to be passed as the FILE parameter t
 
     ;;;;; Find file
     ;; Hide dotfiles:
-    (setq $-find-file-ignore-regexp "\\(?:\\`\\|[/\\]\\)\\.")
+    (setq counsel-find-file-ignore-regexp "\\`\\.")
 
     ;;;;; Faces
     (solarized-set-faces
@@ -1724,7 +1724,11 @@ Optional argument FILE-OVERRIDE is a string to be passed as the FILE parameter t
   !(defun my/org-babel-tangle-message ()
      ""
      (message "Tangling..."))
-  (add-hook 'org-babel-pre-tangle-hook #'my/org-babel-tangle-message :append))
+  (add-hook 'org-babel-pre-tangle-hook #'my/org-babel-tangle-message :append)
+
+  ;;;; Pretty
+  (setq $-pretty-entities t)
+  (setq $-hide-emphasis-markers t))
 
 ;;; Show Paren
 (p@ckage show-paren
