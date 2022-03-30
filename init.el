@@ -312,6 +312,11 @@ Optional argument FILE-OVERRIDE is a string to be passed as the FILE parameter t
 
   ($))
 
+;;; Repeat
+(p@ckage repeat
+  ;;;; Keybindings
+  (bind-key "C-z" @'$))
+
 ;;; Novice
 (p@ckage novice
   ;;;; Disable
