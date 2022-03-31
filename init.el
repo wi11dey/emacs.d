@@ -350,7 +350,10 @@ Optional argument FILE-OVERRIDE is a string to be passed as the FILE parameter t
   (setq command-error-function #'my/command-error-function)
 
   ;;;; No bell
-  (setq ring-bell-function #'ignore))
+  (setq ring-bell-function #'ignore)
+
+  ;;;; Fill column
+  (setq-default fill-column 80))
 
 ;;; Fancy
 (p@ckage fancy
