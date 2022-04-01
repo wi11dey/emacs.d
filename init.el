@@ -1931,15 +1931,6 @@ Optional argument FILE-OVERRIDE is a string to be passed as the FILE parameter t
   ;;;; Build
   ~(straight-use-package '$))
 
-;;; Transient
-(p@ckage transient
-  ;;;; Build
-  ~((straight-use-package '$)
-    ^)
-
-  ;;;; History
-  (setq $-save-history nil))
-
 ;;; Magit
 (p@ckage magit
   ;;;; Build
@@ -1974,6 +1965,18 @@ Optional argument FILE-OVERRIDE is a string to be passed as the FILE parameter t
 
   ;;;; Status
   (bind-key "C-x g" @'$-status))
+
+;;; Transient
+(p@ckage transient
+  ;;;; Build
+  ~^
+
+  ;;;; History
+  (setq $-save-history nil)
+
+  ;;;; Default level
+  ;; Show everything:
+  (setq $-default-level 7))
 
 ;;; Markdown
 (p@ckage markdown-mode
