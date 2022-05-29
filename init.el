@@ -1799,6 +1799,10 @@ Optional argument FILE-OVERRIDE is a string to be passed as the FILE parameter t
      (face-remap-add-relative 'fringe 'my/$/background))
   (add-hook '$-visualizer-mode-hook #'my/$-set-background)
 
+  ;;;; Auto-save
+  ;; Disable:
+  (setq $-auto-save-history nil)
+
   ;;;; Keybindings
   (bind-key [remap keyboard-quit] #'$-visualizer-abort $-visualizer-mode-map)
   (bind-key "RET"                 #'$-visualizer-quit  $-visualizer-mode-map)
