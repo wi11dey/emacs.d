@@ -2100,7 +2100,7 @@ Optional argument FILE-OVERRIDE is a string to be passed as the FILE parameter t
 
   ;;;; Enable
   ;;;;; Outline Minor
-  (add-hook 'outline-minor-mode-hook @'$-add-font-lock-keywords)
+  (add-hook 'outline-minor-mode-hook @'$-mode)
 
   ;;;; Faces
   (solarized-set-faces
