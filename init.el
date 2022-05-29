@@ -1247,7 +1247,7 @@ Optional argument FILE-OVERRIDE is a string to be passed as the FILE parameter t
 		   (:propertize " "
 				display (space :align-to (- right 2)))
 		   ;;;;; Mode line front space
-		   (:propertize mode-line-front-space
+		   (:propertize (:eval (upcase mode-line-front-space))
 				face fixed-pitch)))
 
   ;;;; Enable
