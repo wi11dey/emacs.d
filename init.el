@@ -1427,7 +1427,10 @@ Optional argument FILE-OVERRIDE is a string to be passed as the FILE parameter t
 
     ;;;;; Find file
     ;; Hide dotfiles:
-    (setq counsel-find-file-ignore-regexp "\\`\\.")
+    (setq $-find-file-ignore-regexp "\\`\\.")
+
+    ;; Backspace to go up one directory:
+    (bind-key "DEL" #'$-up-directory $-find-file-map)
 
     ;;;;; Faces
     (solarized-set-faces
