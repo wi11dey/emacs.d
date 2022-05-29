@@ -383,7 +383,8 @@ Optional argument FILE-OVERRIDE is a string to be passed as the FILE parameter t
    (link :inherit variable-pitch)
    (link-visited :inherit variable-pitch)
    (warning :foreground orange :inherit variable-pitch)
-   (minibuffer-prompt :foreground base1 :height 0.95 :inherit variable-pitch)))
+   (minibuffer-prompt :foreground base1 :height 0.95 :inherit variable-pitch)
+   (help-key-binding :inherit keyboard)))
 
 ;;; Save
 (p@ckage save
