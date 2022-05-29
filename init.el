@@ -1428,8 +1428,8 @@ Optional argument FILE-OVERRIDE is a string to be passed as the FILE parameter t
     ;; Hide dotfiles:
     (setq $-find-file-ignore-regexp "\\`\\.")
 
-    ;; Backspace to go up one directory:
-    (bind-key "DEL" #'$-up-directory $-find-file-map)
+    ;;;;;; Keybindings
+    (bind-key "DEL" #'ivy-backward-delete-char $-find-file-map) ; Necessary for some reason.
 
     ;;;;; Faces
     (solarized-set-faces
