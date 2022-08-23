@@ -280,7 +280,8 @@ Optional argument FILE-OVERRIDE is a string to be passed as the FILE parameter t
 	     ("Z" . "@")
 	     ("<escape>" . "~")
 	     ("<home>" . "C-g")
-	     ("<menu>" . "C-g"))
+	     ("<menu>" . "C-g")
+	     ("<apps>" . "C-g"))
 	   xah--dvorak-to-qwerty-kmap))
   (let ((current xah--dvorak-to-custom-qwerty-kmap))
     (while (not (eq current xah--dvorak-to-qwerty-kmap))
@@ -2396,5 +2397,16 @@ Optional argument FILE-OVERRIDE is a string to be passed as the FILE parameter t
   ;;;; Interpreter mode
   (add-to-list 'interpreter-mode-alist (cons "ocamlrun" @'$-mode))
   (add-to-list 'interpreter-mode-alist (cons "ocaml" @'$-mode)))
+
+;;; Lua
+(p@ckage lua-mode
+  ;;;; Build
+  ~(straight-use-package '$)
+
+  ;;;; Auto mode
+  (add-to-list 'auto-mode-alist (cons "\\.lua$" @'$))
+
+  ;;;; Interpreter mode
+  (add-to-list 'interpreter-mode-alist (cons "lua" @'$)))
 
 ;;; init.el ends here
