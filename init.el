@@ -1731,7 +1731,16 @@ Optional argument FILE-OVERRIDE is a string to be passed as the FILE parameter t
   (add-hook 'org-babel-pre-tangle-hook #'my/org-babel-tangle-message :append)
 
   ;;;; Pretty
-  (setq $-pretty-entities t))
+  (setq $-pretty-entities t
+	$-hide-emphasis-markers t)
+
+  ;;;; Emphasis markers
+  (setq $-hide-emphasis-markers t)
+  (p@ckage $-appear
+    ;;;;; Build
+    ~(straight-use-package '$)
+
+    (add-hook 'org-mode @'$-mode)))
 
 ;;; Show Paren
 (p@ckage show-paren
