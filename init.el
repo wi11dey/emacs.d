@@ -1734,13 +1734,15 @@ Optional argument FILE-OVERRIDE is a string to be passed as the FILE parameter t
   (setq $-pretty-entities t
 	$-hide-emphasis-markers t)
 
-  ;;;; Emphasis markers
-  (setq $-hide-emphasis-markers t)
+  ;;;; Appear
   (p@ckage $-appear
     ;;;;; Build
     ~(straight-use-package '$)
 
-    (add-hook 'org-mode @'$-mode)))
+    (setq org-hide-emphasis-markers t
+	  $-autolinks t)
+
+    (add-hook 'org-mode-hook @'$-mode)))
 
 ;;; Show Paren
 (p@ckage show-paren
