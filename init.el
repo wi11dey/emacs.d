@@ -20,7 +20,6 @@
 ;; For a full copy of the GNU General Public License
 ;; see <http://www.gnu.org/licenses/>.
 
-;; Generate README:
 ;;; Commentary:
 
 ;; Using my library [[https://github.com/wi11dey/p-ckage][p@ckage]] rather than `use-package' for package organization.
@@ -983,18 +982,6 @@ Optional argument FILE-OVERRIDE is a string to be passed as the FILE parameter t
   (solarized-set-faces
    ($-prompt :foreground base1 :inherit (bold variable-pitch))
    ($-ls-directory :inherit diredfl-dir-name)))
-
-;;; README.org
-(p@ckage readme-org
-  ;;;; Build
-  ~(straight-use-package '($ :type git :host github :repo "wi11dey/README.org.el"))
-  !^
-
-  ;;;; Title format
-  (setq $-title-format "#+title: \\1")
-
-  ;;;; Enable
-  (readme-org-mode))
 
 ;;; Xtended Faces
 (p@ckage xtended-faces
