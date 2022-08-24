@@ -1,6 +1,22 @@
-#+title: init.el
+#+title: Emacs.d
 #+author: Will Dey
 
-Using my library [[https://github.com/wi11dey/p-ckage][p@ckage]] rather than ~use-package~ for package organization.
+An Emacs configuration that aims to have
+- support for all editing use-cases
+- a minimal UI
+- speed in mind, both in terms of responsiveness and user productivity
 
-Starts in 0.7s on good days, 2s on bad
+A custom keyboard layout is used, based off of [[https://github.com/xahlee/xah-fly-keys][xah-fly-keys]] mode for QWERTY with my personl changes that prioritize symbols over numbers:
+
+[[keyboard-layout.png]]
+
+It takes some getting used to, but typing TeX or general code afterwards is much faster without Shift and with the most-used symbols at your fingertips.
+
+However, if you’d like to stick to plain old QWERTY, or any other keyboard layout supported by [[https://github.com/xahlee/xah-fly-keys][xah-fly-keys]], you can create the following ~site-start.el~ file (which will not be tracked by git):
+#+begin_src elisp
+(setq xah-fly-key-current-layout qwerty)
+#+end_src
+
+Package management is handled by [[https://github.com/radian-software/straight.el][straight.el]], and ~init.el~ is organized using [[https://github.com/wi11dey/p-ckage][p@ckage]]. It is heavily optimized for precompilation, which should be done if possible after first startup. (On good days, the whole config starts in 0.7s, and in 2s on bad days.)
+
+Enjoy!

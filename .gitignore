@@ -2,5 +2,8 @@ straight/
 recovery/
 gnus/
 
+# Site-specific changes
+site-start.el
+
 # Compiled Emacs lisp files
 *.elc
