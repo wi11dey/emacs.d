@@ -1,6 +1,6 @@
 [
   {
-    "name": ".emacs",
+    "name": "emacs.d",
     "author": "Will Dey",
     "css": "* {\n    font-size: 13pt;\n}"
   },
@@ -138,7 +138,7 @@
     "\nk\n\n↓",
     "\nl\n\n→",
     ":\n;\n\n⇥",
-    "'\n\"",
+    "\"\n'",
     {
       "a": 7,
       "w": 2.25
