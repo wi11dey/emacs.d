@@ -598,6 +598,12 @@ Optional argument FILE-OVERRIDE is a string to be passed as the FILE parameter t
   (add-hook 'org-babel-post-tangle-hook (lambda ()
 					  (cancel-function-timers 'aggressive-indent--indent-if-changed)))
 
+  ;;;; Disable message
+  !(defun my/$-region-function (start end &optional column)
+     (let ((inhibit-message t))
+       (indent-region start end column)))
+  (setq $-region-function #'my/$-region-function)
+
   ;;;; Enable
   (global-$-mode))
 
