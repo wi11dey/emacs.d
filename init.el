@@ -22,9 +22,7 @@
 
 ;;; Commentary:
 
-;; Using my library [[https://github.com/wi11dey/p-ckage][p@ckage]] rather than `use-package' for package organization.
-
-;; Starts in 0.7s on good days, 2s on bad
+;; See README.org.
 
 ;;; Code:
 
