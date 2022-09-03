@@ -1214,6 +1214,16 @@ Optional argument FILE-OVERRIDE is a string to be passed as the FILE parameter t
 
   @$)
 
+;;; Battery
+(p@ckage battery
+  ~^
+
+  ;;;; Format
+  (setq $-mode-line-format " %p%% ")
+
+  ;;;; Enable
+  (display-$-mode))
+
 ;;; Minibuffer Line
 (p@ckage minibuffer-line
   ;;;; Build
@@ -1236,8 +1246,12 @@ Optional argument FILE-OVERRIDE is a string to be passed as the FILE parameter t
 		   " "
 		   ;;;;; Date
 		   (:eval (format-time-string "%F %A"))
-		   (:propertize " "
-				display (space :align-to (- right 2)))
+		   ;;;;; Battery
+		   (:eval `((:propertize " "
+					 display (space :align-to (- right ,(+ 3 (length battery-mode-line-string)))))
+			    (:propertize battery-mode-line-string
+					 face (:inverse-video t :inherit fixed-pitch))))
+		   " "
 		   ;;;;; Mode line front space
 		   (:propertize (:eval (upcase mode-line-front-space))
 				face fixed-pitch)))
