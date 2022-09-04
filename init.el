@@ -304,6 +304,9 @@ Optional argument FILE-OVERRIDE is a string to be passed as the FILE parameter t
 	      xah-fly-insert-map))
   (bind-key "<f11>" "." xah-fly-insert-map)
 
+  ;;;; Emacsclient
+  (add-hook 'server-after-make-frame-hook #'xah-fly-command-mode-activate)
+
   ;; TODO modify xfk to accept a list to try for movement with "h" and ";"
 
   ($))
@@ -351,12 +354,12 @@ Optional argument FILE-OVERRIDE is a string to be passed as the FILE parameter t
   ;;;; Fill column
   (setq-default fill-column 80))
 
-;;; Fancy
-(p@ckage fancy
-  ;;;; Startup screen
+;;; Server
+(p@ckage server
+  ;;;; Fancy startup screen
   ;; TODO Is this the best way?
   ;; Show the fancy startup screen even on client frames:
-  (add-hook 'server-after-make-frame-hook #'$-startup-screen))
+  (add-hook '$-after-make-frame-hook #'fancy-startup-screen))
 
 ;;; Minibuffer
 (p@ckage minibuffer
@@ -1251,9 +1254,9 @@ Optional argument FILE-OVERRIDE is a string to be passed as the FILE parameter t
 					 display (space :align-to (- right ,(+ 3 (length battery-mode-line-string)))))
 			    (:propertize battery-mode-line-string
 					 face (:inverse-video t :inherit fixed-pitch))))
-		   " "
 		   ;;;;; Mode line front space
-		   (:propertize (:eval (upcase mode-line-front-space))
+		   (:propertize (" "
+				 (:eval (upcase mode-line-front-space)))
 				face fixed-pitch)))
 
   ;;;; Enable
@@ -1749,7 +1752,8 @@ Optional argument FILE-OVERRIDE is a string to be passed as the FILE parameter t
   ;;;; Appear
   (p@ckage $-appear
     ;;;;; Build
-    ~(straight-use-package '$)
+    ~((straight-use-package '$)
+      ^)
 
     (setq org-hide-emphasis-markers t
 	  $-autolinks t)
@@ -1986,7 +1990,7 @@ Optional argument FILE-OVERRIDE is a string to be passed as the FILE parameter t
       (bind-key [remap xah-end-of-line-or-block] #'my/$-end-of-line-or-section magit-mode-map)))
 
   ;;;; Status
-  (bind-key "C-x g" @'$-status))
+  (bind-key "C-c g" @'$-status))
 
 ;;; Transient
 (p@ckage transient
