@@ -354,13 +354,6 @@ Optional argument FILE-OVERRIDE is a string to be passed as the FILE parameter t
   ;;;; Fill column
   (setq-default fill-column 80))
 
-;;; Server
-(p@ckage server
-  ;;;; Fancy startup screen
-  ;; TODO Is this the best way?
-  ;; Show the fancy startup screen even on client frames:
-  (add-hook '$-after-make-frame-hook #'fancy-startup-screen))
-
 ;;; Minibuffer
 (p@ckage minibuffer
   ;;;; Variable Pitch
