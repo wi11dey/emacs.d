@@ -193,6 +193,17 @@ Optional argument FILE-OVERRIDE is a string to be passed as the FILE parameter t
 
   @$-warn)
 
+;;; Simulate keys
+(defmacro my/simulate-key (keys &optional function)
+  `(lambda ()
+     ,(format-message "Simulate the sequence %s." keys)
+     (interactive)
+     ,@(mapcar (lambda (event)
+		 (if function
+		     `(,function ,event)
+		   `(push ,event unread-command-events)))
+	       (listify-key-sequence (kbd keys)))))
+
 ;; Bootstrapped.
 
 
@@ -240,60 +251,28 @@ Optional argument FILE-OVERRIDE is a string to be passed as the FILE parameter t
 
   ;;;; Keyboard layout
   ;;;;; Custom symbol layout
-  (push '("Z" . "?") xah--dvorak-to-qwerty-kmap)
-  (push '("_" . "\"") xah--dvorak-to-qwerty-kmap)
-  (push '("{" . "_") xah--dvorak-to-qwerty-kmap)
-  (push '("+" . "}") xah--dvorak-to-qwerty-kmap)
-  (push '("?" . "{") xah--dvorak-to-qwerty-kmap)
-  (push '("+" . "}") xah--dvorak-to-qwerty-kmap)
-  (defconst xah--dvorak-to-custom-qwerty-kmap
-    (nconc '(;; Numbers:
-	     ("1" . "*")
-	     ("!" . "1")
-	     ("2" . "$")
-	     ("@" . "2")
-	     ("3" . "<S-menu>") ; <S-menu> instead of <menu> so it becomes <menu> when input methods strip the shift modifier, and falls back to menu automatically when such input methods are active.
-	     ("#" . "3")
-	     ("4" . "{")
-	     ("$" . "4")
-	     ("5" . "}")
-	     ("%" . "5")
-	     ("6" . "_")
-	     ("^" . "6")
-	     ("7" . "\\")
-	     ("&" . "7")
-	     ("8" . "(")
-	     ("*" . "8")
-	     ("9" . ")")
-	     ("(" . "9")
-	     ("0" . "&")
-	     (")" . "0")
-	     ;; Miscellaneous:
-	     ("{" . "%")
-	     ("~" . "#")
-	     ("/" . "[")
-	     ("?" . "?")
-	     ("=" . "]")
-	     ("+" . "!")
-	     ("\\" . "^")
-	     ;; ("-" . "\"")
-	     ;; ("_" . "'")
-	     ("Z" . "@")
-	     ("<escape>" . "~")
-	     ("<home>" . "C-g")
-	     ("<menu>" . "C-g")
-	     ("<apps>" . "C-g"))
-	   xah--dvorak-to-qwerty-kmap))
-  (let ((current xah--dvorak-to-custom-qwerty-kmap))
-    (while (not (eq current xah--dvorak-to-qwerty-kmap))
-      (bind-key (or (cdr (assoc (caar current) xah--dvorak-to-qwerty-kmap))
-		    (caar current))
-		(kbd (cdar current))
-		input-decode-map)
-      (setq current (cdr current))))
-  (setq xah-fly-key-current-layout 'custom-qwerty)
-  ;; Reload with new layout:
-  (load "xah-fly-keys")
+  (define-key xah-fly-insert-map "1" (my/simulate-key "*"))
+  (define-key xah-fly-insert-map "2" (my/simulate-key "$"))
+  (define-key xah-fly-insert-map "3" #'xah-fly-command-mode-activate)
+  (define-key xah-fly-insert-map "4" (my/simulate-key "{"))
+  (define-key xah-fly-insert-map "5" (my/simulate-key "}"))
+  (define-key xah-fly-insert-map "6" (my/simulate-key "_"))
+  (define-key xah-fly-insert-map "7" (my/simulate-key "\\"))
+  (define-key xah-fly-insert-map "8" (my/simulate-key "("))
+  (define-key xah-fly-insert-map "9" (my/simulate-key ")"))
+  (define-key xah-fly-insert-map "0" (my/simulate-key "&"))
+  (define-key xah-fly-insert-map "[" (my/simulate-key "?"))
+  (define-key xah-fly-insert-map "]" (my/simulate-key "!"))
+  (define-key xah-fly-insert-map "{" (my/simulate-key "["))
+  (define-key xah-fly-insert-map "}" (my/simulate-key "]"))
+  (define-key xah-fly-insert-map "\\" (my/simulate-key "^"))
+  (define-key xah-fly-insert-map "_" (my/simulate-key "^"))
+  (define-key xah-fly-insert-map "~" (my/simulate-key "#"))
+  (define-key xah-fly-insert-map "?" (my/simulate-key "@"))
+  (define-key xah-fly-insert-map (kbd "<escape>") (my/simulate-key "~"))
+  (define-key xah-fly-shared-map (kbd "<home>") (my/simulate-key "C-g"))
+  (define-key xah-fly-shared-map (kbd "<menu>") #'keyboard-quit)
+  (define-key xah-fly-shared-map (kbd "<apps>") #'keyboard-quit)
 
   !(defun my/function-key-self-insert-command (n)
      (interactive "p")
@@ -1313,8 +1292,8 @@ Optional argument FILE-OVERRIDE is a string to be passed as the FILE parameter t
 
   ;;;; Expand/contract
   (with-eval-after-load 'xah-fly-keys
-    (bind-key "(" @'er/$ xah-fly-command-map)
-    (bind-key "8" @'er/contract-region xah-fly-command-map)))
+    (define-key xah-fly-command-map "8" @'er/$)
+    (define-key xah-fly-command-map (kbd "S-8") @'er/contract-region)))
 
 ;;; Multiple Cursors
 (p@ckage multiple-cursors
