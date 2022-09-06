@@ -2141,7 +2141,6 @@ Optional argument FILE-OVERRIDE is a string to be passed as the FILE parameter t
 	      1))))
   !(defun my/$-set-outline ()
      (setq-local outline-regexp "[ \t]*;;\\(?1:;+\\)[^#]")
-     (setq outline-minor-faces-regexp ";;;+[^#].*$")
      (setq-local outline-level #'my/$-outline-level))
   ;; `my/emacs-lisp-set-outline' must come before `outline-minor-mode' in `emacs-lisp-mode-hook' so that `outline-minor-faces' caches the right Outline settings when fontifying the buffer for the first time.
   (add-hook '$-mode-hook #'my/$-set-outline)
