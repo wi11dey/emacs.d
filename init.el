@@ -1,4 +1,4 @@
-;;; init.el --- Emacs configuration -*- lexical-binding: t -*-
+;;; init.el --- Emacs configuration -*- lexical-binding: t; eval: (require 'p@ckage) -*-
 
 ;; Author: Will Dey
 ;; Maintainer: Will Dey
@@ -180,7 +180,11 @@ Optional argument FILE-OVERRIDE is a string to be passed as the FILE parameter t
   (straight-use-package '(p@ckage :type git :host github :repo "wi11dey/p-ckage"))
   (require 'p@ckage))
 (p@ckage p@ckage
-  @$)
+  @$
+
+  ;;;; Safe local eval
+  ;; Allow requiring p@ckage from local eval:
+  (push '(require 'p@ckage) safe-local-eval-forms))
 
 ;;; Bytecomp Simplify
 (p@ckage bytecomp-simplify
