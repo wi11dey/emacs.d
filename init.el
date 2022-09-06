@@ -1467,13 +1467,6 @@ Optional argument FILE-OVERRIDE is a string to be passed as the FILE parameter t
 
 ;;; Info
 (p@ckage info
-  ;;;; Italics
-  (font-lock-add-keywords 'Info-mode
-  			  '(("\\(_\\)\\(.+?\\)\\(_\\)"
-  			     (1 '(face nil invisible t))
-  			     (2 'italic)
-  			     (3 '(face nil invisible t)))))
-
   ;;;; Isearch
   ;; Inhibit any later remappings of `isearch-forward'.
   _(bind-key [remap isearch-forward] #'isearch-forward Info-mode-map)
