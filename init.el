@@ -193,17 +193,6 @@ Optional argument FILE-OVERRIDE is a string to be passed as the FILE parameter t
 
   @$-warn)
 
-;;; Simulate keys
-(defmacro my/simulate-key (keys &optional function)
-  `(lambda ()
-     ,(format-message "Simulate the sequence %s." keys)
-     (interactive)
-     ,@(mapcar (lambda (event)
-		 (if function
-		     `(,function ,event)
-		   `(push ,event unread-command-events)))
-	       (listify-key-sequence (kbd keys)))))
-
 ;; Bootstrapped.
 
 
@@ -249,50 +238,30 @@ Optional argument FILE-OVERRIDE is a string to be passed as the FILE parameter t
   ;;;; Load
   !^
 
-  ;;;; Keyboard layout
-  ;;;;; Custom symbol layout
-  (define-key xah-fly-insert-map "1" (my/simulate-key "*"))
-  (define-key xah-fly-insert-map "2" (my/simulate-key "$"))
-  (define-key xah-fly-insert-map "3" #'xah-fly-command-mode-activate)
-  (define-key xah-fly-insert-map "4" (my/simulate-key "{"))
-  (define-key xah-fly-insert-map "5" (my/simulate-key "}"))
-  (define-key xah-fly-insert-map "6" (my/simulate-key "_"))
-  (define-key xah-fly-insert-map "7" (my/simulate-key "\\"))
-  (define-key xah-fly-insert-map "8" (my/simulate-key "("))
-  (define-key xah-fly-insert-map "9" (my/simulate-key ")"))
-  (define-key xah-fly-insert-map "0" (my/simulate-key "&"))
-  (define-key xah-fly-insert-map "[" (my/simulate-key "?"))
-  (define-key xah-fly-insert-map "]" (my/simulate-key "!"))
-  (define-key xah-fly-insert-map "{" (my/simulate-key "["))
-  (define-key xah-fly-insert-map "}" (my/simulate-key "]"))
-  (define-key xah-fly-insert-map "\\" (my/simulate-key "^"))
-  (define-key xah-fly-insert-map "_" (my/simulate-key "^"))
-  (define-key xah-fly-insert-map "~" (my/simulate-key "#"))
-  (define-key xah-fly-insert-map "?" (my/simulate-key "@"))
-  (define-key xah-fly-insert-map (kbd "<escape>") (my/simulate-key "~"))
-  (define-key xah-fly-shared-map (kbd "<home>") (my/simulate-key "C-g"))
-  (define-key xah-fly-shared-map (kbd "<menu>") #'keyboard-quit)
-  (define-key xah-fly-shared-map (kbd "<apps>") #'keyboard-quit)
-
-  !(defun my/function-key-self-insert-command (n)
-     (interactive "p")
-     (let ((key-name (symbol-name last-command-event)))
-       (if (not (eq (aref key-name 0) ?f))
-	   (user-error "%s is not a function key" key-name)
-	 (setq last-command-event (+ ?0 (% (string-to-number (substring-no-properties key-name 1)) 10)))
-	 (self-insert-command n))))
-  (dotimes (i 10)
-    (bind-key (format "<f%d>" (1+ i))
-	      #'my/function-key-self-insert-command
-	      xah-fly-insert-map))
-  (bind-key "<f11>" "." xah-fly-insert-map)
-
   ;;;; Emacsclient
   (add-hook 'server-after-make-frame-hook #'xah-fly-command-mode-activate)
 
   ;; TODO modify xfk to accept a list to try for movement with "h" and ";"
 
   ($))
+
+;;; Symb0l
+(p@ckage symb0l
+  ;;;; Build
+  ~(straight-use-package '($ :type git :host github :repo "wi11dey/symb0l"))
+
+  ;;;; Load
+  !^
+
+  ;;;; Enable
+  ($-mode)
+  ;;;;; Password entry
+  ;; Re-enable during password entry if <menu> was pressed to enter xah-fly-command-mode:
+  !(defun my/symb0l-passwd-command-mode ()
+     (interactive)
+     (symb0l-map-mode 1)
+     (xah-fly-command-mode-activate))
+  (keymap-set read-passwd-map "<menu>" #'my/symb0l-passwd-command-mode))
 
 ;;; Repeat
 (p@ckage repeat
@@ -1293,7 +1262,7 @@ Optional argument FILE-OVERRIDE is a string to be passed as the FILE parameter t
   ;;;; Expand/contract
   (with-eval-after-load 'xah-fly-keys
     (define-key xah-fly-command-map "8" @'er/$)
-    (define-key xah-fly-command-map (kbd "S-8") @'er/contract-region)))
+    (define-key xah-fly-command-map "*" @'er/contract-region)))
 
 ;;; Multiple Cursors
 (p@ckage multiple-cursors
