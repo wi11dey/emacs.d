@@ -1,4 +1,4 @@
-;;; init.el --- Emacs configuration -*- lexical-binding: t; eval: (require 'p@ckage) -*-
+;;; init.el --- Emacs configuration -*- lexical-binding: t; byte-compile-docstring-max-column: 1000; eval: (require 'p@ckage)  -*-
 
 ;; Author: Will Dey
 ;; Maintainer: Will Dey
