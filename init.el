@@ -42,6 +42,7 @@
 ;; TODO Go through and reorganize
 ;; TODO Break up "Keybindings" headings
 ;; TODO remove bind-key
+;; TODO make everything after  independent of order in file
 
 (defgroup my nil
   "Customizations for personal Emacs modifications."
@@ -1060,27 +1061,27 @@ Optional argument FILE-OVERRIDE is a string to be passed as the FILE parameter t
 			   ([remap xah-fly-command-mode-activate] . [#'exwm-reset #'xah-fly-command-mode-activate])
 			   ([remap xah-fly-insert-mode-activate] . [#'xah-fly-insert-mode-activate #'exwm-input-release-keyboard])))
 	     (define-key map
-	       (if (stringp (car pair))
-		   (kbd (car pair))
-		 (car pair))
-	       (if (commandp (cdr pair) :for-call-interactively)
-		   (cdr pair)
-		 (setq events (listify-key-sequence (if (stringp (cdr pair))
-							(kbd (cdr pair))
-						      (cdr pair))))
-		 (or (gethash events commands)
-		     (puthash events
-			      (byte-compile
-			       `(lambda ()
-				  ,(format-message "Simulate the sequence %s."
-						   (cdr pair))
-				  (interactive)
-				  ,@(mapcar (lambda (event)
-					      (if (eq (car-safe event) 'function)
-						  `(call-interactively ,event)
-						`(@$-input--fake-key ',event)))
-					    events)))
-			      commands)))))
+			 (if (stringp (car pair))
+			     (kbd (car pair))
+			   (car pair))
+			 (if (commandp (cdr pair) :for-call-interactively)
+			     (cdr pair)
+			   (setq events (listify-key-sequence (if (stringp (cdr pair))
+								  (kbd (cdr pair))
+								(cdr pair))))
+			   (or (gethash events commands)
+			       (puthash events
+					(byte-compile
+					 `(lambda ()
+					    ,(format-message "Simulate the sequence %s."
+							     (cdr pair))
+					    (interactive)
+					    ,@(mapcar (lambda (event)
+							(if (eq (car-safe event) 'function)
+							    `(call-interactively ,event)
+							  `(@$-input--fake-key ',event)))
+						      events)))
+					commands)))))
 	   map))
 
   ;;;; Visual Line
@@ -1242,12 +1243,6 @@ Optional argument FILE-OVERRIDE is a string to be passed as the FILE parameter t
 
   ;;;; Follow symbolic links
   (setq $-follow-symlinks t))
-
-;;; Auto Save Visited Minor Mode
-(p@ckage auto-save-visited-minor-mode
-  ~(straight-use-package '($ :type git :host github :repo "wi11dey/auto-save-visited-minor-mode"))
-
-  @$)
 
 ;;; Expand Region
 (p@ckage expand-region
@@ -1455,8 +1450,7 @@ Optional argument FILE-OVERRIDE is a string to be passed as the FILE parameter t
   (add-hook 'prog-mode-hook @'$-mode))
 
 ;;; Semantic
-(p@ckage semantic
-  )
+(p@ckage semantic)
 
 ;;; Smartparens
 (p@ckage smartparens
@@ -1928,7 +1922,9 @@ Optional argument FILE-OVERRIDE is a string to be passed as the FILE parameter t
       (bind-key [remap xah-end-of-line-or-block] #'my/$-end-of-line-or-section magit-mode-map)))
 
   ;;;; Status
-  (bind-key "C-c g" @'$-status))
+  (bind-key "C-c g" @'$-status)
+
+  @$-init)
 
 ;;; Transient
 (p@ckage transient
@@ -2036,20 +2032,6 @@ Optional argument FILE-OVERRIDE is a string to be passed as the FILE parameter t
 						[?\s ?→ ?\C-i]
 						[?\s ?» ?\C-i]
 						[?\\    ?\C-i]))))
-
-;;; YASnippet
-(p@ckage yasnippet
-  ;;;; Build
-  ~(straight-use-package '$)
-  !^
-
-  ;;;; Snippets
-  (p@ckage $-snippets
-    ~(straight-use-package '$)
-    ^)
-
-  ;;;; Enable
-  (yas-global-mode))
 
 ;;; Outline Minor Faces
 (p@ckage outline-minor-faces
