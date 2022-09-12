@@ -1,4 +1,4 @@
-;;; straight-init.el --- Initialize straight.el by evaluating all `eval-whe-compile' code in init.el -*- lexical-binding: t -*-
+;;; straight-init.el --- Initialize straight.el by evaluating all `eval-when-compile' code in init.el -*- lexical-binding: t; byte-compile-docstring-max-column: 1000 -*-
 
 (with-temp-buffer
   (insert-file-contents (expand-file-name "init.el" user-emacs-directory))
