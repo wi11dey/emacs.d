@@ -41,7 +41,7 @@
 ;; TODO defvar+setq -> defconst where possible
 ;; TODO Go through and reorganize
 ;; TODO Break up "Keybindings" headings
-;; TODO remove bind-key
+;; TODO remove bind-key and replace all with keymap-set
 ;; TODO make everything after  independent of order in file
 
 (defgroup my nil
@@ -189,8 +189,8 @@ Optional argument FILE-OVERRIDE is a string to be passed as the FILE parameter t
 
 ;;; Bytecomp Simplify
 (p@ckage bytecomp-simplify
-  ~((straight-use-package '$)
-    ^)
+  ~(straight-use-package '$)
+  ~^
 
   @$-warn)
 
@@ -353,6 +353,10 @@ Optional argument FILE-OVERRIDE is a string to be passed as the FILE parameter t
 
 ;;; Keyboard
 (p@ckage keyboard
+  ;;;; Print screen key
+  ;; Sometimes, the print screen key is put where the right control key usually is (next to right alt key), so make print screen act as a control key as well:
+  (keymap-set function-key-map "<print>" #'event-apply-control-modifier)
+
   ;;;; macOS
   ;;;;; Command key
   ;; Command key is control:
@@ -562,9 +566,9 @@ Optional argument FILE-OVERRIDE is a string to be passed as the FILE parameter t
 ;;; AUCTeX
 (p@ckage auctex
   ;;;; Build
-  ~((straight-use-package '$)
-    (my/package-autoloads $)
-    (require 'tex))
+  ~(straight-use-package '$)
+  ~(my/package-autoloads $)
+  ~(require 'tex)
 
   ;;;; Enable
   (require 'tex-site)
@@ -617,8 +621,8 @@ Optional argument FILE-OVERRIDE is a string to be passed as the FILE parameter t
 ;;; Rainbow
 (p@ckage rainbow-mode
   ;;;; Build
-  ~((straight-use-package '$)
-    ^)
+  ~(straight-use-package '$)
+  ~^
 
   ;;;; X colors
   (setq rainbow-x-colors nil)
@@ -630,8 +634,8 @@ Optional argument FILE-OVERRIDE is a string to be passed as the FILE parameter t
 ;;; Company
 (p@ckage company
   ;;;; Build
-  ~((straight-use-package '$)
-    ^)
+  ~(straight-use-package '$)
+  ~^
 
   ;;;; Lighter
   (setq $-lighter nil)
@@ -681,8 +685,8 @@ Optional argument FILE-OVERRIDE is a string to be passed as the FILE parameter t
 ;; TODO Use font-lock "stealth" to add guides to buffers
 (p@ckage highlight-indent-guides
   ;;;; Build
-  ~((straight-use-package '$)
-    ^)
+  ~(straight-use-package '$)
+  ~^
 
   ;;;; Delay
   (setq $-delay 0.05)
@@ -708,8 +712,8 @@ Optional argument FILE-OVERRIDE is a string to be passed as the FILE parameter t
 ;;; REST Client
 (p@ckage restclient
   ;;;; Build
-  ~((straight-use-package '$)
-    ^)
+  ~(straight-use-package '$)
+  ~^
 
   ;;;; Auto mode
   (add-to-list 'auto-mode-alist (cons "\\.http\\'" @'$))
@@ -764,8 +768,8 @@ Optional argument FILE-OVERRIDE is a string to be passed as the FILE parameter t
   ;;;; Subtree
   (p@ckage $-subtree
     ;;;;; Build
-    ~((straight-use-package '$)
-      ^)
+    ~(straight-use-package '$)
+    ~^
 
     ;;;;; Line prefix
     (setq $-line-prefix (propertize "  ┊"
@@ -781,8 +785,8 @@ Optional argument FILE-OVERRIDE is a string to be passed as the FILE parameter t
   ;;;; Rainbow
   (p@ckage $-rainbow
     ;;;;; Build
-    ~((straight-use-package '$)
-      ^)
+    ~(straight-use-package '$)
+    ~^
     (setq $-ext-to-face nil)
 
     ;;;;; Rules
@@ -834,8 +838,8 @@ Optional argument FILE-OVERRIDE is a string to be passed as the FILE parameter t
   ;; TODO Don't delete peeped buffers that already existed before peeping
   (p@ckage peep-$
     ;;;;; Build
-    ~((straight-use-package '$)
-      ^)
+    ~(straight-use-package '$)
+    ~^
 
     ;;;;; Ignored extensions
     (setq $-ignored-extensions '("mkv"
@@ -1158,8 +1162,8 @@ Optional argument FILE-OVERRIDE is a string to be passed as the FILE parameter t
 ;;; Free Keys
 (p@ckage free-keys
   ;;;; Build
-  ~((straight-use-package '$)
-    ^)
+  ~(straight-use-package '$)
+  ~^
 
   @$)
 
@@ -1247,8 +1251,8 @@ Optional argument FILE-OVERRIDE is a string to be passed as the FILE parameter t
 ;;; Expand Region
 (p@ckage expand-region
   ;;;; Build
-  ~((straight-use-package '$)
-    ^)
+  ~(straight-use-package '$)
+  ~^
 
   ;;;; Fast keys
   ;; Disable:
@@ -1262,8 +1266,8 @@ Optional argument FILE-OVERRIDE is a string to be passed as the FILE parameter t
 ;;; Multiple Cursors
 (p@ckage multiple-cursors
   ;;;; Build
-  ~((straight-use-package '$)
-    ^)
+  ~(straight-use-package '$)
+  ~^
 
   ;;;; Run for all
   (setq mc/always-run-for-all t)
@@ -1407,8 +1411,8 @@ Optional argument FILE-OVERRIDE is a string to be passed as the FILE parameter t
 ;;; CTRLF
 (p@ckage ctrlf
   ;;;; Build
-  ~((straight-use-package '$)
-    ^)
+  ~(straight-use-package '$)
+  ~^
 
   ;;;; Search style
   (setq $-default-search-style   'fuzzy
@@ -1490,8 +1494,8 @@ Optional argument FILE-OVERRIDE is a string to be passed as the FILE parameter t
 ;;; Notes
 (p@ckage notes
   ;;;; Build
-  ~((straight-use-package '($ :type git :host github :repo "wi11dey/notes.el"))
-    ^)
+  ~(straight-use-package '($ :type git :host github :repo "wi11dey/notes.el"))
+  ~^
 
   ;;;; Smartparens
   (add-hook '$-new-hook #'turn-off-smartparens-strict-mode)
@@ -1500,12 +1504,12 @@ Optional argument FILE-OVERRIDE is a string to be passed as the FILE parameter t
 
 ;;; Org
 (p@ckage org
-  ~((straight-use-package '($ :type git
-			      :repo "https://code.orgmode.org/bzg/org-mode.git"
-			      :local-repo "org"
-			      :files (:defaults "contrib/lisp/*.el")))
-    (my/package-autoloads $)
-    ^)
+  ~(straight-use-package '($ :type git
+			     :repo "https://code.orgmode.org/bzg/org-mode.git"
+			     :local-repo "org"
+			     :files (:defaults "contrib/lisp/*.el")))
+  ~(my/package-autoloads $)
+  ~^
 
   @$-mode
 
@@ -1684,8 +1688,8 @@ Optional argument FILE-OVERRIDE is a string to be passed as the FILE parameter t
   ;;;; Appear
   (p@ckage $-appear
     ;;;;; Build
-    ~((straight-use-package '$)
-      ^)
+    ~(straight-use-package '$)
+    ~^
 
     (setq org-hide-emphasis-markers t
 	  $-autolinks t)
@@ -1807,8 +1811,8 @@ Optional argument FILE-OVERRIDE is a string to be passed as the FILE parameter t
 ;;; CalFW
 (p@ckage calfw
   ;;;; Build
-  ~((straight-use-package '$)
-    ^)
+  ~(straight-use-package '$)
+  ~^
 
   ;;;; Box drawing
   (setq cfw:fchar-junction         ?┼
@@ -1825,12 +1829,13 @@ Optional argument FILE-OVERRIDE is a string to be passed as the FILE parameter t
 ;;; Chess
 (p@ckage chess
   ;;;; Build
-  ~((straight-use-package '$)
-    ^)
+  ~(straight-use-package '$)
+  ~^
 
   ;;;; Plain display
-  (p@ckage chess-plain
+  (p@ckage $-plain
     ~^
+
     (setq $-border-style [?\s
 			  ?\s
 			  ?\s
@@ -1892,8 +1897,8 @@ Optional argument FILE-OVERRIDE is a string to be passed as the FILE parameter t
 ;;; Magit
 (p@ckage magit
   ;;;; Build
-  ~((straight-use-package '$)
-    ^)
+  ~(straight-use-package '$)
+  ~^
 
   ;;;; Git executable
   ;; Magit will set this to an absolute path on Windows, but then it won't find the right exectuable over TRAMP.
@@ -1941,8 +1946,8 @@ Optional argument FILE-OVERRIDE is a string to be passed as the FILE parameter t
 ;;; Markdown
 (p@ckage markdown-mode
   ;;;; Build
-  ~((straight-use-package '$)
-    ^)
+  ~(straight-use-package '$)
+  ~^
 
   ;;;; Fontify code blocks natively
   (setq markdown-fontify-code-blocks-natively t)
@@ -2036,8 +2041,8 @@ Optional argument FILE-OVERRIDE is a string to be passed as the FILE parameter t
 ;;; Outline Minor Faces
 (p@ckage outline-minor-faces
   ;;;; Build
-  ~((straight-use-package '$)
-    ^)
+  ~(straight-use-package '$)
+  ~^
 
   ;;;; Enable
   ;;;;; Outline Minor
@@ -2177,8 +2182,8 @@ Optional argument FILE-OVERRIDE is a string to be passed as the FILE parameter t
 ;;; Debian.el
 (p@ckage debian-el
   ;;;; Buid
-  ~((straight-use-package '$)
-    ^)
+  ~(straight-use-package '$)
+  ~^
 
   ;;;; APT Sources
   (p@ckage apt-sources
@@ -2211,8 +2216,8 @@ Optional argument FILE-OVERRIDE is a string to be passed as the FILE parameter t
 ;;; Julia
 (p@ckage julia-mode
   ;;;; Build
-  ~((straight-use-package '$)
-    ^)
+  ~(straight-use-package '$)
+  ~^
 
   ;;;; Auto mode
   (add-to-list 'auto-mode-alist (cons "\\.jl\\'" @'$)))
@@ -2275,8 +2280,8 @@ Optional argument FILE-OVERRIDE is a string to be passed as the FILE parameter t
 ;; TODO use this for more use cases?
 (p@ckage web-mode
   ;;;; Build
-  ~((straight-use-package '$)
-    ^)
+  ~(straight-use-package '$)
+  ~^
 
   ;;;; SQL
   (setq $-enable-sql-detection t)
