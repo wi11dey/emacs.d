@@ -255,14 +255,7 @@ Optional argument FILE-OVERRIDE is a string to be passed as the FILE parameter t
   !^
 
   ;;;; Enable
-  ($-mode)
-  ;;;;; Password entry
-  ;; Re-enable during password entry if <menu> was pressed to enter xah-fly-command-mode:
-  !(defun my/symb0l-passwd-command-mode ()
-     (interactive)
-     (symb0l-map-mode 1)
-     (xah-fly-command-mode-activate))
-  (keymap-set read-passwd-map "<menu>" #'my/symb0l-passwd-command-mode))
+  ($-mode))
 
 ;;; Repeat
 (p@ckage repeat
