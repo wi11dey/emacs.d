@@ -347,8 +347,8 @@ Optional argument FILE-OVERRIDE is a string to be passed as the FILE parameter t
 ;;; Keyboard
 (p@ckage keyboard
   ;;;; Print screen key
-  ;; Sometimes, the print screen key is put where the right control key usually is (next to right alt key), so make print screen act as a control key as well:
-  (keymap-set function-key-map "<print>" #'event-apply-control-modifier)
+  ;; Sometimes, the print screen key is put where the right alt key usually is (next to right control key), so make print screen act as a alt key as well:
+  (keymap-set function-key-map "<print>" #'event-apply-meta-modifier)
 
   ;;;; macOS
   ;;;;; Command key
