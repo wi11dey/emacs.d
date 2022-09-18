@@ -2345,4 +2345,16 @@ Optional argument FILE-OVERRIDE is a string to be passed as the FILE parameter t
   ;;;; Interpreter mode
   (add-to-list 'interpreter-mode-alist (cons "lua" @'$)))
 
+;;; GAP
+(p@ckage gap-mode
+  ;;;; Build
+  ~(straight-use-package '$)
+
+  ;;;; Auto mode
+  (add-to-list 'auto-mode-alist (cons "\\.g\\'"   @'$))
+  (add-to-list 'auto-mode-alist (cons "\\.gap\\'" @'$))
+
+  ;;;; Process
+  @$-process)
+
 ;;; init.el ends here
