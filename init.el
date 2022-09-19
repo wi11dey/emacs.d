@@ -316,7 +316,7 @@ Optional argument FILE-OVERRIDE is a string to be passed as the FILE parameter t
   ;; (set-face-attribute FACE nil :fontset "x") works on everything but default face
   (solarized-set-faces
    (fixed-pitch :height 105 :family "DejaVu Sans Mono")
-   (default :background base03 :height 105 :family "DejaVu Sans Mono")
+   (default :background base03 :height 110 :family "DejaVu Sans")
    (variable-pitch :height 110 :family "DejaVu Sans")
    (fringe :foreground base01 :background base03)
    (header-line :inverse-video nil :background base03 :underline base0 :inherit mode-line)
@@ -889,7 +889,13 @@ Optional argument FILE-OVERRIDE is a string to be passed as the FILE parameter t
      ($-flag-mark :foreground green :background green :inverse-video nil)
      ($-flag-mark-line :foreground base2 :inverse-video t)
      ($-deletion :foreground red :background red :inverse-video nil)
-     ($-deletion-file-name :foreground red :background base02 :inverse-video nil))))
+     ($-deletion-file-name :foreground red :background base02 :inverse-video nil)))
+
+  ;;;; Faces
+  (solarized-set-faces
+   ($-directory :inherit diredfl-dir-name))
+  ;;;;; Fixed pitch
+  (add-hook '$-mode-hook #'fixed-pitch-mode))
 
 ;;; ElDoc
 (p@ckage eldoc
@@ -1922,6 +1928,10 @@ Optional argument FILE-OVERRIDE is a string to be passed as the FILE parameter t
   ;;;; Status
   (bind-key "C-c g" @'$-status)
 
+  ;;;; Faces
+  ;;;;; Fixed pitch
+  (add-hook '$-mode-hook #'fixed-pitch-mode)
+
   @$-init)
 
 ;;; Transient
@@ -2382,5 +2392,11 @@ Optional argument FILE-OVERRIDE is a string to be passed as the FILE parameter t
 
   ;;;; Disable
   (setq view-mode-map nil))
+
+;;; Prog
+(p@ckage prog-mode
+  ;;;; Faces
+  ;;;;; Fixed pitch
+  (add-hook '$-hook #'fixed-pitch-mode))
 
 ;;; init.el ends here
