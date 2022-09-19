@@ -2241,6 +2241,124 @@ Optional argument FILE-OVERRIDE is a string to be passed as the FILE parameter t
 	  ;; Reject all cookies for now:
 	  $-untrusted-urls '(".*"))))
 
+;;; SHR
+(p@ckage shr
+  ;;;; Inline images
+  ;; TODO upstream using customizable variable to determine when to (insert "\n")
+  ;; Patch the following functions to avoid placing images on their own line when not needed:
+  _(defun shr-insert (text)
+     (cond
+      ((eq shr-folding-mode 'none)
+       (let ((start (point)))
+	 (insert text)
+	 (save-restriction
+	   (narrow-to-region start (point))
+           (shr--translate-insertion-chars)
+	   (goto-char (point-max)))))
+      (t
+       (let ((font-start (point)))
+	 (when (and (string-match-p "\\`[ \t\n\r]" text)
+		    (not (bolp))
+		    (not (eq (char-after (1- (point))) ? )))
+	   (insert " "))
+	 (let ((start (point))
+	       (bolp (bolp)))
+	   (insert text)
+	   (save-restriction
+	     (narrow-to-region start (point))
+	     (goto-char start)
+	     (when (looking-at "[ \t\n\r]+")
+	       (replace-match "" t t))
+	     (while (re-search-forward "[\t\n\r]+" nil t)
+	       (replace-match " " t t))
+	     (goto-char start)
+             (while (re-search-forward "  +" nil t)
+	       (replace-match " " t t))
+             (shr--translate-insertion-chars)
+	     (goto-char (point-max)))
+	   ;; We may have removed everything we inserted if it was just
+	   ;; spaces.
+	   (unless (= font-start (point))
+	     ;; Mark all lines that should possibly be folded afterwards.
+	     (when bolp
+	       (shr-mark-fill start))
+	     (when shr-use-fonts
+	       (put-text-property font-start (point)
+				  'face
+				  (or shr-current-font 'shr-text)))))))))
+  _(defun shr-tag-img (dom &optional url)
+     (when (or url
+	       (and dom
+		    (or (> (length (dom-attr dom 'src)) 0)
+			(> (length (dom-attr dom 'srcset)) 0))))
+       (let ((alt (dom-attr dom 'alt))
+             (width (shr-string-number (dom-attr dom 'width)))
+             (height (shr-string-number (dom-attr dom 'height)))
+	     (url (shr-expand-url (or url (shr--preferred-image dom)))))
+	 (let ((start (point-marker)))
+	   (when (zerop (length alt))
+	     (setq alt "*"))
+	   (cond
+            ((null url)
+             ;; After further expansion, there turned out to be no valid
+             ;; src in the img after all.
+             )
+	    ((or (member (dom-attr dom 'height) '("0" "1"))
+		 (member (dom-attr dom 'width) '("0" "1")))
+	     ;; Ignore zero-sized or single-pixel images.
+	     )
+	    ((and (not shr-inhibit-images)
+		  (string-match "\\`data:" url))
+	     (let ((image (shr-image-from-data (substring url (match-end 0)))))
+	       (if image
+		   (funcall shr-put-image-function image alt
+                            (list :width width :height height))
+		 (insert alt))))
+	    ((and (not shr-inhibit-images)
+		  (string-match "\\`cid:" url))
+	     (let ((url (substring url (match-end 0)))
+		   image)
+	       (if (or (not shr-content-function)
+		       (not (setq image (funcall shr-content-function url))))
+		   (insert alt)
+		 (funcall shr-put-image-function image alt
+			  (list :width width :height height)))))
+	    ((or shr-inhibit-images
+		 (shr-image-blocked-p url))
+	     (setq shr-start (point))
+             (shr-insert alt))
+	    ((and (not shr-ignore-cache)
+		  (url-is-cached url))
+	     (funcall shr-put-image-function (shr-get-image-data url) alt
+                      (list :width width :height height)))
+	    (t
+	     (when (and shr-ignore-cache
+			(url-is-cached url))
+	       (let ((file (url-cache-create-filename url)))
+		 (when (file-exists-p file)
+		   (delete-file file))))
+             (when (image-type-available-p 'svg)
+               (insert-image
+		(shr-make-placeholder-image dom)
+		(or alt "")))
+             (insert " ")
+	     (url-queue-retrieve
+              url #'shr-image-fetched
+	      (list (current-buffer) start (set-marker (make-marker) (point))
+                    (list :width width :height height))
+	      t
+              (not (shr--use-cookies-p url shr-base)))))
+	   (when (zerop shr-table-depth) ;; We are not in a table.
+	     (put-text-property start (point) 'keymap shr-image-map)
+	     (put-text-property start (point) 'shr-alt alt)
+	     (put-text-property start (point) 'image-url url)
+	     (put-text-property start (point) 'image-displayer
+				(shr-image-displayer shr-content-function))
+	     (put-text-property start (point) 'help-echo
+				(shr-fill-text
+				 (or (dom-attr dom 'title) alt))))))))
+  )
+
 ;;; EWW
 (p@ckage eww
   ~^
