@@ -2231,6 +2231,25 @@ Optional argument FILE-OVERRIDE is a string to be passed as the FILE parameter t
 	  ;; Reject all cookies for now:
 	  $-untrusted-urls '(".*"))))
 
+;;; EWW
+(p@ckage eww
+  ~^
+
+  ;;;; Search
+  ;; TODO upstream by allowing eww-search-prefix to be an alist, in which case it will prompt for search engine
+  (setq $-search-prefix "PROMPT ")
+  (defvar my/$-search-engines
+    '(("DuckDuckGo" . "https://duckduckgo.com/html/?q=")
+      ("Google" . "https://www.google.com/search?q=")
+      ("Google Scholar" . "https://scholar.google.com/scholar?q=")
+      ("Wikipedia" . "https://en.wikipedia.org/wiki/Special:Search?search=")))
+  !(defun my/$-search-prefix (url)
+     (if (string-prefix-p $-search-prefix url)
+	 (concat (cdr (assoc (completing-read "Search engine: " my/$-search-engines nil t) my/$-search-engines))
+		 (substring url (length $-search-prefix)))
+       url))
+  (advice-add #'eww--dwim-expand-url :filter-return #'my/$-search-prefix))
+
 ;;; EJIRA
 (p@ckage ejira
   ;;;; Build
