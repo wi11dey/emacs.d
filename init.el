@@ -2376,4 +2376,11 @@ Optional argument FILE-OVERRIDE is a string to be passed as the FILE parameter t
   ;;;; Process
   @$-process)
 
+;;; View
+(p@ckage view
+  ~^
+
+  ;;;; Disable
+  (setq view-mode-map nil))
+
 ;;; init.el ends here
