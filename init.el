@@ -2376,7 +2376,18 @@ Optional argument FILE-OVERRIDE is a string to be passed as the FILE parameter t
 	 (concat (cdr (assoc (completing-read "Search engine: " my/$-search-engines nil t) my/$-search-engines))
 		 (substring url (length $-search-prefix)))
        url))
-  (advice-add #'eww--dwim-expand-url :filter-return #'my/$-search-prefix))
+  (advice-add #'eww--dwim-expand-url :filter-return #'my/$-search-prefix)
+
+  ;;;; Google Drive
+  !(defun my/$-retrieve-google-drive (args)
+     (cons (replace-regexp-in-string "\\`https?://drive.google.com/file/d/\\(?1:[^/]+\\).*\\'" "https://drive.google.com/uc?export=download&id=\\1" (car args))
+	   (cdr args)))
+  (advice-add #'eww-retrieve :filter-args #'my/$-retrieve-google-drive)
+
+  ;;;; Download directory
+  !(defun my/$-download-directory ()
+     (read-directory-name "Download to: "))
+  (setq eww-download-directory #'my/$-download-directory))
 
 ;;; EJIRA
 (p@ckage ejira
