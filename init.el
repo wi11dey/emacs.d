@@ -2243,6 +2243,11 @@ Optional argument FILE-OVERRIDE is a string to be passed as the FILE parameter t
 
 ;;; SHR
 (p@ckage shr
+  ~^
+
+  ;;;; Maximum width
+  (setq $-max-width nil)
+
   ;;;; Inline images
   ;; TODO upstream using customizable variable to determine when to (insert "\n")
   ;; Patch the following functions to avoid placing images on their own line when not needed:
