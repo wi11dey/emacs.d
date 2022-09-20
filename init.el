@@ -538,7 +538,7 @@ Optional argument FILE-OVERRIDE is a string to be passed as the FILE parameter t
   !^
 
   ;;;; Bugfixes
-  ;; FIXME: Bug in aggressive-indent-mode. Change defvar-local to defvar aggressive-indent--idle-timer in aggressive-indent.el
+  ;; FIXME: Bug in aggressive-indent-mode. Change defvar-local to defvar aggressive-indent--idle-timer in aggressive-indent.el upstream
   (add-hook 'org-babel-post-tangle-hook (lambda ()
 					  (cancel-function-timers 'aggressive-indent--indent-if-changed)))
 
@@ -634,6 +634,7 @@ Optional argument FILE-OVERRIDE is a string to be passed as the FILE parameter t
   (add-hook 'prog-mode-hook @'$))
 
 ;;; Company
+;; TODO enable wherever `completion-in-region' can work
 (p@ckage company
   ;;;; Build
   ~(straight-use-package '$)
@@ -1288,6 +1289,7 @@ Optional argument FILE-OVERRIDE is a string to be passed as the FILE parameter t
 
 ;;; Ivy
 ;; TODO make fonts consistent (current match highlights whole line, commands shown in different color but not highlighted, count function keeps spacing consistent, orderless matches use normal fonts, match required font consistency, counsel-find-file uses dired fonts)
+;; TODO make `ivy-completion-in-region' use `window-text-pixel-size' to adjust placement of overlay
 (p@ckage ivy
   ;;;; Build
   ~(straight-use-package '$)
@@ -1461,6 +1463,7 @@ Optional argument FILE-OVERRIDE is a string to be passed as the FILE parameter t
 (p@ckage semantic)
 
 ;;; Smartparens
+;; TODO set appropriate xah-fly-keys remappings and make it act like paredit
 (p@ckage smartparens
   ;;;; Build
   ~(straight-use-package '$)
@@ -1521,6 +1524,7 @@ Optional argument FILE-OVERRIDE is a string to be passed as the FILE parameter t
   (p@ckage $-contacts
     ;;;; vCard
     (p@ckage org-vcard
+      ;; FIXME reset to upstream since has been merged
       ~(straight-use-package '($ :type git :host github :repo "flexibeast/org-vcard"
 				 :fork (:host github :repo "wi11dey/org-vcard")))
 
@@ -1813,6 +1817,7 @@ Optional argument FILE-OVERRIDE is a string to be passed as the FILE parameter t
   (add-hook '$-post-format-hook #'my/$-untabify))
 
 ;;; CalFW
+;; TODO change to fork with cl-lib
 (p@ckage calfw
   ;;;; Build
   ~(straight-use-package '$)
@@ -2097,6 +2102,7 @@ Optional argument FILE-OVERRIDE is a string to be passed as the FILE parameter t
 	     (t
 	      1))))
   !(defun my/$-set-outline ()
+     ;; TODO make spaces before heading fixed-pitch using overriding font-lock-keywords
      (setq-local outline-regexp "[ \t]*;;\\(?1:;+\\)[^#]")
      (setq-local outline-level #'my/$-outline-level))
   ;; `my/emacs-lisp-set-outline' must come before `outline-minor-mode' in `emacs-lisp-mode-hook' so that `outline-minor-faces' caches the right Outline settings when fontifying the buffer for the first time.
