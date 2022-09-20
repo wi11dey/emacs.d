@@ -1200,7 +1200,7 @@ Optional argument FILE-OVERRIDE is a string to be passed as the FILE parameter t
 		   (:eval (format-time-string "%F %A"))
 		   ;;;;; Battery
 		   (:eval `((:propertize " "
-					 display (space :align-to (- right ,(+ 3 (length battery-mode-line-string)))))
+					 display (space :align-to (- right ,(length battery-mode-line-string) 2)))
 			    (:propertize battery-mode-line-string
 					 face (:inverse-video t :inherit fixed-pitch))))
 		   ;;;;; Mode line front space
