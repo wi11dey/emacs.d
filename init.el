@@ -561,26 +561,35 @@ Optional argument FILE-OVERRIDE is a string to be passed as the FILE parameter t
   ;;;; Build
   ~(straight-use-package '$)
   ~(my/package-autoloads $)
-  ~(require 'tex)
 
-  ;;;; Enable
-  (require 'tex-site)
+  (p@ckage tex
+    ~^
 
-  ;;;; Font lock
-  (p@ckage tex-font
-    ;; Use built-in `tex-mode' syntax highlighting, which highlights all control sequences.
-    (setq TeX-install-font-lock @'tex-font-setup))
+    ;;;; Enable
+    (require '$-site)
 
-  ;;;; Engines
-  (setq TeX-engine-alist '((optex "OpTeX" "luatex -fmt optex" "" "")))
+    ;;;; Font lock
+    (p@ckage $-font
+      ;; Use built-in `tex-mode' syntax highlighting, which highlights all control sequences.
+      (setq TeX-install-font-lock @'$-setup))
 
-  ;;;; Viewer
-  (setq TeX-view-program-selection '((output-pdf "PDF Tools")))
+    ;;;; Engines
+    ;;;;; OpTeX
+    (setq TeX-engine-alist '((optex "OpTeX" "luatex -fmt optex" "" "")))
 
-  ;;;; Buffer
-  (p@ckage tex-buf
-    ;;;;; Revert
-    (add-hook 'TeX-after-compilation-finished-functions @'TeX-revert-document-buffer)))
+    ;;;; Viewer
+    (setq TeX-view-program-selection '((output-pdf "PDF Tools")))
+
+    ;;;; Revert buffer
+    (add-hook 'TeX-after-compilation-finished-functions @'TeX-revert-document-buffer)
+    ;; FIXME upstream this in function itself, it is a bug to not run `TeX-after-compilation-finished-functions' for TeX
+    !(defun my/TeX-run-after-compilation-finished-functions (_process _name)
+       (unless (TeX-error-report-has-errors-p)
+	 (run-hook-with-args 'TeX-after-compilation-finished-functions
+                             (with-current-buffer TeX-command-buffer
+                               (expand-file-name
+				(TeX-active-master (TeX-output-extension)))))))
+    (advice-add @'TeX-TeX-sentinel :after #'my/TeX-run-after-compilation-finished-functions)))
 
 ;;; Auto Dim Other Buffers
 (p@ckage auto-dim-other-buffers
