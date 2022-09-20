@@ -2263,6 +2263,9 @@ Optional argument FILE-OVERRIDE is a string to be passed as the FILE parameter t
   ;; TODO upstream using customizable variable to determine when to (insert "\n")
   ;; Patch the following functions to avoid placing images on their own line when not needed:
   _(defun shr-insert (text)
+     (when (and (not (bolp))
+		(get-text-property (1- (point)) 'image-url))
+       (insert " "))
      (cond
       ((eq shr-folding-mode 'none)
        (let ((start (point)))
