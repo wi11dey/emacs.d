@@ -893,15 +893,7 @@ Optional argument FILE-OVERRIDE is a string to be passed as the FILE parameter t
 
   ;;;; Faces
   (solarized-set-faces
-   ($-directory :inherit diredfl-dir-name))
-  ;;;;; Fixed pitch
-  (add-hook '$-mode-hook #'fixed-pitch-mode))
-
-;;; ElDoc
-(p@ckage eldoc
-  ;;;; Faces
-  (solarized-set-faces
-   (eldoc-highlight-function-argument :inherit (bold fixed-pitch))))
+   ($-directory :inherit diredfl-dir-name)))
 
 ;;; Eshell
 (p@ckage eshell
@@ -954,6 +946,10 @@ Optional argument FILE-OVERRIDE is a string to be passed as the FILE parameter t
   (add-hook 'text-mode-hook #'prose-mode)
   ;;;;; WoMan
   (add-hook 'woman-mode-hook #'prose-mode)
+
+  ;;;; Fixed pitch mode
+  ;;;;; Dired
+  (add-hook '$-mode-hook #'fixed-pitch-mode)
 
   ;;;; Faces
   (solarized-set-faces
