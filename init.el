@@ -959,7 +959,7 @@ Optional argument FILE-OVERRIDE is a string to be passed as the FILE parameter t
 
   ;;;; Fixed pitch mode
   ;;;;; Dired
-  (add-hook '$-mode-hook #'fixed-pitch-mode)
+  (add-hook 'dired-mode-hook #'fixed-pitch-mode)
 
   ;;;; Faces
   (solarized-set-faces
