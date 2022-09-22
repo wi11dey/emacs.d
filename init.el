@@ -2397,11 +2397,15 @@ Optional argument FILE-OVERRIDE is a string to be passed as the FILE parameter t
        url))
   (advice-add #'eww--dwim-expand-url :filter-return #'my/$-search-prefix)
 
-  ;;;; Google Drive
-  !(defun my/$-retrieve-google-drive (args)
-     (cons (replace-regexp-in-string "\\`https?://drive.google.com/file/d/\\(?1:[^/]+\\).*\\'" "https://drive.google.com/uc?export=download&id=\\1" (car args))
-	   (cdr args)))
-  (advice-add #'eww-retrieve :filter-args #'my/$-retrieve-google-drive)
+  ;;;; URL transformers
+  ;;;;; Remove tracking
+  (add-hook 'eww-url-transformers #'eww-remove-tracking)
+  ;;;;; Google Drive
+  !(defun my/$-google-drive-direct (url)
+     (replace-regexp-in-string "\\`https?://drive.google.com/file/d/\\(?1:[^/]+\\).*\\'"
+			       "https://drive.google.com/uc?export=download&id=\\1"
+			       url))
+  (add-hook 'eww-url-transformers #'my/$-google-drive-direct)
 
   ;;;; Download directory
   !(defun my/$-download-directory ()
