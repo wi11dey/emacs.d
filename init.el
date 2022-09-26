@@ -462,9 +462,6 @@ Optional argument FILE-OVERRIDE is a string to be passed as the FILE parameter t
 ;;    #b00000101
 ;;    #b00000101
 ;;    #b00000101])
-(define-fringe-bitmap 'paragraph
-  [#b11111100
-   #b11111100])
 
 ;;; Custom
 (p@ckage custom
