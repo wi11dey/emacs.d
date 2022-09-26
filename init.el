@@ -2557,4 +2557,12 @@ Optional argument FILE-OVERRIDE is a string to be passed as the FILE parameter t
   ;;;;; Fixed pitch
   (add-hook '$-hook #'fixed-pitch-mode))
 
+;;; Rec
+(p@ckage rec-mode
+  ;;;; Build
+  ~(straight-use-package '$)
+
+  ;;;; Auto mode
+  (add-to-list 'auto-mode-alist (cons "\\.rec\\'" @'$)))
+
 ;;; init.el ends here
