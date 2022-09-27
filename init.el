@@ -1004,10 +1004,7 @@ Optional argument FILE-OVERRIDE is a string to be passed as the FILE parameter t
 
     ;;;;; Simulation keys
     ;; TODO split out into separate library and use for symb0l, EXWM, and ansi-term
-    !(defun my/$-fake-next-key ()
-       (interactive)
-       ($--fake-key (read-quoted-char)))
-    (define-key exwm-mode-map [remap quoted-insert] #'my/$-fake-next-key)
+    (define-key exwm-mode-map [remap quoted-insert] #'$-send-next-key)
     !(defun my/$-fake-last-key ()
        (interactive)
        ($--fake-key last-command-event))
