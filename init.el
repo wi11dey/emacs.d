@@ -1267,6 +1267,7 @@ Optional argument FILE-OVERRIDE is a string to be passed as the FILE parameter t
   ;;;; Build
   ~(straight-use-package '$)
   ~^
+  ~(my/package-autoloads $)
 
   ;;;; Run for all
   (setq mc/always-run-for-all t)
