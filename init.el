@@ -966,6 +966,8 @@ Optional argument FILE-OVERRIDE is a string to be passed as the FILE parameter t
   ;;;; Fixed pitch mode
   ;;;;; Dired
   (add-hook 'dired-mode-hook #'fixed-pitch-mode)
+  ;;;;; Undo tree visualizer
+  (add-hook 'undo-tree-visualizer-mode-hook #'fixed-pitch-mode)
 
   ;;;; Faces
   (solarized-set-faces
