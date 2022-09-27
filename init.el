@@ -1370,7 +1370,7 @@ Optional argument FILE-OVERRIDE is a string to be passed as the FILE parameter t
    ($-minibuffer-match-face-2 :foreground back :background orange)
    ($-minibuffer-match-face-3 :foreground back :background cyan)
    ($-minibuffer-match-face-4 :foreground back :background yellow)
-   ($-cursor :inherit cursor))
+   ($-cursor :height unspecified :inherit cursor))
 
   ;;;; Enable
   ($-mode)
