@@ -982,7 +982,6 @@ Optional argument FILE-OVERRIDE is a string to be passed as the FILE parameter t
    (keyboard-pressed :box (:line-width 1 :style pressed-button) :inherit keyboard)))
 
 ;;; EXWM
-;; TODO Always do key translation before sending to X windows. Currently `exwm-input-release-keyboard' is commented out
 (p@ckage exwm
   ;;;; Build
   ~(straight-use-package '$)
@@ -990,116 +989,103 @@ Optional argument FILE-OVERRIDE is a string to be passed as the FILE parameter t
   ;;;; No suspend frame
   (unbind-key [remap suspend-frame])
 
-  ;;;; Global keys
-  (setq $-input-global-keys (list (cons [menu] #'xah-fly-command-mode-activate)))
-
+  ;;;; Load
   !^
 
-  ;;;; Local keys
-  (setq $-mode-map
-	~(let ((map (make-sparse-keymap))
-	       (commands (make-hash-table :test #'equal :weakness 'value))
-	       events
-	       lexical-binding)
-	   ;; TODO document this simulation key format:
-	   ;; TODO upstream it to EXWM for easier configuration for everyone?
-	   ;; TODO make subheadings for every section:
-	   (dolist (pair '(([remap delete-backward-char] . "<backspace>")
-			   ([remap xah-delete-backward-char-or-bracket-text] . "<backspace>")
+  ;;;; Input
+  (p@ckage $-input
+    ;;;;; Passthrough
+    (setq $-line-mode-passthrough t)
+    ;;;;;; Button press
+    ;; Make sure no mouse events get passed through to Emacs by treating ButtonPress as it's treated in char mode:
+    !(defun my/$--on-ButtonPress-line-mode (_buffer _button-event)
+       ($--on-ButtonPress-char-mode))
+    (advice-add '$--on-ButtonPress-line-mode :override #'my/$--on-ButtonPress-line-mode)
 
-			   ([remap delete-char] . "<delete>")
-			   ([remap delete-forward-char] . "<delete>")
+    ;;;;; Simulation keys
+    ;; TODO split out into separate library and use for symb0l, EXWM, and ansi-term
+    !(defun my/$-fake-next-key ()
+       (interactive)
+       ($--fake-key (read-quoted-char)))
+    (define-key exwm-mode-map [remap quoted-insert] #'my/$-fake-next-key)
+    !(defun my/$-fake-last-key ()
+       (interactive)
+       ($--fake-key last-command-event))
+    (define-key exwm-mode-map [remap self-insert-command] #'my/$-fake-last-key)
+    !(defmacro my/$-fake-key (&rest events)
+       `(lambda ()
+	  ,(format-message "Equivalent to pressing `%s'." (key-description events))
+	  (interactive)
+	  ,@(mapcar (lambda (event)
+		      `($--fake-key ',event))
+		    events)))
+    (define-key exwm-mode-map [remap delete-backward-char]                     (my/$-fake-key backspace))
+    (define-key exwm-mode-map [remap xah-delete-backward-char-or-bracket-text] (my/$-fake-key backspace))
 
-			   ([remap backward-kill-word] . "<C-backspace>")
-			   ([remap xah-backward-kill-word] . "<C-backspace>")
+    (define-key exwm-mode-map [remap delete-char]                              (my/$-fake-key delete))
+    (define-key exwm-mode-map [remap delete-forward-char]                      (my/$-fake-key delete))
 
-			   ([remap kill-word] . "<C-delete>")
-			   ([remap xah-kill-word] . "<C-delete>")
+    (define-key exwm-mode-map [remap backward-kill-word]                       (my/$-fake-key C-backspace))
+    (define-key exwm-mode-map [remap xah-backward-kill-word]                   (my/$-fake-key C-backspace))
 
-			   ([remap kill-line] . "<S-end> C-x")
+    (define-key exwm-mode-map [remap kill-word]                                (my/$-fake-key C-delete))
+    (define-key exwm-mode-map [remap xah-kill-word]                            (my/$-fake-key C-delete))
 
-			   ([remap kill-ring-save] . "C-c")
-			   ([remap xah-copy-line-or-region] . "C-c")
+    (define-key exwm-mode-map [remap kill-line]                                (my/$-fake-key S-end ?\C-x))
 
-			   ([remap kill-region] . "C-x")
-			   ([remap xah-cut-line-or-region] . "C-x")
+    (define-key exwm-mode-map [remap kill-ring-save]                           (my/$-fake-key ?\C-c))
+    (define-key exwm-mode-map [remap xah-copy-line-or-region]                  (my/$-fake-key ?\C-c))
 
-			   ([remap yank] . "C-v")
-			   ([remap xah-paste-or-paste-previous] . "C-v")
+    (define-key exwm-mode-map [remap kill-region]                              (my/$-fake-key ?\C-x))
+    (define-key exwm-mode-map [remap xah-cut-line-or-region]                   (my/$-fake-key ?\C-x))
 
-			   ([remap newline] . "<return>")
-			   ("<S-return>" . "<S-return>")
-			   ([remap open-line] . "<return> <left>")
+    (define-key exwm-mode-map [remap yank]                                     (my/$-fake-key ?\C-v))
+    (define-key exwm-mode-map [remap xah-paste-or-paste-previous]              (my/$-fake-key ?\C-v))
 
-			   ([remap keyboard-quit] . "<escape>")
-			   ("<escape>" . "<escape>")
+    (define-key exwm-mode-map [remap newline]                                  (my/$-fake-key   return))
+    (define-key exwm-mode-map [S-return]                                       (my/$-fake-key S-return))
+    (define-key exwm-mode-map [remap open-line]                                (my/$-fake-key   return left))
 
-			   ([remap next-line] . "<down>")
-			   ([remap previous-line] . "<up>")
+    (define-key exwm-mode-map [remap keyboard-quit]                            (my/$-fake-key escape))
+    (define-key exwm-mode-map [escape]                                         (my/$-fake-key escape))
 
-			   ([remap move-beginning-of-line] . "<home>")
-			   ([remap xah-beginning-of-line-or-block] . "<home>")
+    (define-key exwm-mode-map [remap next-line]                                (my/$-fake-key down))
+    (define-key exwm-mode-map [remap previous-line]                            (my/$-fake-key up))
 
-			   ([remap move-end-of-line] . "<end>")
-			   ([remap xah-end-of-line-or-block] . "<end>")
+    (define-key exwm-mode-map [remap move-beginning-of-line]                   (my/$-fake-key home))
+    (define-key exwm-mode-map [remap xah-beginning-of-line-or-block]           (my/$-fake-key home))
 
-			   ([remap backward-char] . "<left>")
-			   ([remap left-char] . "<left>")
-			   ([remap forward-char] . "<right>")
-			   ([remap right-char] . "<right>")
+    (define-key exwm-mode-map [remap move-end-of-line]                         (my/$-fake-key end))
+    (define-key exwm-mode-map [remap xah-end-of-line-or-block]                 (my/$-fake-key end))
 
-			   ([remap forward-word] . "<C-right>")
-			   ([remap backward-word] . "<C-left>")
+    (define-key exwm-mode-map [remap backward-char]                            (my/$-fake-key left))
+    (define-key exwm-mode-map [remap left-char]                                (my/$-fake-key left))
+    (define-key exwm-mode-map [remap forward-char]                             (my/$-fake-key right))
+    (define-key exwm-mode-map [remap right-char]                               (my/$-fake-key right))
 
-			   ([remap scroll-up-command] . "<next>")
-			   ([remap scroll-down-command] . "<prior>")
+    (define-key exwm-mode-map [remap forward-word]                             (my/$-fake-key C-right))
+    (define-key exwm-mode-map [remap backward-word]                            (my/$-fake-key C-left))
 
-			   ("TAB" . "<tab>")
-			   ("<backtab>" . "<S-tab>")
+    (define-key exwm-mode-map [remap scroll-up-command]                        (my/$-fake-key next))
+    (define-key exwm-mode-map [remap scroll-down-command]                      (my/$-fake-key prior))
 
-			   ([remap save-buffer] . "C-s")
+    (define-key exwm-mode-map "\t"                                             (my/$-fake-key tab))
+    (define-key exwm-mode-map [backtab]                                        (my/$-fake-key S-tab))
 
-			   ([remap isearch-forward] . [?\C-f #'xah-fly-insert-mode-activate #'exwm-input-release-keyboard])
-			   ([remap swiper] . [?\C-f #'xah-fly-insert-mode-activate #'exwm-input-release-keyboard])
-			   ([remap swiper-isearch] . [?\C-f #'xah-fly-insert-mode-activate #'exwm-input-release-keyboard])
-			   ([remap my/swiper-isearch-region] . [?\C-f #'xah-fly-insert-mode-activate #'exwm-input-release-keyboard])
+    (define-key exwm-mode-map [remap save-buffer]                              (my/$-fake-key ?\C-s))
 
-			   ([remap mark-whole-buffer] . "C-a")
+    (define-key exwm-mode-map [remap isearch-forward]                          (my/$-fake-key ?\C-f))
 
-			   ([remap undo] . "C-z")
-			   ([remap undo-tree-undo] . "C-z")
-			   ([remap undo-tree-redo] . "C-y")
+    (define-key exwm-mode-map [remap mark-whole-buffer]                        (my/$-fake-key ?\C-a))
 
-			   ([remap xah-insert-space-before] . "SPC")
-			   ([remap xah-insert-space-after] . "SPC <left>")
+    (define-key exwm-mode-map [remap undo]                                     (my/$-fake-key ?\C-z))
+    (define-key exwm-mode-map [remap undo-tree-undo]                           (my/$-fake-key ?\C-z))
+    (define-key exwm-mode-map [remap undo-tree-redo]                           (my/$-fake-key ?\C-y))
 
-			   ("C-@" . "C-@")
+    (define-key exwm-mode-map [remap xah-insert-space-before]                  (my/$-fake-key ?\s))
+    (define-key exwm-mode-map [remap xah-insert-space-after]                   (my/$-fake-key ?\s left))
 
-			   ([remap xah-fly-command-mode-activate] . [#'exwm-reset #'xah-fly-command-mode-activate])
-			   ([remap xah-fly-insert-mode-activate] . [#'xah-fly-insert-mode-activate #'exwm-input-release-keyboard])))
-	     (define-key map
-			 (if (stringp (car pair))
-			     (kbd (car pair))
-			   (car pair))
-			 (if (commandp (cdr pair) :for-call-interactively)
-			     (cdr pair)
-			   (setq events (listify-key-sequence (if (stringp (cdr pair))
-								  (kbd (cdr pair))
-								(cdr pair))))
-			   (or (gethash events commands)
-			       (puthash events
-					(byte-compile
-					 `(lambda ()
-					    ,(format-message "Simulate the sequence %s."
-							     (cdr pair))
-					    (interactive)
-					    ,@(mapcar (lambda (event)
-							(if (eq (car-safe event) 'function)
-							    `(call-interactively ,event)
-							  `(@$-input--fake-key ',event)))
-						      events)))
-					commands)))))
-	   map))
+    (define-key exwm-mode-map "\C-@"                                           (my/$-fake-key ?\C-@)))
 
   ;;;; Visual Line
   (add-hook 'my/visual-line-ignore-modes #'$-mode)
