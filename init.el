@@ -427,11 +427,11 @@ Optional argument FILE-OVERRIDE is a string to be passed as the FILE parameter t
    ($-comment-face :foreground base00 :height 105 :inherit prose)
    ($-comment-delimiter-face :slant normal :inherit fixed-pitch)
    ($-doc-face :slant normal :inherit prose)
-   ($-function-name-face :foreground orange :inherit fixed-pitch)
-   ($-keyword-face :foreground blue :inherit (bold fixed-pitch))
+   ($-function-name-face :foreground orange)
+   ($-keyword-face :foreground blue :inherit bold)
    ($-string-face :height 105 :inherit prose)
-   ($-type-face :foreground magenta :inherit (bold fixed-pitch))
-   ($-variable-name-face :foreground yellow :inherit fixed-pitch)))
+   ($-type-face :foreground magenta :inherit bold)
+   ($-variable-name-face :foreground yellow)))
 
 ;;; Menu Bar
 (p@ckage menu-bar
@@ -1941,14 +1941,22 @@ Optional argument FILE-OVERRIDE is a string to be passed as the FILE parameter t
 ;;; Transient
 (p@ckage transient
   ;;;; Build
-  ~^
+  ~(require '$ nil :noerror)
 
   ;;;; History
   (setq $-save-history nil)
 
+  ;;;; Variable pitch
+  (setq $-align-variable-pitch t)
+
   ;;;; Default level
   ;; Show everything:
-  (setq $-default-level 7))
+  (setq $-default-level 7)
+
+  ;;;; Faces
+  (solarized-set-faces
+   ($-key :inherit (fixed-pitch keyboard))
+   ($-heading :inherit heading-4)))
 
 ;;; Markdown
 (p@ckage markdown-mode
