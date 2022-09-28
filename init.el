@@ -2086,6 +2086,7 @@ Optional argument FILE-OVERRIDE is a string to be passed as the FILE parameter t
 
 ;;; Emacs Lisp
 (p@ckage emacs-lisp
+  ;;;; Outline
   !(defun my/$-outline-level ()
      (let ((match (match-string 1)))
        (cond (match
@@ -2095,8 +2096,12 @@ Optional argument FILE-OVERRIDE is a string to be passed as the FILE parameter t
 	     (t
 	      1))))
   !(defun my/$-set-outline ()
-     ;; TODO make spaces before heading fixed-pitch using overriding font-lock-keywords
      (setq-local outline-regexp "[ \t]*;;\\(?1:;+\\)[^#]")
+     (setq-local outline-minor-faces-regexp "^[ \t]*\\(?2:;;\\(?1:;+\\)[^#].*\n?\\)")
+     (setq-local outline-minor-faces--font-lock-keywords
+		 '((eval . (list (outline-minor-faces--syntactic-matcher outline-minor-faces-regexp)
+				 2 '(outline-minor-faces--get-face) t))
+		   ("-\\*-.*-\\*-" 0 'outline-minor-file-local-prop-line t)))
      (setq-local outline-level #'my/$-outline-level))
   ;; `my/emacs-lisp-set-outline' must come before `outline-minor-mode' in `emacs-lisp-mode-hook' so that `outline-minor-faces' caches the right Outline settings when fontifying the buffer for the first time.
   (add-hook '$-mode-hook #'my/$-set-outline)
