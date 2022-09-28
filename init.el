@@ -982,6 +982,7 @@ Optional argument FILE-OVERRIDE is a string to be passed as the FILE parameter t
    (keyboard-pressed :box (:line-width 1 :style pressed-button) :inherit keyboard)))
 
 ;;; EXWM
+;; TODO disable symb0l for window class "IceCat"/"Firefox", window type (397)
 (p@ckage exwm
   ;;;; Build
   ~(straight-use-package '$)
