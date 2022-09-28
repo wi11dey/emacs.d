@@ -1262,6 +1262,7 @@ Optional argument FILE-OVERRIDE is a string to be passed as the FILE parameter t
     (define-key xah-fly-command-map "*" @'er/contract-region)))
 
 ;;; Multiple Cursors
+;; TODO does not work with symb0l yet -- unread-command-events issue?
 (p@ckage multiple-cursors
   ;;;; Build
   ~(straight-use-package '$)
