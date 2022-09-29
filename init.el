@@ -225,6 +225,7 @@ Optional argument FILE-OVERRIDE is a string to be passed as the FILE parameter t
     !^))
 
 ;;; Xah Fly Keys
+;; FIXME properly respect `delete-selection-temporary-region'
 (p@ckage xah-fly-keys
   ;;;; Build
   ~(straight-use-package '$)
@@ -2566,5 +2567,10 @@ Optional argument FILE-OVERRIDE is a string to be passed as the FILE parameter t
 
   ;;;; Auto mode
   (add-to-list 'auto-mode-alist (cons "\\.rec\\'" @'$)))
+
+;;; DelSel
+(p@ckage delsel
+  ;;;; Temporary region
+  (setq delete-selection-temporary-region 'selection))
 
 ;;; init.el ends here
