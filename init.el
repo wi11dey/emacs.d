@@ -246,11 +246,13 @@ Optional argument FILE-OVERRIDE is a string to be passed as the FILE parameter t
 
   ;;;; Ivy cursor face
   !(defun my/$-bar-cursor ()
-     (set-face-attribute 'ivy-cursor nil :height 1))
+     (when (featurep 'ivy-overlay)
+       (set-face-attribute 'ivy-cursor nil :height 1)))
   (add-hook 'xah-fly-insert-mode-activate-hook #'my/$-bar-cursor)
   !(defun my/$-default-cursor ()
-     (set-face-attribute 'ivy-cursor nil :height 'unspecified)
-     (set-face-attribute 'ivy-cursor t   :height 'unspecified))
+     (when (featurep 'ivy-overlay)
+       (set-face-attribute 'ivy-cursor nil :height 'unspecified)
+       (set-face-attribute 'ivy-cursor t   :height 'unspecified)))
   (add-hook 'xah-fly-command-mode-activate-hook #'my/$-default-cursor)
 
   ;; TODO modify xfk to accept a list to try for movement with "h" and ";"
