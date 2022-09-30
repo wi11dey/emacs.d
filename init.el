@@ -1736,18 +1736,6 @@ Optional argument FILE-OVERRIDE is a string to be passed as the FILE parameter t
   ;;;;; Text modes
   (add-hook 'text-mode-hook @'turn-on-smart-quotes))
 
-;;; Syscontrol
-(p@ckage syscontrol
-  ;;;; Build
-  ~(straight-use-package '($ :type git :host github :repo "wi11dey/syscontrol.el"))
-
-  ;;;; Keybindings
-  (bind-key "<f5>"                   @'syscontrol-lock)
-  (bind-key "<f6>"                   @'syscontrol-suspend)
-  (bind-key "<XF86AudioRaiseVolume>" @'syscontrol-volume-default-increment)
-  (bind-key "<XF86AudioLowerVolume>" @'syscontrol-volume-default-decrement)
-  (bind-key "<XF86AudioMute>"        @'syscontrol-volume-mute))
-
 ;;; Undo Tree
 (p@ckage undo-tree
   ;;;; Build
@@ -2575,5 +2563,14 @@ Optional argument FILE-OVERRIDE is a string to be passed as the FILE parameter t
 (p@ckage delsel
   ;;;; Temporary region
   (setq delete-selection-temporary-region 'selection))
+
+;;; Sysfs
+(p@ckage sysfs
+  ~(straight-use-package '($ :type git :host github :repo "wi11dey/sysfs.el"))
+
+  (global-set-key [XF86PowerOff] @'sysfs-sleep)
+  (global-set-key [XF86Sleep] @'sysfs-sleep)
+  (global-set-key [XF86MonBrightnessUp]   @'sysfs-brightness-up)
+  (global-set-key [XF86MonBrightnessDown] @'sysfs-brightness-down))
 
 ;;; init.el ends here
