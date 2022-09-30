@@ -2209,7 +2209,8 @@ Optional argument FILE-OVERRIDE is a string to be passed as the FILE parameter t
 ;;; Guix
 (p@ckage guix
   ;;;; Build
-  ~(straight-use-package '$)
+  ~(straight-use-package '($ :type git :host github :repo "alezost/guix.el"
+			     :fork (:host github :repo "ROCKTAKEY/guix.el" :branch "remove-geiser-company--setup")))
 
   ;;;; Autoloads
   (my/package-autoloads $))
