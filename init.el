@@ -2194,7 +2194,16 @@ Optional argument FILE-OVERRIDE is a string to be passed as the FILE parameter t
   ;;;; Build
   ~(straight-use-package '$)
 
-  @run-geiser)
+  ;;;; REPL
+  (p@ckage $-repl
+    ~^
+    ;;;;; Query on kill
+    (setq $-repl-query-on-kill-p nil))
+
+  ;;;; Guile
+  (p@ckage $-guile
+    ;;;;; Build
+    ~(straight-use-package '$)))
 
 ;;; Debian.el
 (p@ckage debian-el
