@@ -7,3 +7,4 @@ site-start.el
 
 # Compiled Emacs lisp files
 *.elc
+*.eln
