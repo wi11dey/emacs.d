@@ -53,14 +53,6 @@
 (setq gc-cons-threshold 16777216
       gc-cons-percentage 0.1)
 
-;;; Load
-(eval-and-compile
-  (setq load-prefer-newer t))
-
-;;; Deferred compilation
-(eval-and-compile
-  (setq native-comp-deferred-compilation nil))
-
 ;;; Autoloads
 (eval-when-compile
   (defun my/package-autoloads--clean-p (func
@@ -2202,7 +2194,7 @@ Optional argument FILE-OVERRIDE is a string to be passed as the FILE parameter t
   (p@ckage $-repl
     ~^
     ;;;;; Query on kill
-    (setq $-repl-query-on-kill-p nil))
+    (setq $-query-on-kill-p nil))
 
   ;;;; Guile
   (p@ckage $-guile
