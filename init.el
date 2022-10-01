@@ -2576,4 +2576,11 @@ Optional argument FILE-OVERRIDE is a string to be passed as the FILE parameter t
   (global-set-key [XF86MonBrightnessUp]   @'sysfs-brightness-up)
   (global-set-key [XF86MonBrightnessDown] @'sysfs-brightness-down))
 
+;;; Warnings
+(p@ckage warnings
+  ;;;; Suppressed
+  ;;;;; Compilation
+  ;; Don't popup compilation warnings (they will still be logged):
+  (add-to-list 'warning-suppress-types '(comp)))
+
 ;;; init.el ends here
