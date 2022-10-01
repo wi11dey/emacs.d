@@ -2583,4 +2583,9 @@ Optional argument FILE-OVERRIDE is a string to be passed as the FILE parameter t
   ;; Don't popup compilation warnings (they will still be logged):
   (add-to-list 'warning-suppress-types '(comp)))
 
+;;; Comp
+(p@ckage comp
+  ;;;; Speed
+  (setq native-comp-speed 3))
+
 ;;; init.el ends here
