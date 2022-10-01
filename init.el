@@ -57,6 +57,10 @@
 (eval-and-compile
   (setq load-prefer-newer t))
 
+;;; Deferred compilation
+(eval-and-compile
+  (setq native-comp-deferred-compilation nil))
+
 ;;; Autoloads
 (eval-when-compile
   (defun my/package-autoloads--clean-p (func
@@ -2596,10 +2600,6 @@ Optional argument FILE-OVERRIDE is a string to be passed as the FILE parameter t
 ;;; Comp
 (p@ckage comp
   ;;;; Speed
-  !(setq native-comp-speed 3)
-
-  ;;;; Asynchronous
-  ;; Disable:
-  !(setq native-comp-deferred-compilation nil))
+  !(setq native-comp-speed 3))
 
 ;;; init.el ends here
