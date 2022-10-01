@@ -43,6 +43,7 @@
 ;; TODO Break up "Keybindings" headings
 ;; TODO remove bind-key and replace all with keymap-set
 ;; TODO make everything after  independent of order in file
+;; TODO move to custom melpa pull + synchronous native compilation
 
 (defgroup my nil
   "Customizations for personal Emacs modifications."
@@ -2586,6 +2587,10 @@ Optional argument FILE-OVERRIDE is a string to be passed as the FILE parameter t
 ;;; Comp
 (p@ckage comp
   ;;;; Speed
-  (setq native-comp-speed 3))
+  !(setq native-comp-speed 3)
+
+  ;;;; Asynchronous
+  ;; Disable:
+  !(setq native-comp-deferred-compilation nil))
 
 ;;; init.el ends here
