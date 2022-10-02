@@ -1416,6 +1416,7 @@ Optional argument FILE-OVERRIDE is a string to be passed as the FILE parameter t
   (setq $-initial-inputs-alist nil))
 
 ;;; CTRLF
+;; TODO switch to phi-search entirely
 (p@ckage ctrlf
   ;;;; Build
   ~(straight-use-package '$)
