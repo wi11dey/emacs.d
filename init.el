@@ -252,6 +252,12 @@ Optional argument FILE-OVERRIDE is a string to be passed as the FILE parameter t
        (set-face-attribute 'ivy-cursor t   :height 'unspecified)))
   (add-hook 'xah-fly-command-mode-activate-hook #'my/$-default-cursor)
 
+  ;;;; Keybindings
+  ;; Still use the binding M-SPC to enable command mode:
+  (global-set-key (kbd "M-SPC") #'xah-fly-command-mode-activate)
+  ;; Allow menu key to be sent through to other keymaps:
+  (define-key xah-fly-command-map [menu] nil)
+
   ;; TODO modify xfk to accept a list to try for movement with "h" and ";"
 
   ($))
