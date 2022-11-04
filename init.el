@@ -2211,7 +2211,10 @@ Optional argument FILE-OVERRIDE is a string to be passed as the FILE parameter t
   (p@ckage $-repl
     ~^
     ;;;;; Query on kill
-    (setq $-query-on-kill-p nil))
+    (setq $-query-on-kill-p nil)
+
+    ;;;;; Disable history
+    _(advice-add #'$--write-input-ring :override #'ignore))
 
   ;;;; Guile
   (p@ckage $-guile
