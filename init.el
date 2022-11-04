@@ -1126,6 +1126,13 @@ Optional argument FILE-OVERRIDE is a string to be passed as the FILE parameter t
 
   ;;   (add-hook 'after-init-hook #'$-enable :append))
 
+  ;;;; System tray
+  (p@ckage $-systemtray
+    !^
+
+    ;;;;; Enable
+    ($-enable))
+
   ;;;; Enable
   ($-enable))
 
