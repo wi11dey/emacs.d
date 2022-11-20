@@ -791,7 +791,7 @@ Optional argument FILE-OVERRIDE is a string to be passed as the FILE parameter t
     ~^
 
     ;;;;; Line prefix
-    (setq $-line-prefix (propertize "  ┊"
+    (setq $-line-prefix (propertize "  ·"
 				    'face 'highlight-indent-guides-character-face)
 	  $-line-prefix-face nil)
 
