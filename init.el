@@ -2593,6 +2593,7 @@ Optional argument FILE-OVERRIDE is a string to be passed as the FILE parameter t
   ;;;; Temporary region
   (setq delete-selection-temporary-region 'selection))
 
+;; TODO rename to Sysyphus
 ;;; Sysfs
 (p@ckage sysfs
   ~(straight-use-package '($ :type git :host github :repo "wi11dey/sysfs.el"))
