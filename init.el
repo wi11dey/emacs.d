@@ -2608,15 +2608,14 @@ See also Info node `(eshell)Top'."
   ;;;; Temporary region
   (setq delete-selection-temporary-region 'selection))
 
-;; TODO rename to Sysyphus
-;;; Sysfs
-(p@ckage sysfs
-  ~(straight-use-package '($ :type git :host github :repo "wi11dey/sysfs.el"))
+;;; Sysyphus
+(p@ckage sysyphus
+  ~(straight-use-package '($ :type git :host github :repo "wi11dey/sysyphus.el"))
 
-  (global-set-key [XF86PowerOff] @'sysfs-sleep)
-  (global-set-key [XF86Sleep] @'sysfs-sleep)
-  (global-set-key [XF86MonBrightnessUp]   @'sysfs-brightness-up)
-  (global-set-key [XF86MonBrightnessDown] @'sysfs-brightness-down))
+  (global-set-key [XF86PowerOff] @'sysyphus-sleep)
+  (global-set-key [XF86Sleep] @'sysyphus-sleep)
+  (global-set-key [XF86MonBrightnessUp]   @'sysyphus-brightness-up)
+  (global-set-key [XF86MonBrightnessDown] @'sysyphus-brightness-down))
 
 ;;; Warnings
 (p@ckage warnings
