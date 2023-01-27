@@ -43,7 +43,6 @@
 ;; TODO Break up "Keybindings" headings
 ;; TODO remove bind-key and replace all with keymap-set
 ;; TODO make everything after  independent of order in file
-;; TODO move to custom melpa pull + synchronous native compilation
 
 (defgroup my nil
   "Customizations for personal Emacs modifications."
