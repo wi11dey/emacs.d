@@ -2614,4 +2614,13 @@ Optional argument FILE-OVERRIDE is a string to be passed as the FILE parameter t
   ;;;; Speed
   !(setq native-comp-speed 3))
 
+;;; Lean
+(p@ckage lean-mode
+  ;;;; Build
+  ~(straight-use-package '$)
+
+  ;;;; Auto mode
+  (add-to-list 'auto-mode-alist (cons "\\.lean\\'" @'$))
+  (add-to-list 'auto-mode-alist (cons "\\.hlean\\'" @'$)))
+
 ;;; init.el ends here
