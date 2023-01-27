@@ -1133,6 +1133,21 @@ Optional argument FILE-OVERRIDE is a string to be passed as the FILE parameter t
     ;;;;; Enable
     ($-enable))
 
+  ;;;; Session
+  ;;;;; Logout
+  (keymap-global-set "<remap> <delete-frame>" #'save-buffers-kill-terminal)
+  ;;;;; Shutdown
+  !(defun my/$-shutdown (&optional reboot)
+     "Convenience function calling `sudo shutdown' via Eshell.
+With prefix argument REBOOT, calls `sudo reboot' instead.
+
+See also Info node `(eshell)Top'."
+     (interactive "P")
+     (let ((command (if reboot "reboot" "shutdown")))
+       (if (yes-or-no-p (concat "Really " command "? "))
+	   (eshell-command (concat "sudo " command)))))
+  (keymap-global-set "<remap> <save-buffers-kill-terminal>" #'my/$-shutdown)
+
   ;;;; Enable
   ($-enable))
 
