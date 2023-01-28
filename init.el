@@ -1142,9 +1142,12 @@ With prefix argument REBOOT, calls `sudo reboot' instead.
 
 See also Info node `(eshell)Top'."
      (interactive "P")
-     (let ((command (if reboot "reboot" "shutdown")))
-       (if (yes-or-no-p (concat "Really " command "? "))
-	   (eshell-command (concat "sudo " command)))))
+     (let* ((command (if reboot "reboot" "shutdown"))
+	    ;; Instead of confirm function, use function that confirms then shuts down before Emacs dies:
+	    (confirm-kill-emacs (lambda (_prompt)
+				  (if (yes-or-no-p (concat "Really " command "? "))
+				      (eshell-command (concat "sudo " command))))))
+       (save-buffers-kill-emacs)))
   (keymap-global-set "<remap> <save-buffers-kill-terminal>" #'my/$-shutdown)
 
   ;;;; Enable
