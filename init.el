@@ -2635,6 +2635,11 @@ See also Info node `(eshell)Top'."
 (p@ckage lean-mode
   ;;;; Build
   ~(straight-use-package '$)
+  ~^
+
+  ;;;; Memory limit
+  ;; Use at most 1GiB of memory:
+  (setq lean-memory-limit 1024)
 
   ;;;; Auto mode
   (add-to-list 'auto-mode-alist (cons "\\.lean\\'" @'$))
