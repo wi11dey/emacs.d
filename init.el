@@ -2589,7 +2589,7 @@ See also Info node `(eshell)Top'."
   ~^
 
   ;;;; Disable
-  (setq view-mode-map nil))
+  (setq $-mode-map nil))
 
 ;;; Prog
 (p@ckage prog-mode
