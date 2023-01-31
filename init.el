@@ -2263,7 +2263,9 @@ See also Info node `(eshell)Top'."
   ;;;; Build
   ~(straight-use-package '($ :type git :host github :repo "wi11dey/pwdgen.el"))
 
-  @pwdgen)
+  (keymap-set read-passwd-map "TAB" @'$-minibuffer)
+
+  @$)
 
 ;;; Nov.el
 (p@ckage nov
