@@ -2631,7 +2631,7 @@ See also Info node `(eshell)Top'."
 ;;; Comp
 (p@ckage comp
   ;;;; Speed
-  !(setq native-comp-speed 3))
+  !(setq native-$-speed 3))
 
 ;;; Lean
 (p@ckage lean-mode
