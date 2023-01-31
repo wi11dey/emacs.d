@@ -2647,4 +2647,11 @@ See also Info node `(eshell)Top'."
   (add-to-list 'auto-mode-alist (cons "\\.lean\\'" @'$))
   (add-to-list 'auto-mode-alist (cons "\\.hlean\\'" @'$)))
 
+;;; TOTP
+(p@ckage totp
+  ;;;; Build
+  ~(straight-use-package '$)
+
+  @totp)
+
 ;;; init.el ends here
