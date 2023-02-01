@@ -2641,7 +2641,7 @@ See also Info node `(eshell)Top'."
 
   ;;;; Memory limit
   ;; Use at most 1GiB of memory:
-  (setq lean-memory-limit 1024)
+  (setq lean-memory-limit 2048)
 
   ;;;; Auto mode
   (add-to-list 'auto-mode-alist (cons "\\.lean\\'" @'$))
