@@ -2654,4 +2654,12 @@ See also Info node `(eshell)Top'."
 
   @totp)
 
+;;; Probuf
+(p@ckage protobuf-mode
+  ;;;; Build
+  ~(straight-use-package '$)
+
+  ;;;; Auto mode
+  (add-to-list 'auto-mode-alist (cons "\\.proto\\'" @'$)))
+
 ;;; init.el ends here
