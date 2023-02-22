@@ -2662,4 +2662,14 @@ See also Info node `(eshell)Top'."
   ;;;; Auto mode
   (add-to-list 'auto-mode-alist (cons "\\.proto\\'" @'$)))
 
+;;; Proof General
+(p@ckage proof-general
+  ;;;; Build
+  ~(straight-use-package '$)
+
+  ;;;; Coq
+  (p@ckage coq-mode
+    ;;;; Auto mode
+    (add-to-list 'auto-mode-alist (cons "\\.v\\'" @'$))))
+
 ;;; init.el ends here
