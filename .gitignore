@@ -1,6 +1,5 @@
 straight/
-recovery/
-gnus/
+var/
 
 # Site-specific changes
 site-start.el

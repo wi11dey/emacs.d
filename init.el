@@ -32,7 +32,6 @@
 ;; All headings below are Sentence case.
 
 ;; TODO Test all possibilities of compilation orders and init orders (including daemonized vs not) for maximum reliability
-;; TODO https://github.com/emacscollective/no-littering
 ;; TODO make first installation idempotent, reliable, and reproducible
 ;; TODO Outline-minor-mode C-ret and M-ret keybindings
 ;; TODO Outline minor mode heading indentation
@@ -43,6 +42,8 @@
 ;; TODO Break up "Keybindings" headings
 ;; TODO remove bind-key and replace all with keymap-set
 ;; TODO make everything after  independent of order in file
+;; TODO make all regexes use rx
+;; TODO move all advice-add to define-advice
 
 (defgroup my nil
   "Customizations for personal Emacs modifications."
@@ -186,10 +187,26 @@ Optional argument FILE-OVERRIDE is a string to be passed as the FILE parameter t
 
 ;;; Bytecomp Simplify
 (p@ckage bytecomp-simplify
+  ;;;; Build
   ~(straight-use-package '$)
   ~^
 
   @$-warn)
+
+;;; Compat
+(p@ckage compat
+  ;;;; Build
+  ~(straight-use-package '$)
+  ~^)
+
+;;; No Littering
+(p@ckage no-littering
+  ;;;; Build
+  ~(straight-use-package '$)
+  !^
+
+  ;;;; Backups
+  ($-theme-backups))
 
 ;; Bootstrapped.
 
@@ -257,6 +274,9 @@ Optional argument FILE-OVERRIDE is a string to be passed as the FILE parameter t
   (global-set-key (kbd "M-SPC") #'xah-fly-command-mode-activate)
   ;; Allow menu key to be sent through to other keymaps:
   (define-key xah-fly-command-map [menu] nil)
+  ;; Always use normal `kill-current-buffer':
+  (keymap-global-set "<remap> <xah-save-close-current-buffer>" #'kill-current-buffer)
+  (keymap-global-set "<remap> <xah-close-current-buffer>" #'kill-current-buffer)
 
   ;; TODO modify xfk to accept a list to try for movement with "h" and ";"
 
@@ -387,47 +407,16 @@ Optional argument FILE-OVERRIDE is a string to be passed as the FILE parameter t
   (when (boundp 'w32-get-true-file-attributes)
     (setq w32-get-true-file-attributes nil))
 
-  ;;;; Recovery
-  (p@ckage recovery
-    (let (($-directory (file-name-as-directory (expand-file-name "recovery"
-								 user-emacs-directory))))
-      (mkdir $-directory :parents)
+  ;;;; Backup
+  (p@ckage backup
+    ;;;;; Copying
+    (setq $-by-copying t)
 
-      ;;;;; Auto-save
-      (p@ckage auto-save
-	(let (($-directory (file-name-as-directory (concat recovery-directory
-							   "auto-save"))))
-
-	  (mkdir $-directory :parents)
-
-	  ;;;;;; Directory
-	  (setq $-file-name-transforms `((".*"
-					  ,$-directory
-					  t)))
-
-	  ;;;;;; List file
-	  (setq $-list-file-prefix (concat (file-name-as-directory (concat $-directory
-									   "lists"))
-					   "saves-"))
-	  (mkdir (file-name-directory $-list-file-prefix) :parents)))
-
-      ;;;;; Backup
-      (p@ckage backup
-	(let (($-directory (file-name-as-directory (concat recovery-directory
-							   "backup"))))
-	  (mkdir $-directory :parents)
-
-	  ;;;;;; Directory
-	  (setq $-directory-alist `(("." . ,$-directory)))
-
-	  ;;;;;; Copying
-	  (setq $-by-copying t)
-
-	  ;;;;;; Versions
-	  (setq version-control t
-		kept-old-versions 1
-		kept-new-versions 3
-		delete-old-versions t))))))
+    ;;;;; Versions
+    (setq version-control t
+	  kept-old-versions 1
+	  kept-new-versions 3
+	  delete-old-versions t)))
 
 ;;; Font Lock
 (p@ckage font-lock
@@ -1118,13 +1107,39 @@ Optional argument FILE-OVERRIDE is a string to be passed as the FILE parameter t
 
   ;; TODO Plug and play new screens
   ;;;; RandR
-  ;; (p@ckage $-randr
-  ;;   !^
+  (p@ckage $-randr
+    !^
 
-  ;;   ;;;;; Workspaces
-  ;;   (setq $-workspace-monitor-plist '(0 "VGA-1"))
+    !(defun my/$-resolutions ()
+       (with-temp-buffer
+	 (call-process "xrandr" nil (current-buffer))
+	 (goto-char (point-min))
+	 (let (resolutions)
+	   (while (re-search-forward (rx line-start
+					 (= 3 ?\s)
+					 (group-n 1 (1+ digit)) ?x (group-n 2 (1+ digit))
+					 (1+ space)
+					 (group-n 3 (1+ digit) ?. (1+ digit))
+					 (or (group-n 4 ?*)
+					     ?\s)
+					 (or (group-n 5 ?+)
+					     ?\s)
+					 (group-n 6 (0+ not-newline))
+					 line-end)
+				     nil
+				     t)
+	     (message "AAA")
+	     (setq resolutions (cons `((,(string-to-number (match-string-no-properties 1))
+					. ,(string-to-number (match-string-no-properties 2)))
+				       ,(string-to-number (match-string-no-properties 3))
+				       ,@(when (match-string-no-properties 4) '(*))
+				       ,@(when (match-string-no-properties 5) '(+))
+				       ,@(mapcar #'string-to-number
+						 (split-string (match-string-no-properties 6))))
+				     resolutions)))
+	   (nreverse resolutions))))
 
-  ;;   (add-hook 'after-init-hook #'$-enable :append))
+    (add-hook 'after-init-hook #'$-enable :append))
 
   ;;;; System tray
   (p@ckage $-systemtray
@@ -1135,7 +1150,7 @@ Optional argument FILE-OVERRIDE is a string to be passed as the FILE parameter t
 
   ;;;; Session
   ;;;;; Logout
-  (keymap-global-set "<remap> <delete-frame>" #'save-buffers-kill-terminal)
+  (global-set-key [remap delete-frame] #'save-buffers-kill-terminal)
   ;;;;; Shutdown
   !(defun my/$-shutdown (&optional reboot)
      "Convenience function calling `sudo shutdown' via Eshell.
@@ -1236,7 +1251,7 @@ See also Info node `(eshell)Top'."
 		   (:eval (format-time-string "%F %A"))
 		   ;;;;; Battery
 		   (:eval `((:propertize " "
-					 display (space :align-to (- right ,(length battery-mode-line-string) 2)))
+					 display (space :align-to (- right ,(length battery-mode-line-string) 3)))
 			    (:propertize battery-mode-line-string
 					 face (:inverse-video t :inherit fixed-pitch))))
 		   ;;;;; Mode line front space
@@ -2581,7 +2596,11 @@ See also Info node `(eshell)Top'."
   ~(straight-use-package '$)
 
   ;;;; Auto mode
-  (add-to-list 'auto-mode-alist (cons "\\.g\\'"   @'$))
+  (add-to-list 'auto-mode-alist (cons (rx ?.
+					  (or "g"
+					      "gap")
+					  string-end)
+				      @'$))
   (add-to-list 'auto-mode-alist (cons "\\.gap\\'" @'$))
 
   ;;;; Process
@@ -2645,8 +2664,11 @@ See also Info node `(eshell)Top'."
   (setq lean-memory-limit 2048)
 
   ;;;; Auto mode
-  (add-to-list 'auto-mode-alist (cons "\\.lean\\'" @'$))
-  (add-to-list 'auto-mode-alist (cons "\\.hlean\\'" @'$)))
+  (add-to-list 'auto-mode-alist (cons (rx ?.
+					  (or "lean"
+					      "hlean")
+					  string-end)
+				      @'$)))
 
 ;;; TOTP
 (p@ckage totp
@@ -2661,7 +2683,7 @@ See also Info node `(eshell)Top'."
   ~(straight-use-package '$)
 
   ;;;; Auto mode
-  (add-to-list 'auto-mode-alist (cons "\\.proto\\'" @'$)))
+  (add-to-list 'auto-mode-alist (cons (rx ".proto" string-end) @'$)))
 
 ;;; Proof General
 (p@ckage proof-general
@@ -2671,6 +2693,32 @@ See also Info node `(eshell)Top'."
   ;;;; Coq
   (p@ckage coq-mode
     ;;;; Auto mode
-    (add-to-list 'auto-mode-alist (cons "\\.v\\'" @'$))))
+    (add-to-list 'auto-mode-alist (cons (rx ".v" string-end) @'$))))
+
+;;; Xref
+(p@ckage xref
+  ;;;; Completing read
+  (setq $-show-definitions-function #'$-show-definitions-completing-read))
+
+;;; Dumb Jump
+(p@ckage dumb-jump
+  ;;;; Build
+  ~(straight-use-package '$)
+
+  ;;;; Xref
+  (add-hook 'xref-backend-functions @'$-xref-activate))
+
+;;; Groovy
+(p@ckage groovy-mode
+  ;;;; Build
+  ~(straight-use-package '$)
+
+  ;;;; Auto mode
+  (add-to-list 'auto-mode-alist (cons (rx ?.
+					  (or "groovy"
+					      "gradle"
+					      "gant")
+					  string-end)
+				      @'$)))
 
 ;;; init.el ends here
