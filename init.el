@@ -2721,4 +2721,17 @@ See also Info node `(eshell)Top'."
 					  string-end)
 				      @'$)))
 
+;;; Haskell
+(p@ckage haskell-mode
+  ;;;; Build
+  ~(straight-use-package '$)
+
+  (add-to-list 'auto-mode-alist        (cons "\\.[gh]s\\'"  @'$))
+  (add-to-list 'auto-mode-alist        (cons "\\.hsig\\'"   @'$))
+  (add-to-list 'auto-mode-alist        (cons "\\.hsc\\'"    @'$))
+  (add-to-list 'interpreter-mode-alist (cons "runghc"       @'$))
+  (add-to-list 'interpreter-mode-alist (cons "runhaskell"   @'$))
+  (add-to-list 'auto-mode-alist        (cons "\\.l[gh]s\\'" @'haskell-literate-mode))
+  (add-to-list 'completion-ignored-extensions ".hi"))
+
 ;;; init.el ends here
