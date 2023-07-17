@@ -2726,12 +2726,21 @@ See also Info node `(eshell)Top'."
   ;;;; Build
   ~(straight-use-package '$)
 
-  (add-to-list 'auto-mode-alist        (cons "\\.[gh]s\\'"  @'$))
-  (add-to-list 'auto-mode-alist        (cons "\\.hsig\\'"   @'$))
-  (add-to-list 'auto-mode-alist        (cons "\\.hsc\\'"    @'$))
-  (add-to-list 'interpreter-mode-alist (cons "runghc"       @'$))
-  (add-to-list 'interpreter-mode-alist (cons "runhaskell"   @'$))
-  (add-to-list 'auto-mode-alist        (cons "\\.l[gh]s\\'" @'haskell-literate-mode))
+  (add-to-list 'auto-mode-alist (cons (rx ?.
+					  (or "hs"
+					      "ghs"
+					      "hsig"
+					      "hsc")
+					  string-end)
+				      @'$))
+  (add-to-list 'auto-mode-alist (cons (rx ?.
+					  (or "lgs"
+					      "lhs")
+					  string-end)
+				      @'haskell-literate-mode))
+  (add-to-list 'interpreter-mode-alist (cons (rx (or "runghc"
+						     "runhaskell"))
+					     @'$))
   (add-to-list 'completion-ignored-extensions ".hi"))
 
 ;;; init.el ends here
