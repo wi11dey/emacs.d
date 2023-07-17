@@ -2585,7 +2585,7 @@ See also Info node `(eshell)Top'."
   ~(straight-use-package '$)
 
   ;;;; Auto mode
-  (add-to-list 'auto-mode-alist (cons "\\.lua$" @'$))
+  (add-to-list 'auto-mode-alist (cons (rx ".lua" string-end) @'$))
 
   ;;;; Interpreter mode
   (add-to-list 'interpreter-mode-alist (cons "lua" @'$)))
