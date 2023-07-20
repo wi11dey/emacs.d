@@ -2743,4 +2743,16 @@ See also Info node `(eshell)Top'."
 					     @'$))
   (add-to-list 'completion-ignored-extensions ".hi"))
 
+;;; Graphviz DOT
+(p@ckage graphviz-dot-mode
+  ;;;; Build
+  ~(straight-use-package '$)
+
+  ;;;; Auto mode
+  (add-to-list 'auto-mode-alist (cons (rx ?.
+					  (or "dot"
+					      "gv")
+					  string-end)
+				      @'$)))
+
 ;;; init.el ends here
