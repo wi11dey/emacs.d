@@ -418,6 +418,12 @@ Optional argument FILE-OVERRIDE is a string to be passed as the FILE parameter t
 	  kept-new-versions 3
 	  delete-old-versions t)))
 
+;;; Mouse
+(p@ckage mouse
+  ;;;; Yank
+  ;; Don't paste on middle-click:
+  (keymap-global-unset "<mouse-2>"))
+
 ;;; Font Lock
 (p@ckage font-lock
   ;;;; Faces
