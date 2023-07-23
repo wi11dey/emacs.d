@@ -2640,12 +2640,17 @@ See also Info node `(eshell)Top'."
 
 ;;; Sysyphus
 (p@ckage sysyphus
+  ;;;; Build
   ~(straight-use-package '($ :type git :host github :repo "wi11dey/sysyphus.el"))
 
-  (global-set-key [XF86PowerOff] @'sysyphus-sleep)
-  (global-set-key [XF86Sleep] @'sysyphus-sleep)
-  (global-set-key [XF86MonBrightnessUp]   @'sysyphus-brightness-up)
-  (global-set-key [XF86MonBrightnessDown] @'sysyphus-brightness-down))
+  ;;;; Auto sleep mode
+  (add-hook 'exwm-init-hook @'$-auto-sleep-mode)
+
+  ;;;; Keybindings
+  (global-set-key [XF86PowerOff] @'$-sleep)
+  (global-set-key [XF86Sleep] @'$-sleep)
+  (global-set-key [XF86MonBrightnessUp]   @'$-brightness-up)
+  (global-set-key [XF86MonBrightnessDown] @'$-brightness-down))
 
 ;;; Warnings
 (p@ckage warnings
