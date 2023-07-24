@@ -2631,7 +2631,7 @@ See also Info node `(eshell)Top'."
   ~(straight-use-package '$)
 
   ;;;; Auto mode
-  (add-to-list 'auto-mode-alist (cons "\\.rec\\'" @'$)))
+  (add-to-list 'auto-mode-alist (cons (rx ".rec" string-end) @'$)))
 
 ;;; DelSel
 (p@ckage delsel
