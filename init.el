@@ -2737,6 +2737,7 @@ See also Info node `(eshell)Top'."
   ;;;; Build
   ~(straight-use-package '$)
 
+  ;;;; Auto mode
   (add-to-list 'auto-mode-alist (cons (rx ?.
 					  (or "hs"
 					      "ghs"
