@@ -2673,7 +2673,7 @@ See also Info node `(eshell)Top'."
   ~^
 
   ;;;; Memory limit
-  ;; Use at most 1GiB of memory:
+  ;; Use at most 2GiB of memory:
   (setq lean-memory-limit 2048)
 
   ;;;; Auto mode
