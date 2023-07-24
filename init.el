@@ -2607,7 +2607,6 @@ See also Info node `(eshell)Top'."
 					      "gap")
 					  string-end)
 				      @'$))
-  (add-to-list 'auto-mode-alist (cons "\\.gap\\'" @'$))
 
   ;;;; Process
   @$-process)
