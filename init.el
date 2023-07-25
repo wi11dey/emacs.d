@@ -1770,7 +1770,7 @@ See also Info node `(eshell)Top'."
 
   !(defun my/show-paren-data-function (oldfun &rest args)
      ""
-     (if (looking-at-p "\\s)")
+     (if (looking-at-p (rx (syntax close-parenthesis)))
 	 (save-excursion
 	   (forward-char 1)
 	   (apply oldfun args))
@@ -1847,7 +1847,12 @@ See also Info node `(eshell)Top'."
   ;;;; Fontify headings
   !(defun my/$-fontify-headings ()
      (goto-char (point-min))
-     (while (re-search-forward "^\\(?:   \\)?\\(?1:[A-Z].*\\)" nil t)
+     (while (re-search-forward (rx line-start
+				   (? (= 3 ?\s))
+				   (group-n 1
+				     (any (?A . ?Z))
+				     (0+ not-newline)))
+			       nil t)
        (@$-set-face (match-beginning 1) (match-end 1) 'heading-1)))
   (add-hook '$-post-format-hook #'my/$-fontify-headings)
 
@@ -2016,7 +2021,11 @@ See also Info node `(eshell)Top'."
   (setq markdown-fontify-code-blocks-natively t)
 
   ;;;; Auto mode
-  (add-to-list 'auto-mode-alist (cons "\\.j?md\\'" @'$))
+  (add-to-list 'auto-mode-alist (cons (rx ?.
+					  (or "md"
+					      "jmd")
+					  string-end)
+				      @'$))
 
   ;;;; Code lang modes
   ;;;;; Julia
@@ -2148,17 +2157,27 @@ See also Info node `(eshell)Top'."
      (let ((match (match-string 1)))
        (cond (match
 	      (length match))
-	     ((looking-at "  [^[:blank:]]")
+	     ((looking-at (rx ?\s (not blank)))
 	      2)
 	     (t
 	      1))))
   !(defun my/$-set-outline ()
-     (setq-local outline-regexp "[ \t]*;;\\(?1:;+\\)[^#]")
-     (setq-local outline-minor-faces-regexp "^[ \t]*\\(?2:;;\\(?1:;+\\)[^#].*\n?\\)")
+     (rx-let ((indent (0+ (any ?\s ?\t)))
+	      (levels (and ";;"
+			   (group-n 1
+			     (1+ ?\;))
+			   (not ?#))))
+       (setq-local outline-regexp (rx indent levels))
+       (setq-local outline-minor-faces-regexp (rx line-start
+						  indent
+						  (group-n 2
+						    levels
+						    (0+ not-newline)
+						    (? ?\n)))))
      (setq-local outline-minor-faces--font-lock-keywords
-		 '((eval . (list (outline-minor-faces--syntactic-matcher outline-minor-faces-regexp)
+		 `((eval . (list (outline-minor-faces--syntactic-matcher outline-minor-faces-regexp)
 				 2 '(outline-minor-faces--get-face) t))
-		   ("-\\*-.*-\\*-" 0 'outline-minor-file-local-prop-line t)))
+		   (,(rx "-*-" (0+ not-newline) "-*-") 0 'outline-minor-file-local-prop-line t)))
      (setq-local outline-level #'my/$-outline-level))
   ;; `my/emacs-lisp-set-outline' must come before `outline-minor-mode' in `emacs-lisp-mode-hook' so that `outline-minor-faces' caches the right Outline settings when fontifying the buffer for the first time.
   (add-hook '$-mode-hook #'my/$-set-outline)
@@ -2268,8 +2287,13 @@ See also Info node `(eshell)Top'."
 
   ;;;; APT Sources
   (p@ckage apt-sources
-    (add-to-list 'auto-mode-alist (cons "sources\\.list\\'" @'apt-sources-mode))
-    (add-to-list 'auto-mode-alist (cons "sources\\.list\\.d/.*\\.list\\'" @'apt-sources-mode))))
+    ;;;;; Auto mode
+    (add-to-list 'auto-mode-alist (cons (rx "sources.list"
+					    (? ".d/"
+					       (0+ not-newline)
+					       ".list")
+					    string-end)
+					@'apt-sources-mode))))
 
 ;;; Guix
 (p@ckage guix
@@ -2295,7 +2319,7 @@ See also Info node `(eshell)Top'."
   ~(straight-use-package '$)
 
   ;;;; Auto mode
-  (add-to-list 'auto-mode-alist (cons "\\.epub\\'" @'$-mode)))
+  (add-to-list 'auto-mode-alist (cons (rx ".epub" string-end) @'$-mode)))
 
 ;;; Julia
 (p@ckage julia-mode
@@ -2304,7 +2328,7 @@ See also Info node `(eshell)Top'."
   ~^
 
   ;;;; Auto mode
-  (add-to-list 'auto-mode-alist (cons "\\.jl\\'" @'$)))
+  (add-to-list 'auto-mode-alist (cons (rx ".jl" string-end) @'$)))
 
 ;;; Variable Pitch Table
 (p@ckage vpt
@@ -2445,8 +2469,7 @@ See also Info node `(eshell)Top'."
 				(shr-image-displayer shr-content-function))
 	     (put-text-property start (point) 'help-echo
 				(shr-fill-text
-				 (or (dom-attr dom 'title) alt))))))))
-  )
+				 (or (dom-attr dom 'title) alt)))))))))
 
 ;;; EWW
 (p@ckage eww
@@ -2497,7 +2520,7 @@ See also Info node `(eshell)Top'."
   ~(straight-use-package '$)
 
   ;;;; Auto mode
-  (add-to-list 'auto-mode-alist (cons "\\.js\\'" @'$)))
+  (add-to-list 'auto-mode-alist (cons (rx ".js" string-end) @'$)))
 
 ;;; RJSX
 (p@ckage rjsx-mode
@@ -2505,7 +2528,7 @@ See also Info node `(eshell)Top'."
   ~(straight-use-package '$)
 
   ;;;; Auto mode
-  (add-to-list 'auto-mode-alist (cons "\\.jsx\\'" @'$))
+  (add-to-list 'auto-mode-alist (cons (rx ".jsx" string-end) @'$))
 
   ;;;; Faces
   (solarized-set-faces
@@ -2518,7 +2541,7 @@ See also Info node `(eshell)Top'."
   ~(straight-use-package '$)
 
   ;;;; Auto mode
-  (add-to-list 'auto-mode-alist (cons "\\.ts\\'" @'$)))
+  (add-to-list 'auto-mode-alist (cons (rx ".ts" string-end) @'$)))
 
 ;;; Web
 ;; TODO use this for more use cases?
@@ -2533,9 +2556,13 @@ See also Info node `(eshell)Top'."
   ;;;; Auto mode
   ;;;;; TSX
   ;; Nothing handles TypeScripted JSX better:
-  (add-to-list 'auto-mode-alist (cons "\\.tsx" @'$))
+  (add-to-list 'auto-mode-alist (cons (rx ".tsx" string-end) @'$))
   ;;;;; HTML
-  (add-to-list 'auto-mode-alist (cons "\\.html?\\'" @'$)))
+  (add-to-list 'auto-mode-alist (cons (rx ?.
+					  (or "htm"
+					      "html")
+					  string-end)
+				      @'$)))
 
 ;;; Rust
 (p@ckage rust-mode
@@ -2543,7 +2570,7 @@ See also Info node `(eshell)Top'."
   ~(straight-use-package '$)
 
   ;;;; Auto mode
-  (add-to-list 'auto-mode-alist (cons "\\.rs\\'" @'$)))
+  (add-to-list 'auto-mode-alist (cons (rx ".rs" string-end) @'$)))
 
 ;;; DjVu
 (p@ckage djvu
@@ -2559,7 +2586,7 @@ See also Info node `(eshell)Top'."
       ^))
 
   ;;;; Auto mode
-  (add-to-list 'auto-mode-alist (cons "\\.djvu\\'" @'$-dummy-mode)))
+  (add-to-list 'auto-mode-alist (cons (rx ".djvu" string-end) @'$-dummy-mode)))
 
 ;;; YAML
 (p@ckage yaml-mode
@@ -2567,10 +2594,27 @@ See also Info node `(eshell)Top'."
   ~(straight-use-package '$)
 
   ;;;; Auto mode
-  (add-to-list 'auto-mode-alist (cons "\\.\\(e?ya?\\|ra\\)ml\\'" @'yaml-mode))
+  (add-to-list 'auto-mode-alist (cons (rx ?.
+					  (or "yml"
+					      "yaml"
+					      "eyml"
+					      "eyaml"
+					      "raml")
+					  string-end)
+				      @'yaml-mode))
 
   ;;;; Magic mode
-  (add-to-list 'magic-mode-alist (cons "^%YAML\\s-+[0-9]+\\.[0-9]+\\(\\s-+#\\|\\s-*$\\)" @'yaml-mode)))
+  (add-to-list 'magic-mode-alist (cons (rx line-start
+					   "%YAML"
+					   (1+ (syntax whitespace))
+					   (1+ digit)
+					   ?.
+					   (1+ digit)
+					   (or
+					    (1+ (syntax whitespace))
+					    (and (0+ (syntax whitespace))
+						 line-end)))
+				       @'yaml-mode)))
 
 ;;; Tuareg
 (p@ckage tuareg
@@ -2578,8 +2622,14 @@ See also Info node `(eshell)Top'."
   ~(straight-use-package '$)
 
   ;;;; Auto mode
-  (add-to-list 'auto-mode-alist (cons "\\.ml[ip]?\\'" @'$-mode))
-  (add-to-list 'auto-mode-alist (cons "\\.eliomi?\\'" @'$-mode))
+  (add-to-list 'auto-mode-alist (cons (rx ?.
+					  (or "ml"
+					      "mli"
+					      "mlp"
+					      "eliom"
+					      "eliomi")
+					  string-end)
+				      @'$-mode))
 
   ;;;; Interpreter mode
   (add-to-list 'interpreter-mode-alist (cons "ocamlrun" @'$-mode))
