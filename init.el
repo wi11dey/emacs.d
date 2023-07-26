@@ -613,7 +613,8 @@ Optional argument FILE-OVERRIDE is a string to be passed as the FILE parameter t
 
   ;;;; Faces
   (solarized-set-faces
-   ($-face :background base02)))
+   ($-face :background base02)
+   ($-hide-face :foreground base02 :background base02)))
 
 ;;; Text Scale
 (p@ckage text-scale
