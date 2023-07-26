@@ -1749,6 +1749,32 @@ See also Info node `(eshell)Top'."
   (setq $-pretty-entities t
 	$-hide-emphasis-markers t)
 
+  ;;;; Entities
+  (p@ckage $-entities
+    ~^
+    ~(require 'tex-mode)
+
+    (setq $-user ~(append $
+			  '("* TeX")
+			  (mapcar (lambda (entry)
+				    (let* ((name (replace-regexp-in-string (rx ?\{ (group-n 1 (1+ alpha)) ?\}
+									       string-end)
+									   (rx (backref 1))
+									   (car entry)
+									   :fixedcase
+									   nil
+									   nil
+									   1))
+					   (fallback (concat "[" name "]")))
+				      (list name
+					    (car entry) ; LaTeX replacement.
+					    (string-prefix-p "text" name) ; LaTeX mathp.
+					    fallback ; HTML replacement
+					    fallback ; ASCII replacement
+					    fallback ; Latin1 replacement
+					    (string (cdr entry)))))
+				  tex--prettify-symbols-alist))))
+
   ;;;; Appear
   (p@ckage $-appear
     ;;;;; Build
