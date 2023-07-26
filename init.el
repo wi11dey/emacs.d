@@ -1717,8 +1717,9 @@ See also Info node `(eshell)Top'."
 
   ;;;; Faces
   (setq org-cycle-level-faces nil)
-  (setq org-n-level-faces 5)
+  (setq org-n-level-faces 1)
   (solarized-set-faces
+   ($-level-1 :inherit bold)
    ($-block-begin-line :height 0.9 :inherit (org-meta-line org-block))
    ($-checkbox :inherit fixed-pitch)
    ($-code :foreground base0 :inherit embedded-code)
