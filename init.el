@@ -2697,9 +2697,6 @@ See also Info node `(eshell)Top'."
   ;;;; Auto sleep mode
   (add-hook 'exwm-init-hook @'$-auto-sleep-mode)
 
-  ;;;; Auto dim mode
-  (add-hook 'exwm-init-hook @'$-brightness-auto-dim-mode)
-
   ;;;; Keybindings
   (global-set-key [XF86PowerOff] @'$-sleep)
   (global-set-key [XF86Sleep] @'$-sleep)
