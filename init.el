@@ -2844,4 +2844,12 @@ See also Info node `(eshell)Top'."
 					  string-end)
 				      @'$)))
 
+;;; Go
+(p@ckage go-mode
+  ;;;; Build
+  ~(straight-use-package '$)
+
+  ;;;; Auto mode
+  (add-to-list 'auto-mode-alist (cons (rx ".go" string-end) @'$)))
+
 ;;; init.el ends here
