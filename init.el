@@ -2852,4 +2852,15 @@ See also Info node `(eshell)Top'."
   ;;;; Auto mode
   (add-to-list 'auto-mode-alist (cons (rx ".go" string-end) @'$)))
 
+;;; Kubernetes
+(p@ckage kubernetes
+  ;;;; Build
+  ~(straight-use-package '$)
+
+  ;;;; Overview
+  (p@ckage $-overview
+    ;;;;; Faces
+    ;;;;;; Fixed pitch
+    (add-hook '$-mode-hook #'fixed-pitch-mode)))
+
 ;;; init.el ends here
