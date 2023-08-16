@@ -2857,6 +2857,11 @@ See also Info node `(eshell)Top'."
   ;;;; Build
   ~(straight-use-package '$)
 
+  ;;;; Refresh
+  ;; Refresh only on demand:
+  (setq $-poll-frequency 3600)
+  (setq $-redraw-frequency 3600)
+
   ;;;; Overview
   (p@ckage $-overview
     ;;;;; Faces
