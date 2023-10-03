@@ -397,7 +397,10 @@ Optional argument FILE-OVERRIDE is a string to be passed as the FILE parameter t
     (setq ns-command-modifier 'control))
   (when (boundp 'mac-command-modifier)
     ;; Mitsuharu Yamamoto’s macOS port:
-    (setq mac-command-modifier 'control)))
+    (setq mac-command-modifier 'control))
+  ;;;;; Option key
+  (when (boundp 'mac-option-modifier)
+    (setq mac-option-modifier 'meta)))
 
 ;;; Paragraphs
 (p@ckage paragraphs
