@@ -395,9 +395,11 @@ Optional argument FILE-OVERRIDE is a string to be passed as the FILE parameter t
   (when (boundp 'ns-command-modifier)
     ;; GNUStep:
     (setq ns-command-modifier 'control))
-  (when (boundp 'mac-command-modifier)
+  (when (and (boundp 'mac-command-modifier)
+	     (boundp 'mac-pass-command-to-system))
     ;; Mitsuharu Yamamoto’s macOS port:
-    (setq mac-command-modifier 'control))
+    (setq mac-command-modifier 'control
+	  mac-pass-command-to-system nil))
   ;;;;; Option key
   (when (boundp 'mac-option-modifier)
     (setq mac-option-modifier 'meta)))
