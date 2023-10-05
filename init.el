@@ -2877,4 +2877,17 @@ See also Info node `(eshell)Top'."
     ;;;;;; Fixed pitch
     (add-hook '$-mode-hook #'fixed-pitch-mode)))
 
+;;; HCL
+(p@ckage hcl-mode
+  ;;;; Build
+  ~(straight-use-package '$)
+
+  ;;;; Auto mode
+  (add-to-list 'auto-mode-alist (cons (rx ?.
+					  (or "hcl"
+					      "nomad"
+					      "tf")
+					  string-end)
+				      @'$)))
+
 ;;; init.el ends here
