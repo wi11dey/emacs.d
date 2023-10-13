@@ -2890,4 +2890,9 @@ See also Info node `(eshell)Top'."
 					  string-end)
 				      @'$)))
 
+;;; XWWP
+(p@ckage xwwp
+  ;;;; Build
+  ~(straight-use-package '$))
+
 ;;; init.el ends here
