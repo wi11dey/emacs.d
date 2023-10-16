@@ -551,6 +551,12 @@ Optional argument FILE-OVERRIDE is a string to be passed as the FILE parameter t
      (@$-prefix-mode (if visual-line-mode 1 -1)))
   (add-hook 'visual-line-mode-hook #'my/$-on-visual-line-mode))
 
+;;; Subword
+(p@ckage subword
+  !^
+
+  (global-$-mode))
+
 ;;; Aggressive Indent
 (p@ckage aggressive-indent
   ;;;; Build
