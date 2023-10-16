@@ -2808,6 +2808,12 @@ See also Info node `(eshell)Top'."
   ;;;; Build
   ~(straight-use-package '$)
 
+  ;;;; Searcher
+  ;;;;; macOS
+  ;; git grep -E is not POSIX-compliant on macOS; use BSD POSIX grep there instead:
+  (when (eq system-type 'darwin)
+    (setq $-force-searcher 'grep))
+
   ;;;; Xref
   (add-hook 'xref-backend-functions @'$-xref-activate))
 
