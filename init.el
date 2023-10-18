@@ -1483,38 +1483,36 @@ See also Info node `(eshell)Top'."
   ;; None:
   (setq $-initial-inputs-alist nil))
 
-;;; CTRLF
+;;; Isearch
+(p@ckage isearch
+  ;;;; Count matches
+  (setq $-lazy-count t
+	$-regexp-lax-whitespace t
+	search-whitespace-regexp (rx (minimal-match (0+ not-newline))))
+
+  ;;;; Keybindings
+  ;;;;; Regular expressions
+  (keymap-global-set "<remap> <isearch-forward>"  #'$-forward-regexp)
+  (keymap-global-set "<remap> <isearch-backward>" #'$-backward-regexp))
+
+;;; Isearch Minibuffer
 ;; TODO switch to phi-search entirely
-(p@ckage ctrlf
+(p@ckage isearch-mb
   ;;;; Build
-  ~(straight-use-package '$)
-  ~^
+  ~(straight-use-package '($ :type git :host github :repo "astoff/isearch-mb"
+			     :fork (:host github :repo "wi11dey/isearch-mb")))
+  !^
 
-  ;;;; Search style
-  (setq $-default-search-style   'fuzzy
-	$-alternate-search-style 'fuzzy-regexp)
-
-  ;;;; Auto recenter
-  (setq $-auto-recenter nil)
-
-  ;;;; Movement
-  _((bind-key [remap next-line]     @'$-next-match     $-minibuffer-mode-map)
-    (bind-key [remap previous-line] @'$-previous-match $-minibuffer-mode-map))
+  ;;;; Keybindings
+  ;;;;; Movement
+  _(keymap-set $-minibuffer-map "<remap> <next-line>" #'isearch-repeat-forward)
+  _(keymap-set $-minibuffer-map "<remap> <previous-line>" #'isearch-repeat-backward)
 
   ;;;; Enable
-  (bind-key [remap isearch-forward] @'$-forward-default)
-  (bind-key [remap isearch-forward] @'$-forward-alternate)
-  (bind-key [remap isearch-backward] @'$-backward-default)
-  (bind-key [remap isearch-backward] @'$-backward-alternate)
-  (bind-key [remap isearch-symbol] @'$-forward-symbol)
-  (bind-key [remap isearch-symbol-at-point] @'$-forward-symbol-at-point))
+  ($-mode))
 
 ;;; Info
 (p@ckage info
-  ;;;; Isearch
-  ;; Inhibit any later remappings of `isearch-forward'.
-  _(bind-key [remap isearch-forward] #'isearch-forward Info-mode-map)
-
   ;;;; Faces
   (solarized-set-faces
    (info-menu-star :inherit default)
@@ -1594,9 +1592,7 @@ See also Info node `(eshell)Top'."
   (p@ckage $-contacts
     ;;;; vCard
     (p@ckage org-vcard
-      ;; FIXME reset to upstream since has been merged
-      ~(straight-use-package '($ :type git :host github :repo "flexibeast/org-vcard"
-				 :fork (:host github :repo "wi11dey/org-vcard")))
+      ~(straight-use-package '$)
 
       ;;;; Styles
       !((defvar $-styles-dirs)
@@ -2093,13 +2089,6 @@ See also Info node `(eshell)Top'."
   !^
   ($-install-noverify)
 
-  ;;;; Isearch
-  (p@ckage pdf-isearch
-    ~^
-
-    ;; Inhibit any later remappings of `isearch-forward'.
-    _(bind-key [remap isearch-forward] #'isearch-forward $-minor-mode-map))
-
   ;;;; Annotations
   (p@ckage pdf-annot
     ~^
@@ -2126,8 +2115,8 @@ See also Info node `(eshell)Top'."
   ~^
 
   ;;;; Ignored directories
-  _((add-to-list '$-find-ignored-directories "node_modules")
-    (add-to-list '$-find-ignored-directories ".venv")))
+  _(add-to-list '$-find-ignored-directories "node_modules")
+  _(add-to-list '$-find-ignored-directories ".venv"))
 
 ;;; WGrep
 (p@ckage wgrep
