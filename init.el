@@ -2907,4 +2907,12 @@ See also Info node `(eshell)Top'."
   ;;;; Build
   ~(straight-use-package '$))
 
+;;; Avy
+(p@ckage avy
+  ;;;; Build
+  ~(straight-use-package '$)
+
+  ;;;; Keybindings
+  (keymap-global-set "C-j" @'$-goto-char))
+
 ;;; init.el ends here
