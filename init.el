@@ -2915,4 +2915,12 @@ See also Info node `(eshell)Top'."
   ;;;; Keybindings
   (keymap-global-set "C-j" @'$-goto-char))
 
+;;; Jimport
+(p@ckage jimport
+  ;;;; Build
+  ~(straight-use-package '(jimport :type git :host github :repo "wi11dey/jimport"))
+
+  !^
+  ($-mode))
+
 ;;; init.el ends here
