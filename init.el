@@ -1110,7 +1110,8 @@ Optional argument FILE-OVERRIDE is a string to be passed as the FILE parameter t
   (add-hook 'my/visual-line-ignore-modes #'$-mode)
 
   ;;;; Smartparens
-  (add-hook 'sp-ignore-modes-list #'$-mode)
+  (with-eval-after-load 'smartparens
+    (add-hook 'sp-ignore-modes-list #'$-mode))
 
   ;;;; Changing major modes
   !(defun my/$-major-mode-change-error ()
@@ -1540,14 +1541,8 @@ See also Info node `(eshell)Top'."
   ;;;; Default config
   (require 'smartparens-config)
 
-  ;;;; Disable
-  ;;;;; Minibuffer
-  (add-hook 'sp-ignore-modes-list 'minibuffer-inactive-mode)
-
   ;;;; Enable
   ($-global-strict-mode)
-  ;;;;; Eval expresssion minibuffer
-  (add-hook 'eval-expression-minibuffer-setup-hook #'$-strict-mode)
 
   ;;;; Keybindings
   (bind-key "C-M-b" #'sp-backward-sexp      smartparens-mode-map)
@@ -1560,6 +1555,16 @@ See also Info node `(eshell)Top'."
   (bind-key "C-M-n" #'sp-next-sexp          smartparens-mode-map)
   (bind-key "C-M-p" #'sp-previous-sexp      smartparens-mode-map)
   (bind-key "C-M-e" #'sp-up-sexp            smartparens-mode-map))
+
+;;; Eval Expression
+(p@ckage eval-expression
+  ;;;; Eval expression
+  ;;;;; Smartparens
+  (add-hook '$-minibuffer-setup-hook #'smartparens-strict-mode)
+  ;;;;;; Lisp pairs
+  !(defun my/$-sp-local-pairs ()
+     (sp-update-local-pairs '(:open "'" :close nil :actions nil)))
+  (add-hook '$-minibuffer-setup-hook #'my/$-sp-local-pairs))
 
 ;;; Major Extension
 (p@ckage major-extension
