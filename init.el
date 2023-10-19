@@ -2908,8 +2908,17 @@ See also Info node `(eshell)Top'."
 (p@ckage jimport
   ;;;; Build
   ~(straight-use-package '(jimport :type git :host github :repo "wi11dey/jimport"))
-
   !^
+
+  ;;;; Enable
   ($-mode))
+
+;;; Palantir Java Style
+(p@ckage palantir-java-style
+  ;;;; Build
+  ~(straight-use-package '(palantir-java-style :type git :host github :repo "wi11dey/palantir-java-style"))
+
+  ;;;; Enable
+  !^)
 
 ;;; init.el ends here
