@@ -577,11 +577,6 @@ Optional argument FILE-OVERRIDE is a string to be passed as the FILE parameter t
   ;;;; Enable
   (global-$-mode))
 
-;;; All The Icons
-(p@ckage all-the-icons
-  ;;;; Build
-  ~(straight-use-package '$))
-
 ;;; AUCTeX
 (p@ckage auctex
   ;;;; Build
