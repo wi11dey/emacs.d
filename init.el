@@ -2921,4 +2921,16 @@ See also Info node `(eshell)Top'."
   ;;;; Enable
   !^)
 
+;;; Async
+(p@ckage async
+  ;;;; Build
+  ~(straight-use-package '$)
+
+  ;;;; Dired
+  (p@ckage dired-$
+    !^
+
+    ;;;;; Enable
+    ($-mode)))
+
 ;;; init.el ends here
