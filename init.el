@@ -688,10 +688,10 @@ Optional argument FILE-OVERRIDE is a string to be passed as the FILE parameter t
   (add-hook 'prog-mode-hook @'$-mode)
 
   ;;;; Keybindings
-  _((unbind-key "RET" company-active-map)
-    ;;;;; Tab completion
-    (bind-key "TAB"   @'company-complete company-active-map)
-    (bind-key "<tab>" @'company-complete company-active-map))
+  (keymap-unset $-active-map "RET")
+  ;;;;; Tab completion
+  (keymap-set "TAB"   $-active-map @'$-complete)
+  (keymap-set "<tab>" $-active-map @'$-complete)
 
   ;;;; Faces
   (solarized-set-faces
@@ -873,8 +873,8 @@ Optional argument FILE-OVERRIDE is a string to be passed as the FILE parameter t
 				 "elc"))
 
     ;;;;; Keybindings
-    _((bind-key "p" @'$-prev-file $-mode-map)
-      (bind-key "n" @'$-next-file $-mode-map))
+    (keymap-set $-mode-map "p" @'$-prev-file)
+    (keymap-set $-mode-map "n" @'$-next-file)
 
     @$)
   _(bind-key ";" #'peep-$ $-mode-map)
@@ -1673,8 +1673,8 @@ See also Info node `(eshell)Top'."
   (setq org-refile-targets '((nil . (:maxlevel 8))))
 
   ;;;; Move
-  _((bind-key "M-p" @'org-metaup   org-mode-map)
-    (bind-key "M-n" @'org-metadown org-mode-map))
+  _(keymap-set $-mode-map "M-p" @'$-metaup)
+  _(keymap-set $-mode-map "M-n" @'$-metadown)
 
   ;;;; Log
   ;; Log what time an item is marked DONE:
