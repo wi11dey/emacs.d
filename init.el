@@ -943,8 +943,9 @@ Optional argument FILE-OVERRIDE is a string to be passed as the FILE parameter t
   ;;;; History
   (p@ckage em-hist
     ~^
-    ;; Do not save history. (`nil' would tell Eshell to use the HISTFILE environment variable):
-    (setq eshell-history-file-name ""))
+    ;;;;; Disable
+    (setq eshell-history-file-name "") ;`nil' would tell Eshell to use the HISTFILE environment variable.
+    )
 
   ;;;; Directories
   (p@ckage em-dirs
@@ -2036,6 +2037,7 @@ See also Info node `(eshell)Top'."
   ~(require '$ nil :noerror)
 
   ;;;; History
+  ;;;;; Disable
   (setq $-save-history nil)
 
   ;;;; Variable pitch
@@ -2303,7 +2305,8 @@ See also Info node `(eshell)Top'."
     ;;;;; Query on kill
     (setq $-query-on-kill-p nil)
 
-    ;;;;; Disable history
+    ;;;;; History
+    ;;;;;; Disable
     _(advice-add #'$--write-input-ring :override #'ignore))
 
   ;;;; Guile
@@ -2932,5 +2935,13 @@ See also Info node `(eshell)Top'."
 
     ;;;;; Enable
     ($-mode)))
+
+;;; Project
+(p@ckage project
+  ;;;; History
+  ;;;;; Disable
+  (setq $--list nil)
+  _(advice-add #'$--read-project-list  :override #'ignore)
+  _(advice-add #'$--write-project-list :override #'ignore))
 
 ;;; init.el ends here
