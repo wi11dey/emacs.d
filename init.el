@@ -2944,4 +2944,10 @@ See also Info node `(eshell)Top'."
   _(advice-add #'$--read-project-list  :override #'ignore)
   _(advice-add #'$--write-project-list :override #'ignore))
 
+;;; TRAMP
+(p@ckage tramp
+  ;;;; History
+  ;;;;; Disable
+  (setq $-persistency-file-name nil))
+
 ;;; init.el ends here
