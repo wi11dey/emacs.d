@@ -117,7 +117,8 @@ Optional argument FILE-OVERRIDE is a string to be passed as the FILE parameter t
   (defconst my/straight-build-dir (concat my/straight-dir (file-name-as-directory "build")))
 
   ;;;; Build
-  ;;;;; Disable autoloads
+  ;;;;; Autoloads
+  ;;;;;; Disable
   (setq straight-disable-autoloads t)
 
   ;;;;; Shallow clones
@@ -1796,7 +1797,18 @@ See also Info node `(eshell)Top'."
     (setq org-hide-emphasis-markers t
 	  $-autolinks t)
 
-    (add-hook 'org-mode-hook @'$-mode)))
+    (add-hook 'org-mode-hook @'$-mode))
+
+  ;;;; Real
+  (p@ckage $-real
+    ;;;;; Build
+    ~(straight-use-package '($ :type git :host gitlab :repo "tygrdev/org-real")))
+
+  ;;;; Element
+  (p@ckage $-element
+    ;;;;; Persistence
+    ;;;;;; Disable
+    (setq $-cache-persistent nil)))
 
 ;;; Show Paren
 (p@ckage show-paren
