@@ -1497,8 +1497,7 @@ See also Info node `(eshell)Top'."
 ;; TODO switch to phi-search entirely
 (p@ckage isearch-mb
   ;;;; Build
-  ~(straight-use-package '($ :type git :host github :repo "astoff/isearch-mb"
-			     :fork (:host github :repo "wi11dey/isearch-mb")))
+  ~(straight-use-package '$)
   !^
 
   ;;;; Keybindings
