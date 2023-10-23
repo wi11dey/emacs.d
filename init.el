@@ -1493,7 +1493,7 @@ See also Info node `(eshell)Top'."
   (keymap-global-set "<remap> <isearch-forward>"  #'$-forward-regexp)
   (keymap-global-set "<remap> <isearch-backward>" #'$-backward-regexp))
 
-;;; Isearch Minibuffer
+;;; Isearch MB
 ;; TODO switch to phi-search entirely
 (p@ckage isearch-mb
   ;;;; Build
@@ -1807,7 +1807,15 @@ See also Info node `(eshell)Top'."
   (p@ckage $-element
     ;;;;; Persistence
     ;;;;;; Disable
-    (setq $-cache-persistent nil)))
+    (setq $-cache-persistent nil))
+
+  ;;;; Modern
+  (p@ckage $-modern
+    ;;;;; Build
+    ~(straight-use-package '$)
+
+    ;; TODO setup
+    ))
 
 ;;; Show Paren
 (p@ckage show-paren
@@ -2040,7 +2048,13 @@ See also Info node `(eshell)Top'."
   ;;;;; Fixed pitch
   (add-hook '$-mode-hook #'fixed-pitch-mode)
 
-  @$-init)
+  ;;;; Todo
+  (p@ckage $-todos
+    ;;;;; Build
+    ~(straight-use-package '$)
+
+    ;; TODO setup
+    ))
 
 ;;; Transient
 (p@ckage transient
@@ -2256,7 +2270,7 @@ See also Info node `(eshell)Top'."
   ;;;; Build
   ~(straight-use-package '$)
 
-  ;; TODO Activate somehow
+  ;; TODO setup
   )
 
 ;;; Font Lock Studio
@@ -2264,7 +2278,7 @@ See also Info node `(eshell)Top'."
   ;;;; Build
   ~(straight-use-package '$)
 
-  ;; TODO Activate somehow
+  ;; TODO setup
   )
 
 ;;; Diff HL
@@ -2960,5 +2974,13 @@ See also Info node `(eshell)Top'."
   ;;;; History
   ;;;;; Disable
   (setq $-persistency-file-name nil))
+
+;;; HL Todo
+(p@ckage hl-todo
+  ;;;; Build
+  ~(straight-use-package '$)
+
+  ;; TODO setup
+  )
 
 ;;; init.el ends here
