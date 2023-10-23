@@ -2935,7 +2935,7 @@ See also Info node `(eshell)Top'."
 ;;; Jimport
 (p@ckage jimport
   ;;;; Build
-  ~(straight-use-package '(jimport :type git :host github :repo "wi11dey/jimport"))
+  ~(straight-use-package '($ :type git :host github :repo "wi11dey/jimport"))
   !^
 
   ;;;; Enable
@@ -2944,7 +2944,7 @@ See also Info node `(eshell)Top'."
 ;;; Palantir Java Style
 (p@ckage palantir-java-style
   ;;;; Build
-  ~(straight-use-package '(palantir-java-style :type git :host github :repo "wi11dey/palantir-java-style"))
+  ~(straight-use-package '($ :type git :host github :repo "wi11dey/palantir-java-style"))
 
   ;;;; Enable
   !^)
@@ -2979,6 +2979,14 @@ See also Info node `(eshell)Top'."
 (p@ckage hl-todo
   ;;;; Build
   ~(straight-use-package '$)
+
+  ;; TODO setup
+  )
+
+;;; Valign
+(p@ckage valign
+  ;;;; Build
+  ~(straight-use-package '($ :type git :host github :repo "casouri/valign"))
 
   ;; TODO setup
   )
