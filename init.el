@@ -2991,4 +2991,14 @@ See also Info node `(eshell)Top'."
   ;; TODO setup
   )
 
+;;; Calc
+(p@ckage calc
+  ;;;; Literate
+  (p@ckage literate-$-mode
+    ;;;;; Build
+    ~(straight-use-package '$)
+
+    ;; TODO setup
+    ))
+
 ;;; init.el ends here
