@@ -691,8 +691,8 @@ Optional argument FILE-OVERRIDE is a string to be passed as the FILE parameter t
   ;;;; Keybindings
   (keymap-unset $-active-map "RET")
   ;;;;; Tab completion
-  (keymap-set "TAB"   $-active-map @'$-complete)
-  (keymap-set "<tab>" $-active-map @'$-complete)
+  (keymap-set $-active-map "TAB" @'$-complete)
+  (keymap-set $-active-map "<tab>" @'$-complete)
 
   ;;;; Faces
   (solarized-set-faces
