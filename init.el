@@ -549,7 +549,10 @@ Optional argument FILE-OVERRIDE is a string to be passed as the FILE parameter t
   ;;;; Enable
   ;;;;; Visual Line
   !(defun my/$-on-visual-line-mode ()
-     (@$-prefix-mode (if visual-line-mode 1 -1)))
+     (@$-prefix-mode (if (and visual-line-mode
+			      (not (derived-mode-p 'org-mode)))
+			 1
+		       -1)))
   (add-hook 'visual-line-mode-hook #'my/$-on-visual-line-mode))
 
 ;;; Subword
