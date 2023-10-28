@@ -2826,6 +2826,7 @@ See also Info node `(eshell)Top'."
 (p@ckage dumb-jump
   ;;;; Build
   ~(straight-use-package '$)
+  ~^
 
   ;;;; Searcher
   ;;;;; macOS
