@@ -550,7 +550,7 @@ Optional argument FILE-OVERRIDE is a string to be passed as the FILE parameter t
   ;;;;; Visual Line
   !(defun my/$-on-visual-line-mode ()
      (@$-prefix-mode (if (and visual-line-mode
-			      (not (bound-and-true-p 'org-indent-mode)))
+			      (not (bound-and-true-p org-indent-mode)))
 			 1
 		       -1)))
   (add-hook 'visual-line-mode-hook #'my/$-on-visual-line-mode))
