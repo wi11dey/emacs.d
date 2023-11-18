@@ -998,7 +998,7 @@ Optional argument FILE-OVERRIDE is a string to be passed as the FILE parameter t
    (heading-2 :height 1.0 :weight bold :slant normal :inherit heading-3)
    (heading-3 :height 1.2 :width normal :slant italic :inherit heading-4)
    (heading-4 :height 1.1 :width condensed :inherit heading-5)
-   (heading-5 :height 1.1 :foreground base1 :inherit variable-pitch)
+   (heading-5 :height 1.1 :foreground base1 :inherit prose)
    (keyboard :foreground base1 :height 0.9 :box (:line-width 2 :style released-button) :inherit (variable-pitch highlight))
    (keyboard-pressed :box (:line-width 1 :style pressed-button) :inherit keyboard)))
 
