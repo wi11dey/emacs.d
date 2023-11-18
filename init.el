@@ -355,9 +355,9 @@ Optional argument FILE-OVERRIDE is a string to be passed as the FILE parameter t
   ;; TODO fontsets
   ;; (set-face-attribute FACE nil :fontset "x") works on everything but default face
   (solarized-set-faces
-   (fixed-pitch :height 140 :family "DejaVu Sans Mono")
-   (default :background base03 :height 140 :family "DejaVu Sans")
-   (variable-pitch :height 140 :family "DejaVu Sans")
+   (fixed-pitch :height 105 :family "DejaVu Sans Mono")
+   (default :background base03 :height 110 :family "DejaVu Sans")
+   (variable-pitch :height 110 :family "DejaVu Sans")
    (fringe :foreground base01 :background base03)
    (header-line :inverse-video nil :background base03 :underline base0 :inherit mode-line)
    (link :inherit variable-pitch)
@@ -438,12 +438,12 @@ Optional argument FILE-OVERRIDE is a string to be passed as the FILE parameter t
 (p@ckage font-lock
   ;;;; Faces
   (solarized-set-faces
-   ($-comment-face :foreground base00 :height 140 :inherit prose)
+   ($-comment-face :foreground base00 :height 105 :inherit prose)
    ($-comment-delimiter-face :slant normal :inherit fixed-pitch)
    ($-doc-face :slant normal :inherit prose)
    ($-function-name-face :foreground orange)
    ($-keyword-face :foreground blue :inherit bold)
-   ($-string-face :height 140 :inherit prose)
+   ($-string-face :height 105 :inherit prose)
    ($-type-face :foreground magenta :inherit bold)
    ($-variable-name-face :foreground yellow)))
 
@@ -848,7 +848,7 @@ Optional argument FILE-OVERRIDE is a string to be passed as the FILE parameter t
     (solarized-set-faces
      (dired-rainbow-cache-face :strike-through t)
      (dired-rainbow-log-face :inherit italic)
-     (dired-rainbow-generated-face :height 120 :weight normal)
+     (dired-rainbow-generated-face :height 88 :weight normal)
      (dired-rainbow-dotfile-face :foreground base01)
      (dired-rainbow-executable-face :foreground orange)
      (dired-rainbow-prose-face :inherit prose)))
@@ -992,7 +992,7 @@ Optional argument FILE-OVERRIDE is a string to be passed as the FILE parameter t
 
   ;;;; Faces
   (solarized-set-faces
-   (prose :height 140 :family "DejaVu Serif")
+   (prose :height 110 :family "DejaVu Serif")
    (title :height 2.0 :weight light :inherit heading-1)
    (heading-1 :height 1.2 :weight normal :inherit heading-2)
    (heading-2 :height 1.0 :weight bold :slant normal :inherit heading-3)
