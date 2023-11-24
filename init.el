@@ -233,11 +233,7 @@ Optional argument FILE-OVERRIDE is a string to be passed as the FILE parameter t
   ;;;; Load
   (require '$-theme)
   (load-theme '$ :no-confirm)
-
-  ;;;; Utils
-  (p@ckage $-utils
-    ~(straight-use-package '($ :type git :host github :repo "wi11dey/solarized-utils"))
-    !^))
+  (load-theme 'custom-$ :no-confirm))
 
 ;;; Xah Fly Keys
 ;; FIXME properly respect `delete-selection-temporary-region'
@@ -354,17 +350,7 @@ Optional argument FILE-OVERRIDE is a string to be passed as the FILE parameter t
 (p@ckage faces
   ;; TODO fontsets
   ;; (set-face-attribute FACE nil :fontset "x") works on everything but default face
-  (solarized-set-faces
-   (fixed-pitch :height 105 :family "DejaVu Sans Mono")
-   (default :background base03 :height 110 :family "DejaVu Sans")
-   (variable-pitch :height 110 :family "DejaVu Sans")
-   (fringe :foreground base01 :background base03)
-   (header-line :inverse-video nil :background base03 :underline base0 :inherit mode-line)
-   (link :inherit variable-pitch)
-   (link-visited :inherit variable-pitch)
-   (warning :foreground orange :inherit variable-pitch)
-   (minibuffer-prompt :foreground base1 :height 0.95 :inherit variable-pitch)
-   (help-key-binding :inherit keyboard)))
+  )
 
 ;;; Save
 (p@ckage save
@@ -433,19 +419,6 @@ Optional argument FILE-OVERRIDE is a string to be passed as the FILE parameter t
   ;;;; Yank
   ;; Don't paste on middle-click:
   (keymap-global-unset "<mouse-2>"))
-
-;;; Font Lock
-(p@ckage font-lock
-  ;;;; Faces
-  (solarized-set-faces
-   ($-comment-face :foreground base00 :height 105 :inherit prose)
-   ($-comment-delimiter-face :slant normal :inherit fixed-pitch)
-   ($-doc-face :slant normal :inherit prose)
-   ($-function-name-face :foreground orange)
-   ($-keyword-face :foreground blue :inherit bold)
-   ($-string-face :height 105 :inherit prose)
-   ($-type-face :foreground magenta :inherit bold)
-   ($-variable-name-face :foreground yellow)))
 
 ;;; Menu Bar
 (p@ckage menu-bar
@@ -623,12 +596,7 @@ Optional argument FILE-OVERRIDE is a string to be passed as the FILE parameter t
   !^
 
   ;;;; Enable
-  ($-mode)
-
-  ;;;; Faces
-  (solarized-set-faces
-   ($-face :background base02)
-   ($-hide-face :foreground base02 :background base02)))
+  ($-mode))
 
 ;;; Text Scale
 (p@ckage text-scale
@@ -695,12 +663,7 @@ Optional argument FILE-OVERRIDE is a string to be passed as the FILE parameter t
   (keymap-unset $-active-map "RET")
   ;;;;; Tab completion
   (keymap-set $-active-map "TAB" @'$-complete)
-  (keymap-set $-active-map "<tab>" @'$-complete)
-
-  ;;;; Faces
-  (solarized-set-faces
-   (company-preview :foreground base01 :background base02 :inherit underline)
-   (company-preview-common :foreground base0 :inherit company-preview)))
+  (keymap-set $-active-map "<tab>" @'$-complete))
 
 ;;; Goto Last Change
 (p@ckage goto-last-change
@@ -733,10 +696,7 @@ Optional argument FILE-OVERRIDE is a string to be passed as the FILE parameter t
 
   ;;;; Faces
   ;; Don't automatically calculate face colors:
-  (setq $-auto-enabled nil)
-  (solarized-set-faces
-   ($-character-face :foreground base01 :inherit fixed-pitch)
-   ($-top-character-face :foreground magenta :inherit (bold $-character-face))))
+  (setq $-auto-enabled nil))
 
 ;;; REST Client
 (p@ckage restclient
@@ -842,16 +802,7 @@ Optional argument FILE-OVERRIDE is a string to be passed as the FILE parameter t
     ($-define dotfile nil "\\..*" :append)
     ;;;;;; Executable
     ($-define-chmod executable nil "-[-rwx]+x[-rwx]*"
-		    :append)
-
-    ;;;;; Faces
-    (solarized-set-faces
-     (dired-rainbow-cache-face :strike-through t)
-     (dired-rainbow-log-face :inherit italic)
-     (dired-rainbow-generated-face :height 88 :weight normal)
-     (dired-rainbow-dotfile-face :foreground base01)
-     (dired-rainbow-executable-face :foreground orange)
-     (dired-rainbow-prose-face :inherit prose)))
+		    :append))
 
   ;;;; Collapse
   (p@ckage $-collapse
@@ -904,32 +855,7 @@ Optional argument FILE-OVERRIDE is a string to be passed as the FILE parameter t
     (setq dired-omit-extensions nil)
     (setq completion-ignored-extensions nil)
     (defvar $-ignore-compressed-flag)
-    (setq $-ignore-compressed-flag nil)
-
-    ;;;;; Faces
-    (solarized-set-faces
-     ;; TODO fix the buffer-directory shared system
-     ($-dir-heading :inherit heading-4)
-     ($-dir-priv :foreground blue :inherit bold)
-     ($-read-priv :foreground cyan :inverse-video t)
-     ($-write-priv :foreground yellow :inverse-video t)
-     ($-exec-priv :foreground orange :inverse-video t)
-     ($-no-priv :foreground base02 :background base02 :strike-through base2)
-     ($-date-time :foreground yellow)
-     ($-number :foreground violet :inherit bold)
-     ($-dir-name :foreground blue :inherit (underline variable-pitch))
-     ($-file-name :foreground base1 :inherit variable-pitch)
-     ($-compressed-file-name :inherit $-file-name)
-     ($-file-suffix :foreground base0 :height 0.8 :inherit (bold variable-pitch))
-     ($-compressed-file-suffix :inherit $-file-suffix)
-     ($-flag-mark :foreground green :background green :inverse-video nil)
-     ($-flag-mark-line :foreground base2 :inverse-video t)
-     ($-deletion :foreground red :background red :inverse-video nil)
-     ($-deletion-file-name :foreground red :background base02 :inverse-video nil)))
-
-  ;;;; Faces
-  (solarized-set-faces
-   ($-directory :inherit diredfl-dir-name)))
+    (setq $-ignore-compressed-flag nil)))
 
 ;;; Eshell
 (p@ckage eshell
@@ -961,12 +887,7 @@ Optional argument FILE-OVERRIDE is a string to be passed as the FILE parameter t
   (p@ckage esh-mode
     (setq eshell-buffer-maximum-lines 10000)
 
-    _(add-to-list 'eshell-output-filter-functions @'eshell-truncate-buffer :append))
-
-  ;;;; Faces
-  (solarized-set-faces
-   ($-prompt :foreground base1 :inherit (bold variable-pitch))
-   ($-ls-directory :inherit diredfl-dir-name)))
+    _(add-to-list 'eshell-output-filter-functions @'eshell-truncate-buffer :append)))
 
 ;;; Xtended Faces
 (p@ckage xtended-faces
@@ -988,19 +909,7 @@ Optional argument FILE-OVERRIDE is a string to be passed as the FILE parameter t
   ;;;;; Dired
   (add-hook 'dired-mode-hook #'fixed-pitch-mode)
   ;;;;; Undo tree visualizer
-  (add-hook 'undo-tree-visualizer-mode-hook #'fixed-pitch-mode)
-
-  ;;;; Faces
-  (solarized-set-faces
-   (prose :height 110 :family "DejaVu Serif")
-   (title :height 2.0 :weight light :inherit heading-1)
-   (heading-1 :height 1.2 :weight normal :inherit heading-2)
-   (heading-2 :height 1.0 :weight bold :slant normal :inherit heading-3)
-   (heading-3 :height 1.2 :width normal :slant italic :inherit heading-4)
-   (heading-4 :height 1.1 :width condensed :inherit heading-5)
-   (heading-5 :height 1.1 :foreground base1 :inherit prose)
-   (keyboard :foreground base1 :height 0.9 :box (:line-width 2 :style released-button) :inherit (variable-pitch highlight))
-   (keyboard-pressed :box (:line-width 1 :style pressed-button) :inherit keyboard)))
+  (add-hook 'undo-tree-visualizer-mode-hook #'fixed-pitch-mode))
 
 ;;; EXWM
 ;; TODO disable symb0l for window class "IceCat"/"Firefox", window type (397)
@@ -1224,10 +1133,7 @@ See also Info node `(eshell)Top'."
   ;;;;; Text modes
   (add-hook 'text-mode-hook @'$-mode)
   ;;;;; Help
-  (add-hook 'help-mode-hook @'$-mode)
-
-  (solarized-set-faces
-   ($-line :strike-through base01)))
+  (add-hook 'help-mode-hook @'$-mode))
 
 ;;; Free Keys
 (p@ckage free-keys
@@ -1283,11 +1189,7 @@ See also Info node `(eshell)Top'."
 				face fixed-pitch)))
 
   ;;;; Enable
-  ($-mode)
-
-  ;;;; Faces
-  (solarized-set-faces
-   ($ :inverse-video nil :background base03)))
+  ($-mode))
 
 ;;; Mode Line
 (p@ckage mode-line
@@ -1350,12 +1252,7 @@ See also Info node `(eshell)Top'."
   ;;;; Rectangular region
   (p@ckage rectangular-region-mode
     ;;;;; Keybindings
-    (bind-key "C-x SPC" @'set-rectangular-region-anchor))
-
-  ;;;; Faces
-  (solarized-set-faces
-   (mc/cursor-face :box nil :inherit cursor)
-   (mc/region-face :box nil :inherit region)))
+    (bind-key "C-x SPC" @'set-rectangular-region-anchor)))
 
 ;;; Ivy
 ;; TODO make fonts consistent (current match highlights whole line, commands shown in different color but not highlighted, count function keeps spacing consistent, orderless matches use normal fonts, match required font consistency, counsel-find-file uses dired fonts)
@@ -1425,15 +1322,6 @@ See also Info node `(eshell)Top'."
   ;;;; Done
   (bind-key "M-RET" #'$-immediate-done $-minibuffer-map)
 
-  ;;;; Faces
-  (solarized-set-faces
-   ($-current-match :inherit highlight)
-   ($-minibuffer-match-face-1 :underline base0)
-   ($-minibuffer-match-face-2 :foreground back :background orange)
-   ($-minibuffer-match-face-3 :foreground back :background cyan)
-   ($-minibuffer-match-face-4 :foreground back :background yellow)
-   ($-cursor :height unspecified :inherit cursor))
-
   ;;;; Enable
   ($-mode)
 
@@ -1459,19 +1347,6 @@ See also Info node `(eshell)Top'."
 
     ;;;;;; Keybindings
     (bind-key "DEL" #'ivy-backward-delete-char $-find-file-map) ; Necessary for some reason.
-
-    ;;;;; Faces
-    (solarized-set-faces
-     ($-outline-default :inherit variable-pitch)
-     ($-outline-1 :inherit ($-outline-default heading-1))
-     ($-outline-2 :inherit ($-outline-default heading-2))
-     ($-outline-3 :inherit ($-outline-default heading-3))
-     ($-outline-4 :inherit ($-outline-default heading-4))
-     ($-outline-5 :inherit ($-outline-default heading-5))
-     ($-outline-6 :inherit ($-outline-default heading-6))
-     ($-outline-7 :inherit ($-outline-default heading-7))
-     ($-outline-8 :inherit ($-outline-default heading-8))
-     ($-key-binding :inherit keyboard))
 
     ;;;;; Enable
     ($-mode)
@@ -1512,13 +1387,6 @@ See also Info node `(eshell)Top'."
 
   ;;;; Enable
   ($-mode))
-
-;;; Info
-(p@ckage info
-  ;;;; Faces
-  (solarized-set-faces
-   (info-menu-star :inherit default)
-   (info-node :foreground orange :inherit (bold italic))))
 
 ;;; Asemantic Stickyfunc
 (p@ckage asemantic-stickyfunc
@@ -1735,25 +1603,6 @@ See also Info node `(eshell)Top'."
   ;;;; Faces
   (setq org-cycle-level-faces nil)
   (setq org-n-level-faces 1)
-  (solarized-set-faces
-   ($-level-1 :inherit bold)
-   ($-block-begin-line :height 0.9 :inherit (org-meta-line org-block))
-   ($-checkbox :inherit fixed-pitch)
-   ($-code :foreground base0 :inherit embedded-code)
-   ($-date :foreground base3 :underline nil :height 0.95 :inherit (bold variable-pitch))
-   ($-default :inherit prose)
-   ($-document-info :foreground base1)
-   ($-document-info-keyword :foreground base00 :inherit bold)
-   ($-document-title :inherit title)
-   ($-done :foreground green :inverse-video nil :inherit (org-todo highlight))
-   ($-drawer :foreground base00 :slant normal :inherit variable-pitch)
-   ($-formula :inherit org-table)
-   ($-hide :inherit fixed-pitch)
-   ($-meta-line :inherit (bold org-document-info-keyword))
-   ($-special-keyword :box t :inherit org-drawer)
-   ($-table :foreground base0 :inherit fixed-pitch)
-   ($-todo :foreground red :background nil :inverse-video t :height 1.1 :inherit fixed-pitch)
-   ($-block :foreground base0 :inherit embedded-code))
 
   ;;;; Tangle
   ;;;;; Message
@@ -1879,14 +1728,7 @@ See also Info node `(eshell)Top'."
   (bind-key "RET"                 #'$-visualizer-quit  $-visualizer-mode-map)
 
   ;;;; Enable
-  (global-$-mode)
-
-  ;;;; Faces
-  (solarized-set-faces
-   (my/$/background :background base3)
-   ($-visualizer-default-face :foreground base01)
-   ($-visualizer-active-branch-face :foreground base02 :background base3 :inherit bold)
-   ($-visualizer-current-face :foreground yellow :background base02 :inverse-video t :inherit bold)))
+  (global-$-mode))
 
 ;;; WoMan
 (p@ckage woman
@@ -1978,11 +1820,7 @@ See also Info node `(eshell)Top'."
 			  (?r . ?♜)
 			  (?b . ?♝)
 			  (?n . ?♞)
-			  (?p . ?♟)))
-    ;;;;; Faces
-    (solarized-set-faces
-     ($-black-face :foreground base3)
-     ($-white-face :foreground base3))))
+			  (?p . ?♟)))))
 
 ;;; Fontfile
 (p@ckage fontfile
@@ -2075,12 +1913,7 @@ See also Info node `(eshell)Top'."
 
   ;;;; Default level
   ;; Show everything:
-  (setq $-default-level 7)
-
-  ;;;; Faces
-  (solarized-set-faces
-   ($-key :inherit (fixed-pitch keyboard))
-   ($-heading :inherit heading-4)))
+  (setq $-default-level 7))
 
 ;;; Markdown
 (p@ckage markdown-mode
@@ -2100,12 +1933,7 @@ See also Info node `(eshell)Top'."
 
   ;;;; Code lang modes
   ;;;;; Julia
-  _(add-to-list 'markdown-code-lang-modes (cons "julia" @'julia-mode))
-
-  ;;;; Faces
-  (solarized-set-faces
-   (markdown-pre-face :inherit embedded-code)
-   (markdown-inline-code-face :inherit embedded-code)))
+  _(add-to-list 'markdown-code-lang-modes (cons "julia" @'julia-mode)))
 
 ;;; Org CalDAV
 (p@ckage org-caldav
@@ -2182,11 +2010,7 @@ See also Info node `(eshell)Top'."
 
   ;;;; Enable
   ;;;;; Outline Minor
-  (add-hook 'outline-minor-mode-hook @'$-mode)
-
-  ;;;; Faces
-  (solarized-set-faces
-   (outline-minor-0)))
+  (add-hook 'outline-minor-mode-hook @'$-mode))
 
 ;;; WDired
 (p@ckage wdired
@@ -2298,12 +2122,6 @@ See also Info node `(eshell)Top'."
   ;;;; Flydiff
   !(require '$-flydiff)
   ($-flydiff-mode)
-
-  ;;;; Faces
-  (solarized-set-faces
-   ($-insert :foreground green)
-   ($-change :foreground violet)
-   ($-delete :foreground red))
 
   ;;;; Bitmap
   (define-fringe-bitmap 'my/$-bmp-delete
@@ -2593,12 +2411,7 @@ See also Info node `(eshell)Top'."
   ~(straight-use-package '$)
 
   ;;;; Auto mode
-  (add-to-list 'auto-mode-alist (cons (rx ".jsx" string-end) @'$))
-
-  ;;;; Faces
-  (solarized-set-faces
-   (rjsx-text :inherit default ; TODO: This is only so that indentation becomes fixed-width. In a perfect world, everything would be variable-width and indentation would be with elastic-tabs.
-	      )))
+  (add-to-list 'auto-mode-alist (cons (rx ".jsx" string-end) @'$)))
 
 ;;; TypeScript
 (p@ckage typescript-mode
