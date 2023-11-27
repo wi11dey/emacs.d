@@ -1173,11 +1173,11 @@ See also Info node `(eshell)Top'."
   ;;;; Format
   (setq $-format '("%e"
 		   ;;;;; Time
-		   (:propertize (:eval (format-time-string "%T %Z"))
-				face bold)
+		   (:propertize (:eval (format-time-string "%T"))
+				face italic)
 		   " "
 		   ;;;;; Date
-		   (:eval (format-time-string "%F %A"))
+		   (:eval (format-time-string "%A %F %Z"))
 		   ;;;;; Battery
 		   (:eval `((:propertize " "
 					 display (space :align-to (- right ,(length battery-mode-line-string) 3)))
