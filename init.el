@@ -53,6 +53,9 @@
 (setq gc-cons-threshold 16777216
       gc-cons-percentage 0.1)
 
+;;; Load
+(setq load-prefer-newer t)
+
 ;;; Autoloads
 (eval-when-compile
   (defun my/package-autoloads--clean-p (func
