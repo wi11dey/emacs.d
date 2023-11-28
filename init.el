@@ -1580,7 +1580,7 @@ See also Info node `(eshell)Top'."
 			     (2 (list 'face
 				      'fixed-pitch
 				      'display
-				      (aref ["◉" "○"]
+				      (aref ["⚫" "⚪"]
 					    (% (- (match-end       0)
 						  (match-beginning 0))
 					       2))
