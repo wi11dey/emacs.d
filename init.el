@@ -435,8 +435,6 @@ Optional argument FILE-OVERRIDE is a string to be passed as the FILE parameter t
                                            (bottom . nil)
                                            ;; Do show both arrows in the left fringe.
                                            (t . left)))
-;;;;; Empty lines
-(setq-default indicate-empty-lines t)
 ;;;;; Paragraph
 ;; TODO
 ;; (define-fringe-bitmap 'paragraph
