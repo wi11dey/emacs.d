@@ -1670,7 +1670,11 @@ See also Info node `(eshell)Top'."
     ~(straight-use-package '$)
 
     ;; TODO setup
-    ))
+    )
+
+  ;;;; Remote
+  ;; It is not safe for files to allow themselves to get remote images:
+  (put '$-display-remote-inline-images 'safe-local-variable #'ignore))
 
 ;;; Show Paren
 (p@ckage show-paren
