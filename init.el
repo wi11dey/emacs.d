@@ -2641,7 +2641,10 @@ See also Info node `(eshell)Top'."
 ;;; Xref
 (p@ckage xref
   ;;;; Completing read
-  (setq $-show-definitions-function #'$-show-definitions-completing-read))
+  ;; Select definitions from minibuffer rather than real buffer:
+  (setq $-show-definitions-function #'$-show-definitions-completing-read)
+
+  (keymap-global-set "C-M-?" #'$-find-references-and-replace))
 
 ;;; Dumb Jump
 (p@ckage dumb-jump
