@@ -258,12 +258,14 @@ Optional argument FILE-OVERRIDE is a string to be passed as the FILE parameter t
   ;;;; Emacsclient
   (add-hook 'server-after-make-frame-hook #'xah-fly-command-mode-activate)
 
-  ;;;; Ivy cursor face
+  ;;;; Cursor
   !(defun my/$-bar-cursor ()
+     (modify-all-frames-parameters (list (cons 'cursor-type '(bar . 1))))
      (when (featurep 'ivy-overlay)
        (set-face-attribute 'ivy-cursor nil :height 1)))
   (add-hook 'xah-fly-insert-mode-activate-hook #'my/$-bar-cursor)
   !(defun my/$-default-cursor ()
+     (modify-all-frames-parameters (list (cons 'cursor-type '(hbar . 3))))
      (when (featurep 'ivy-overlay)
        (set-face-attribute 'ivy-cursor nil :height 'unspecified)
        (set-face-attribute 'ivy-cursor t   :height 'unspecified)))
