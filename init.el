@@ -1194,11 +1194,7 @@ See also Info node `(eshell)Top'."
 		   (:eval `((:propertize " "
 					 display (space :align-to (- right ,(length battery-mode-line-string) 3)))
 			    (:propertize battery-mode-line-string
-					 face (:inverse-video t :inherit fixed-pitch))))
-		   ;;;;; Mode line front space
-		   (:propertize (" "
-				 (:eval (upcase mode-line-front-space)))
-				face fixed-pitch)))
+					 face (:inverse-video t :inherit fixed-pitch))))))
 
   ;;;; Enable
   ($-mode))
