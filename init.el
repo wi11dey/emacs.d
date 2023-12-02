@@ -1197,14 +1197,6 @@ See also Info node `(eshell)Top'."
   ;;;; Disable
   (setq-default $-format nil))
 
-;;; HL Line
-(p@ckage hl-line
-  ;;;; Enable
-  ;;;;; Compilation
-  (add-hook 'compilation-mode-hook #'$-mode)
-  ;;;;; Programming modes
-  (add-hook 'prog-mode-hook #'$-mode))
-
 ;;; Ibuffer
 (p@ckage ibuffer
   ~^
