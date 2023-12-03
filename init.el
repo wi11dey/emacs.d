@@ -1703,6 +1703,14 @@ See also Info node `(eshell)Top'."
   ;;;;; TeX
   (add-hook 'tex-mode-hook @'turn-off-smart-quotes)
   (add-hook 'TeX-mode-hook @'turn-off-smart-quotes)
+  ;;;;; Org source blocks
+  !(defun my/org-in-src-block-p (&rest _ignored)
+     (when (and (derived-mode-p 'org-mode)
+		(org-in-src-block-p))
+       (self-insert-command 1)
+       t))
+  _(advice-add 'smart-quotes-insert-single :before-until #'my/org-in-src-block-p)
+  _(advice-add 'smart-quotes-insert-double :before-until #'my/org-in-src-block-p)
 
   ;;;; Enable
   ;;;;; Text modes
