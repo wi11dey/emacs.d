@@ -1192,9 +1192,9 @@ See also Info node `(eshell)Top'."
 		   (:eval (format-time-string "%A %F %Z"))
 		   ;;;;; Battery
 		   (:eval `((:propertize " "
-					 display (space :align-to (- right ,(length battery-mode-line-string) 3)))
+					 display (space :align-to (- right ,(length battery-mode-line-string) 1)))
 			    (:propertize battery-mode-line-string
-					 face (:inverse-video t :inherit fixed-pitch))))))
+					 face fixed-pitch)))))
 
   ;;;; Enable
   ($-mode))
