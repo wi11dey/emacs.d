@@ -1622,7 +1622,10 @@ See also Info node `(eshell)Top'."
   ;;;; Real
   (p@ckage $-real
     ;;;;; Build
-    ~(straight-use-package '($ :type git :host gitlab :repo "tygrdev/org-real")))
+    ~(straight-use-package '($ :type git :host gitlab :repo "tygrdev/org-real"))
+
+    ;; TODO setup
+    )
 
   ;;;; Element
   (p@ckage $-element
