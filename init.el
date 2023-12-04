@@ -1569,7 +1569,7 @@ See also Info node `(eshell)Top'."
 
   ;;;; Faces
   (setq org-cycle-level-faces nil)
-  (setq org-n-level-faces 1)
+  (setq org-n-level-faces 8)
 
   ;;;; Tangle
   ;;;;; Message
