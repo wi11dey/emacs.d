@@ -1559,39 +1559,6 @@ See also Info node `(eshell)Top'."
   ;;;; Tempo
   _(require 'org-tempo)
 
-  ;;;; Bullets
-  !(defun my/$-goto-last-bullet ()
-     (when (search-forward "* "
-			   (line-end-position)
-			   t)
-       (forward-char -2)))
-  !(defun my/$-promote-subtree ()
-     (interactive)
-     (@$-promote-subtree)
-     (my/$-goto-last-bullet))
-  !(defun my/$-demote-subtree ()
-     (interactive)
-     (@$-demote-subtree)
-     (my/$-goto-last-bullet))
-  (font-lock-add-keywords '$-mode
-			  `(("^\\(?1:\\**\\)\\(?2:*\\)\\(?3: \\)"
-			     (1 '$-hide)
-			     (2 (list 'face
-				      'fixed-pitch
-				      'display
-				      (aref ["⚫" "⚪"]
-					    (% (- (match-end       0)
-						  (match-beginning 0))
-					       2))
-				      'keymap
-				      ',(let ((map (make-sparse-keymap)))
-					  (define-key map "i" #'$-metaup)
-					  (define-key map "k" #'$-metadown)
-					  (define-key map "j" #'my/$-promote-subtree)
-					  (define-key map "l" #'my/$-demote-subtree)
-					  map)))
-			     (3 '$-hide))))
-
   ;;;; Insert
   ;;;;; Heading
   (setq $-insert-heading-respect-content t)
