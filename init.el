@@ -1643,7 +1643,22 @@ See also Info node `(eshell)Top'."
 
   ;;;; Remote
   ;; It is not safe for files to allow themselves to get remote images:
-  (put '$-display-remote-inline-images 'safe-local-variable #'ignore))
+  (put '$-display-remote-inline-images 'safe-local-variable #'ignore)
+
+  ;;;; Smartparens
+  ;; Don't turn on strict mode in org buffers, even with `smartparens-global-strict-mode'. Unfortunately, there is no specific `sp-ignore-strict-modes-list': both `smartparens-mode' and `smartparens-strict-mode' are not turned on when the major mode appears in `sp-ignore-modes-list'. We add `org-mode' to `sp-ignore-modes-list' and then turn on non-strict smartparens manually:
+  (with-eval-after-load 'smartparens
+    (add-hook 'sp-ignore-modes-list #'$-mode))
+  (add-hook '$-mode-hook #'smartparens-mode)
+
+  ;;;; Timeblock
+  (p@ckage $-timeblock
+    ;;;;; Build
+    ~(straight-use-package '$)
+
+    ;; TODO setup, it's the perfect calendar
+    )
+  )
 
 ;;; Show Paren
 (p@ckage show-paren
