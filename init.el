@@ -230,6 +230,11 @@ Optional argument FILE-OVERRIDE is a string to be passed as the FILE parameter t
   ~(straight-use-package '$)
   !^)
 
+;;; emaχ
+(p@ckage emaχ
+  ;;;; Build
+  ~(straight-use-package '($ :type git :host github :repo "wi11dey/emaX")))
+
 ;;; Solarized
 (p@ckage solarized
   ;;;; Build
@@ -1189,7 +1194,7 @@ See also Info node `(eshell)Top'."
 				face italic)
 		   " "
 		   ;;;;; Date
-		   (:eval (format-time-string "%A %F %Z"))
+		   (:eval (format-time-string "%A %+4Y/%m/%d %Z"))
 		   ;;;;; Battery
 		   (:eval `((:propertize " "
 					 display (space :align-to (- right ,(length battery-mode-line-string) 1)))
