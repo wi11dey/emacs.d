@@ -224,16 +224,45 @@ Optional argument FILE-OVERRIDE is a string to be passed as the FILE parameter t
 ;; Bootstrapped.
 
 
-;;; Bind Key
-(p@ckage bind-key
+;;; Xtended Faces
+(p@ckage xtended-faces
+  ;;;; Build
+  ~(straight-use-package '($ :type git :host github :repo "wi11dey/xtended-faces"))
+  !^
+
+  ;;;; Prose mode
+  ;;;;; Help
+  (add-hook 'help-mode-hook #'prose-mode)
+  ;;;;; Info
+  (add-hook 'Info-mode-hook #'prose-mode)
+  ;;;;; Text modes
+  (add-hook 'text-mode-hook #'prose-mode)
+  ;;;;; WoMan
+  (add-hook 'woman-mode-hook #'prose-mode)
+
+  ;;;; Fixed pitch mode
+  ;;;;; Dired
+  (add-hook 'dired-mode-hook #'fixed-pitch-mode)
+  ;;;;; Undo tree visualizer
+  (add-hook 'undo-tree-visualizer-mode-hook #'fixed-pitch-mode))
+
+;;; Modus Themes
+(p@ckage modus-themes
   ;;;; Build
   ~(straight-use-package '$)
-  !^)
+
+  ;;;; Load
+  ^
+  (load-theme 'modus-operandi :no-confirm))
 
 ;;; emaχ
 (p@ckage emaχ
   ;;;; Build
-  ~(straight-use-package '($ :type git :host github :repo "wi11dey/emaX")))
+  ~(straight-use-package '($ :type git :host github :repo "wi11dey/emaX"))
+
+  ;;;; Load
+  (require '$-theme)
+  (load-theme '$ :no-confirm))
 
 ;;; Solarized
 (p@ckage solarized
@@ -249,8 +278,15 @@ Optional argument FILE-OVERRIDE is a string to be passed as the FILE parameter t
 
   ;;;; Load
   (require '$-theme)
-  (load-theme '$ :no-confirm)
-  (load-theme 'custom-$ :no-confirm))
+  ;; (load-theme '$ :no-confirm)
+  ;; (load-theme 'custom-$ :no-confirm)
+  )
+
+;;; Bind Key
+(p@ckage bind-key
+  ;;;; Build
+  ~(straight-use-package '$)
+  !^)
 
 ;;; Xah Fly Keys
 ;; FIXME properly respect `delete-selection-temporary-region'
@@ -905,28 +941,6 @@ Optional argument FILE-OVERRIDE is a string to be passed as the FILE parameter t
     (setq eshell-buffer-maximum-lines 10000)
 
     _(add-to-list 'eshell-output-filter-functions @'eshell-truncate-buffer :append)))
-
-;;; Xtended Faces
-(p@ckage xtended-faces
-  ;;;; Build
-  ~(straight-use-package '($ :type git :host github :repo "wi11dey/xtended-faces"))
-  !^
-
-  ;;;; Prose mode
-  ;;;;; Help
-  (add-hook 'help-mode-hook #'prose-mode)
-  ;;;;; Info
-  (add-hook 'Info-mode-hook #'prose-mode)
-  ;;;;; Text modes
-  (add-hook 'text-mode-hook #'prose-mode)
-  ;;;;; WoMan
-  (add-hook 'woman-mode-hook #'prose-mode)
-
-  ;;;; Fixed pitch mode
-  ;;;;; Dired
-  (add-hook 'dired-mode-hook #'fixed-pitch-mode)
-  ;;;;; Undo tree visualizer
-  (add-hook 'undo-tree-visualizer-mode-hook #'fixed-pitch-mode))
 
 ;;; EXWM
 ;; TODO disable symb0l for window class "IceCat"/"Firefox", window type (397)
@@ -1891,7 +1905,7 @@ See also Info node `(eshell)Top'."
 
   ;;;; Faces
   ;;;;; Fixed pitch
-  (add-hook '$-mode-hook #'fixed-pitch-mode)
+  ;; (add-hook '$-mode-hook #'fixed-pitch-mode)
 
   ;;;; Todo
   (p@ckage $-todos
@@ -2552,7 +2566,8 @@ See also Info node `(eshell)Top'."
 (p@ckage prog-mode
   ;;;; Faces
   ;;;;; Fixed pitch
-  (add-hook '$-hook #'fixed-pitch-mode))
+  ;; (add-hook '$-hook #'fixed-pitch-mode)
+  )
 
 ;;; Rec
 (p@ckage rec-mode
