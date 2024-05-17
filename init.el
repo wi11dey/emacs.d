@@ -2055,7 +2055,7 @@ See also Info node `(eshell)Top'."
 (p@ckage emacs-lisp
   ;;;; Outline
   !(defun my/$-outline-level ()
-     (let ((match (match-string 1)))
+     (let ((match (match-string-no-properties 1)))
        (cond (match
 	      (length match))
 	     ((looking-at (rx ?\s (not blank)))
@@ -2064,10 +2064,13 @@ See also Info node `(eshell)Top'."
 	      1))))
   !(defun my/$-set-outline ()
      (rx-let ((indent (0+ (any ?\s ?\t)))
-	      (levels (and ";;"
-			   (group-n 1
-			     (1+ ?\;))
-			   (not ?#))))
+	      (levels (and
+		       ?\;
+		       (group-n 3
+			 ?\;
+			 (group-n 1
+			   (1+ ?\;)))
+		       (not ?#))))
        (setq-local outline-regexp (rx indent levels))
        (setq-local outline-minor-faces-regexp (rx line-start
 						  indent
@@ -2077,9 +2080,15 @@ See also Info node `(eshell)Top'."
 						    (? ?\n)))))
      (setq-local outline-minor-faces--font-lock-keywords
 		 `((eval . (list (outline-minor-faces--syntactic-matcher outline-minor-faces-regexp)
-				 2 '(outline-minor-faces--get-face) t))
+                                 '(2 `(face ,(outline-minor-faces--get-face)) t)
+                                 '(3 '( face default
+                                        ;; Not using `invisible' so deleting one character does not delete the entire invisble range:
+					display "")
+				     t)))
 		   (,(rx "-*-" (0+ not-newline) "-*-") 0 'outline-minor-file-local-prop-line t)))
-     (setq-local outline-level #'my/$-outline-level))
+     (setq-local outline-level #'my/$-outline-level)
+     (unless (memq 'display font-lock-extra-managed-props)
+       (push 'display font-lock-extra-managed-props)))
   ;; `my/emacs-lisp-set-outline' must come before `outline-minor-mode' in `emacs-lisp-mode-hook' so that `outline-minor-faces' caches the right Outline settings when fontifying the buffer for the first time.
   (add-hook '$-mode-hook #'my/$-set-outline)
   (add-hook '$-mode-hook #'outline-minor-mode :append)
