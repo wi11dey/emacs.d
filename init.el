@@ -358,9 +358,6 @@ Optional argument FILE-OVERRIDE is a string to be passed as the FILE parameter t
 
 ;;; Emacs
 (p@ckage emacs
-  ;;;; Password character
-  (setq read-hide-char ?•)
-
   ;;;; Graphical display
   ;; xdisp
   (setq x-underline-at-descent-line t ; Lines up underline with `telephone-line' separators.
