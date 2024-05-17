@@ -59,8 +59,8 @@
 ;;; Native compilation cache
 (eval-when-compile
   (when (and (fboundp 'startup-redirect-eln-cache)
-	     ;; Sometimes `startup-redirect-eln-cache' is defined but fails with "Symbol's value as variable is void: native-comp-eln-load-path":
-	     (boundp 'native-comp-eln-load-path))
+             ;; Sometimes `startup-redirect-eln-cache' is defined but fails with "Symbol's value as variable is void: native-comp-eln-load-path":
+             (boundp 'native-comp-eln-load-path))
     (startup-redirect-eln-cache
      (convert-standard-filename
       (expand-file-name  "var/eln-cache/" user-emacs-directory)))))
@@ -68,19 +68,19 @@
 ;;; Autoloads
 (eval-when-compile
   (defun my/package-autoloads--clean-p (func
-					file
-					&optional
-					docstring
-					interactive
-					type)
+                                        file
+                                        &optional
+                                        docstring
+                                        interactive
+                                        type)
     (pcase nil
       ((and (let `(quote ,(pred symbolp)) func)
-	    (let (pred stringp) file)
-	    (let (or (pred stringp)
-		     (pred null))
-	      docstring)
-	    (let (pred symbolp) interactive)
-	    (let (pred symbolp) type))
+            (let (pred stringp) file)
+            (let (or (pred stringp)
+                     (pred null))
+              docstring)
+            (let (pred symbolp) interactive)
+            (let (pred symbolp) type))
        t)))
   (defmacro my/package-autoloads (package &optional file-override)
     "Generate autoloads for PACKAGE, but return a form of only `autoload' calls. This removes any code that may automatically execute when activating a package, and only makes the functions available so that they may be explicitly called by the user.
@@ -94,29 +94,29 @@ Optional argument FILE-OVERRIDE is a string to be passed as the FILE parameter t
     (when file-override
       (setq file-override (eval file-override lexical-binding)))
     (let* ((package-name (symbol-name package))
-	   (directory (concat my/straight-build-dir package-name))
-	   (autoload-file (expand-file-name (concat package-name "-autoloads.el")
-					    directory))
-	   (noninteractive t)
-	   (backup-inhibited t)
-	   (version-control 'never)
-	   (inhibit-message t)
-	   sexp
-	   autoloads)
+           (directory (concat my/straight-build-dir package-name))
+           (autoload-file (expand-file-name (concat package-name "-autoloads.el")
+                                            directory))
+           (noninteractive t)
+           (backup-inhibited t)
+           (version-control 'never)
+           (inhibit-message t)
+           sexp
+           autoloads)
       (make-directory-autoloads directory autoload-file)
       (with-current-buffer (find-file-noselect autoload-file)
-	(goto-char (point-min))
-	(prog1
-	    (condition-case nil
-		(while t
-		  (setq sexp (read (current-buffer)))
-		  (pcase sexp
-		    (`(autoload . ,(pred (apply #'my/package-autoloads--clean-p)))
-		     (when file-override
-		       (setf (nth 2 sexp) file-override))
-		     (push sexp autoloads))))
-	      (end-of-file (cons 'progn autoloads)))
-	  (kill-buffer))))))
+        (goto-char (point-min))
+        (prog1
+            (condition-case nil
+                (while t
+                  (setq sexp (read (current-buffer)))
+                  (pcase sexp
+                    (`(autoload . ,(pred (apply #'my/package-autoloads--clean-p)))
+                     (when file-override
+                       (setf (nth 2 sexp) file-override))
+                     (push sexp autoloads))))
+              (end-of-file (cons 'progn autoloads)))
+          (kill-buffer))))))
 
 ;;; Straight.el
 ;; TODO disable straight build and manually rebuild based on timestamps
@@ -124,7 +124,7 @@ Optional argument FILE-OVERRIDE is a string to be passed as the FILE parameter t
   ;;;; Constants
   ;;;;; Paths
   (defconst my/straight-dir (expand-file-name (file-name-as-directory "straight")
-					      user-emacs-directory))
+                                              user-emacs-directory))
 
   (defconst my/straight-build-dir (concat my/straight-dir (file-name-as-directory "build")))
 
@@ -154,7 +154,7 @@ Optional argument FILE-OVERRIDE is a string to be passed as the FILE parameter t
   ;;;; Bootstrap
   (defvar bootstrap-version)
   (let ((bootstrap-file (concat my/straight-dir "repos/straight.el/bootstrap.el"))
-	(bootstrap-version 5))
+        (bootstrap-version 5))
     (unless (file-exists-p bootstrap-file)
       (with-current-buffer
           (url-retrieve-synchronously
@@ -170,20 +170,20 @@ Optional argument FILE-OVERRIDE is a string to be passed as the FILE parameter t
 (eval-and-compile
   ;;;; Site lisp
   (defvar my/site-lisp (eval-when-compile
-			 (let (site-lisp)
-			   (dolist (path load-path)
-			     (when (string-match-p "site-lisp" path)
-			       (push path site-lisp)))
-			   (nreverse site-lisp))))
+                         (let (site-lisp)
+                           (dolist (path load-path)
+                             (when (string-match-p "site-lisp" path)
+                               (push path site-lisp)))
+                           (nreverse site-lisp))))
 
   (let ((straight-built (directory-files my/straight-build-dir
-					 :full-name
-					 "\\`[^.]")))
+                                         :full-name
+                                         "\\`[^.]")))
     ;;;; Load path
     ;; Pull site-lisp directories to the front of the load path:
     (setq load-path (append my/site-lisp
-			    straight-built
-			    load-path))
+                            straight-built
+                            load-path))
     ;;;; Info
     (setq Info-additional-directory-list straight-built)))
 
@@ -274,7 +274,7 @@ Optional argument FILE-OVERRIDE is a string to be passed as the FILE parameter t
   (when (boundp 'ns-use-srgb-colorspace)
     ;; Consistenly use Apple RGB across faces and XPM images, so use altered Solarized values intended for Apple RGB:
     (setq ns-use-srgb-colorspace nil
-	  solarized-broken-srgb t))
+          solarized-broken-srgb t))
 
   ;;;; Load
   (require '$-theme)
@@ -361,25 +361,25 @@ Optional argument FILE-OVERRIDE is a string to be passed as the FILE parameter t
   ;;;; Graphical display
   ;; xdisp
   (setq x-underline-at-descent-line t ; Lines up underline with `telephone-line' separators.
-	x-stretch-cursor t)
+        x-stretch-cursor t)
 
   ;;;; Command error function
   !(defun my/command-error-function (data context function)
      (message (when (not (eq (car data) 'quit))
-		(concat (propertize (concat context
-					    (when (and context
-						       (stringp context)
-						       (not (string-empty-p context)))
-					      " ")
-					    (error-message-string data))
-				    'face 'variable-pitch)
-			(when function
-			  (concat (propertize " ("
-					      'face 'variable-pitch)
-				  (propertize (symbol-name function)
-					      'face 'font-lock-function-name-face)
-				  (propertize ")"
-					      'face 'variable-pitch)))))))
+                (concat (propertize (concat context
+                                            (when (and context
+                                                       (stringp context)
+                                                       (not (string-empty-p context)))
+                                              " ")
+                                            (error-message-string data))
+                                    'face 'variable-pitch)
+                        (when function
+                          (concat (propertize " ("
+                                              'face 'variable-pitch)
+                                  (propertize (symbol-name function)
+                                              'face 'font-lock-function-name-face)
+                                  (propertize ")"
+                                              'face 'variable-pitch)))))))
   (setq command-error-function #'my/command-error-function)
 
   ;;;; No bell
@@ -416,8 +416,8 @@ Optional argument FILE-OVERRIDE is a string to be passed as the FILE parameter t
   !(defun my/prompt-before-killing-buffer ()
      ""
      (when (and buffer-file-name
-		(buffer-modified-p)
-		(yes-or-no-p (format "Save %s before killing buffer? " buffer-file-name)))
+                (buffer-modified-p)
+                (yes-or-no-p (format "Save %s before killing buffer? " buffer-file-name)))
        (save-buffer))
      t)
   (add-hook 'kill-buffer-query-functions #'my/prompt-before-killing-buffer))
@@ -435,10 +435,10 @@ Optional argument FILE-OVERRIDE is a string to be passed as the FILE parameter t
     ;; GNUStep:
     (setq ns-command-modifier 'control))
   (when (and (boundp 'mac-command-modifier)
-	     (boundp 'mac-pass-command-to-system))
+             (boundp 'mac-pass-command-to-system))
     ;; Mitsuharu Yamamoto’s macOS port:
     (setq mac-command-modifier 'control
-	  mac-pass-command-to-system nil))
+          mac-pass-command-to-system nil))
   ;;;;; Option key
   (when (boundp 'mac-option-modifier)
     (setq mac-option-modifier 'meta)))
@@ -462,9 +462,9 @@ Optional argument FILE-OVERRIDE is a string to be passed as the FILE parameter t
 
     ;;;;; Versions
     (setq version-control t
-	  kept-old-versions 1
-	  kept-new-versions 3
-	  delete-old-versions t)))
+          kept-old-versions 1
+          kept-new-versions 3
+          delete-old-versions t)))
 
 ;;; Mouse
 (p@ckage mouse
@@ -506,7 +506,7 @@ Optional argument FILE-OVERRIDE is a string to be passed as the FILE parameter t
   ~(require 'cus-edit)
 
   (setq $-file (concat user-emacs-directory "custom.el")
-	$-raised-buttons t))
+        $-raised-buttons t))
 
 ;;; Tool Bar
 (p@ckage tool-bar
@@ -531,11 +531,11 @@ Optional argument FILE-OVERRIDE is a string to be passed as the FILE parameter t
      "Disable Visual Line mode if the current major mode or any of its parents is blacklisted in `my/visual-line-ignore-modes'."
      (when $-mode
        (let ((mode major-mode))
-	 ;; Traverse up parent modes through the `derived-mode-parent' property.
-	 (while (and (not (when (memq mode my/$-ignore-modes)
-			    ($-mode -1)
-			    t))
-		     (setq mode (get mode 'derived-mode-parent)))))))
+         ;; Traverse up parent modes through the `derived-mode-parent' property.
+         (while (and (not (when (memq mode my/$-ignore-modes)
+                            ($-mode -1)
+                            t))
+                     (setq mode (get mode 'derived-mode-parent)))))))
   (add-hook '$-mode-hook #'my/$-ignore-modes-check)
 
   ;;;; Enable
@@ -573,9 +573,9 @@ Optional argument FILE-OVERRIDE is a string to be passed as the FILE parameter t
   ;;;;; Visual Line
   !(defun my/$-on-visual-line-mode ()
      (@$-prefix-mode (if (and visual-line-mode
-			      (not (bound-and-true-p org-indent-mode)))
-			 1
-		       -1)))
+                              (not (bound-and-true-p org-indent-mode)))
+                         1
+                       -1)))
   (add-hook 'visual-line-mode-hook #'my/$-on-visual-line-mode))
 
 ;;; Subword
@@ -593,7 +593,7 @@ Optional argument FILE-OVERRIDE is a string to be passed as the FILE parameter t
   ;;;; Bugfixes
   ;; FIXME: Bug in aggressive-indent-mode. Change defvar-local to defvar aggressive-indent--idle-timer in aggressive-indent.el upstream
   (add-hook 'org-babel-post-tangle-hook (lambda ()
-					  (cancel-function-timers 'aggressive-indent--indent-if-changed)))
+                                          (cancel-function-timers 'aggressive-indent--indent-if-changed)))
 
   ;;;; Disable message
   !(defun my/$-region-function (start end &optional column)
@@ -633,10 +633,10 @@ Optional argument FILE-OVERRIDE is a string to be passed as the FILE parameter t
     ;; FIXME upstream this in function itself, it is a bug to not run `TeX-after-compilation-finished-functions' for TeX
     !(defun my/TeX-run-after-compilation-finished-functions (_process _name)
        (unless (TeX-error-report-has-errors-p)
-	 (run-hook-with-args 'TeX-after-compilation-finished-functions
+         (run-hook-with-args 'TeX-after-compilation-finished-functions
                              (with-current-buffer TeX-command-buffer
                                (expand-file-name
-				(TeX-active-master (TeX-output-extension)))))))
+                                (TeX-active-master (TeX-output-extension)))))))
     (advice-add @'TeX-TeX-sentinel :after #'my/TeX-run-after-compilation-finished-functions)))
 
 ;;; Auto Dim Other Buffers
@@ -735,7 +735,7 @@ Optional argument FILE-OVERRIDE is a string to be passed as the FILE parameter t
 
   ;;;; Character
   (setq $-method 'character
-	$-character ?|)
+        $-character ?|)
 
   ;;;; Responsive
   (setq $-responsive 'top)
@@ -781,9 +781,9 @@ Optional argument FILE-OVERRIDE is a string to be passed as the FILE parameter t
   ;;;; Time format
   !(defconst my/$-time-regexp "[\s[:digit:]]\\{4\\} [[:alpha:]]\\{3\\} [\s[:digit:]]\\{2\\} [\s[:digit:]]\\{2\\}:[[:digit:]]\\{2\\}")
   (setq $-format-time-list '("     %b %_d %k:%M"
-			     "%Y %b %_d %k:%M")
-	$-use-localized-time-format t
-	directory-listing-before-filename-regexp (format "\\(?7:%s\\) " my/$-time-regexp))
+                             "%Y %b %_d %k:%M")
+        $-use-localized-time-format t
+        directory-listing-before-filename-regexp (format "\\(?7:%s\\) " my/$-time-regexp))
   (defvar dired-hacks-datetime-regexp)
   !(setq dired-hacks-datetime-regexp my/ls-lisp-time-regexp))
 
@@ -812,8 +812,8 @@ Optional argument FILE-OVERRIDE is a string to be passed as the FILE parameter t
 
     ;;;;; Line prefix
     (setq $-line-prefix (propertize "  ·"
-				    'face 'highlight-indent-guides-character-face)
-	  $-line-prefix-face nil)
+                                    'face 'highlight-indent-guides-character-face)
+          $-line-prefix-face nil)
 
     ;;;;; Use backgrounds
     (setq $-use-backgrounds nil)
@@ -831,28 +831,28 @@ Optional argument FILE-OVERRIDE is a string to be passed as the FILE parameter t
     ;;;;; Rules
     ;;;;;; Generated
     ($-define generated nil ("elc"
-			     "aux"
-			     "o"
-			     "class")
-	      :append)
+                             "aux"
+                             "o"
+                             "class")
+              :append)
     ;;;;;; Prose
     ~(defconst my/$-prose-files (concat "?:\\(?1:[\sA-Z]+\\)\\|\\(?1:.*\\)\\."
-					(regexp-opt '("txt"
-						      "text"
-						      "tex"
-						      "latex"
-						      "org"
-						      "md"))))
+                                        (regexp-opt '("txt"
+                                                      "text"
+                                                      "tex"
+                                                      "latex"
+                                                      "org"
+                                                      "md"))))
     ($-define prose nil my/$-prose-files
-	      :append)
+              :append)
     ;;;;;; Cache
     ($-define cache nil "#.*#\\|\\.DS_Store\\|Thumbs\\.db\\|.*\\(?:~\\|\\.bak\\)"
-	      :append)
+              :append)
     ;;;;;; Dotfile
     ($-define dotfile nil "\\..*" :append)
     ;;;;;; Executable
     ($-define-chmod executable nil "-[-rwx]+x[-rwx]*"
-		    :append))
+                    :append))
 
   ;;;; Collapse
   (p@ckage $-collapse
@@ -873,9 +873,9 @@ Optional argument FILE-OVERRIDE is a string to be passed as the FILE parameter t
 
     ;;;;; Ignored extensions
     (setq $-ignored-extensions '("mkv"
-				 "iso"
-				 "mp4"
-				 "elc"))
+                                 "iso"
+                                 "mp4"
+                                 "elc"))
 
     ;;;;; Keybindings
     (keymap-set $-mode-map "p" @'$-prev-file)
@@ -915,10 +915,10 @@ Optional argument FILE-OVERRIDE is a string to be passed as the FILE parameter t
     ;;;;; Visual commands
     ;; Commands that need to be run in a ANSI terminal emulator:
     (setq eshell-visual-commands '("aptitude"
-				   "htop"
-				   "less"
-				   "more"
-				   "top")))
+                                   "htop"
+                                   "less"
+                                   "more"
+                                   "top")))
 
   ;;;; History
   (p@ckage em-hist
@@ -970,11 +970,11 @@ Optional argument FILE-OVERRIDE is a string to be passed as the FILE parameter t
     (define-key exwm-mode-map [remap self-insert-command] #'my/$-fake-last-key)
     !(defmacro my/$-fake-key (&rest events)
        `(lambda ()
-	  ,(format-message "Equivalent to pressing `%s'." (key-description events))
-	  (interactive)
-	  ,@(mapcar (lambda (event)
-		      `($--fake-key ',event))
-		    events)))
+          ,(format-message "Equivalent to pressing `%s'." (key-description events))
+          (interactive)
+          ,@(mapcar (lambda (event)
+                      `($--fake-key ',event))
+                    events)))
     (define-key exwm-mode-map [remap delete-backward-char]                     (my/$-fake-key backspace))
     (define-key exwm-mode-map [remap xah-delete-backward-char-or-bracket-text] (my/$-fake-key backspace))
 
@@ -1062,8 +1062,8 @@ Optional argument FILE-OVERRIDE is a string to be passed as the FILE parameter t
      "Set buffer name to window title."
      (rename-buffer $-title t))
   (add-hook '$-update-title-hook #'my/$-buffer-name-window-title
-	    t ;; Append, so it runs after other EXWM hooks.
-	    )
+            t ;; Append, so it runs after other EXWM hooks.
+            )
 
   ;; TODO Plug and play new screens
   ;;;; RandR
@@ -1072,32 +1072,32 @@ Optional argument FILE-OVERRIDE is a string to be passed as the FILE parameter t
 
     !(defun my/$-resolutions ()
        (with-temp-buffer
-	 (call-process "xrandr" nil (current-buffer))
-	 (goto-char (point-min))
-	 (let (resolutions)
-	   (while (re-search-forward (rx line-start
-					 (= 3 ?\s)
-					 (group-n 1 (1+ digit)) ?x (group-n 2 (1+ digit))
-					 (1+ space)
-					 (group-n 3 (1+ digit) ?. (1+ digit))
-					 (or (group-n 4 ?*)
-					     ?\s)
-					 (or (group-n 5 ?+)
-					     ?\s)
-					 (group-n 6 (0+ not-newline))
-					 line-end)
-				     nil
-				     t)
-	     (message "AAA")
-	     (setq resolutions (cons `((,(string-to-number (match-string-no-properties 1))
-					. ,(string-to-number (match-string-no-properties 2)))
-				       ,(string-to-number (match-string-no-properties 3))
-				       ,@(when (match-string-no-properties 4) '(*))
-				       ,@(when (match-string-no-properties 5) '(+))
-				       ,@(mapcar #'string-to-number
-						 (split-string (match-string-no-properties 6))))
-				     resolutions)))
-	   (nreverse resolutions))))
+         (call-process "xrandr" nil (current-buffer))
+         (goto-char (point-min))
+         (let (resolutions)
+           (while (re-search-forward (rx line-start
+                                         (= 3 ?\s)
+                                         (group-n 1 (1+ digit)) ?x (group-n 2 (1+ digit))
+                                         (1+ space)
+                                         (group-n 3 (1+ digit) ?. (1+ digit))
+                                         (or (group-n 4 ?*)
+                                             ?\s)
+                                         (or (group-n 5 ?+)
+                                             ?\s)
+                                         (group-n 6 (0+ not-newline))
+                                         line-end)
+                                     nil
+                                     t)
+             (message "AAA")
+             (setq resolutions (cons `((,(string-to-number (match-string-no-properties 1))
+                                        . ,(string-to-number (match-string-no-properties 2)))
+                                       ,(string-to-number (match-string-no-properties 3))
+                                       ,@(when (match-string-no-properties 4) '(*))
+                                       ,@(when (match-string-no-properties 5) '(+))
+                                       ,@(mapcar #'string-to-number
+                                                 (split-string (match-string-no-properties 6))))
+                                     resolutions)))
+           (nreverse resolutions))))
 
     (add-hook 'after-init-hook #'$-enable :append))
 
@@ -1119,10 +1119,10 @@ With prefix argument REBOOT, calls `sudo reboot' instead.
 See also Info node `(eshell)Top'."
      (interactive "P")
      (let* ((command (if reboot "reboot" "shutdown"))
-	    ;; Instead of confirm function, use function that confirms then shuts down before Emacs dies:
-	    (confirm-kill-emacs (lambda (_prompt)
-				  (if (yes-or-no-p (concat "Really " command "? "))
-				      (eshell-command (concat "sudo " command))))))
+            ;; Instead of confirm function, use function that confirms then shuts down before Emacs dies:
+            (confirm-kill-emacs (lambda (_prompt)
+                                  (if (yes-or-no-p (concat "Really " command "? "))
+                                      (eshell-command (concat "sudo " command))))))
        (save-buffers-kill-emacs)))
   (keymap-global-set "<remap> <save-buffers-kill-terminal>" #'my/$-shutdown)
 
@@ -1134,11 +1134,11 @@ See also Info node `(eshell)Top'."
   ~^
 
   (setq $-program-name (cond ((executable-find "aspell")
-			      "aspell")
-			     ((executable-find "hunspell")
-			      "hunspell")
-			     ((executable-find "ispell")
-			      "ispell"))))
+                              "aspell")
+                             ((executable-find "hunspell")
+                              "hunspell")
+                             ((executable-find "ispell")
+                              "ispell"))))
 
 ;;; Flyspell
 (p@ckage flyspell
@@ -1200,17 +1200,17 @@ See also Info node `(eshell)Top'."
 
   ;;;; Format
   (setq $-format '("%e"
-		   ;;;;; Time
-		   (:propertize (:eval (format-time-string "%T"))
-				face italic)
-		   " "
-		   ;;;;; Date
-		   (:eval (format-time-string "%A %+4Y/%m/%d %Z"))
-		   ;;;;; Battery
-		   (:eval `((:propertize " "
-					 display (space :align-to (- right ,(length battery-mode-line-string) 1)))
-			    (:propertize battery-mode-line-string
-					 face fixed-pitch)))))
+                   ;;;;; Time
+                   (:propertize (:eval (format-time-string "%T"))
+                                face italic)
+                   " "
+                   ;;;;; Date
+                   (:eval (format-time-string "%A %+4Y/%m/%d %Z"))
+                   ;;;;; Battery
+                   (:eval `((:propertize " "
+                                         display (space :align-to (- right ,(length battery-mode-line-string) 1)))
+                            (:propertize battery-mode-line-string
+                                         face fixed-pitch)))))
 
   ;;;; Enable
   ($-mode))
@@ -1285,7 +1285,7 @@ See also Info node `(eshell)Top'."
      (interactive)
      (let ((current (ivy-state-current ivy-last)))
        (unless (member current ivy-marked-candidates)
-	 (push current ivy-marked-candidates)))
+         (push current ivy-marked-candidates)))
      (ivy-next-line))
   (bind-key "C->" #'my/$-mark $-minibuffer-map)
   ;;;;; Unmark
@@ -1307,19 +1307,19 @@ See also Info node `(eshell)Top'."
   !(defun my/$-toggle-marks ()
      (interactive)
      (let ((new-candidates (cons nil ivy-marked-candidates))
-	   current-candidates
-	   found)
+           current-candidates
+           found)
        (dolist (candidate ivy--old-cands)
-	 (setq current-candidates new-candidates
-	       found nil)
-	 (while (and (cdr current-candidates)
-		     (not found))
-	   (when (equal (cadr current-candidates) candidate)
-	     (setcdr current-candidates (cddr current-candidates))
-	     (setq found t))
-	   (setq current-candidates (cdr current-candidates)))
-	 (unless found
-	   (push candidate (cdr new-candidates))))
+         (setq current-candidates new-candidates
+               found nil)
+         (while (and (cdr current-candidates)
+                     (not found))
+           (when (equal (cadr current-candidates) candidate)
+             (setcdr current-candidates (cddr current-candidates))
+             (setq found t))
+           (setq current-candidates (cdr current-candidates)))
+         (unless found
+           (push candidate (cdr new-candidates))))
        (setq ivy-marked-candidates (cdr new-candidates))))
   (bind-key "C-M->" #'my/$-toggle-marks $-minibuffer-map)
 
@@ -1379,8 +1379,8 @@ See also Info node `(eshell)Top'."
 (p@ckage isearch
   ;;;; Count matches
   (setq $-lazy-count t
-	$-regexp-lax-whitespace t
-	search-whitespace-regexp (rx (minimal-match (0+ not-newline))))
+        $-regexp-lax-whitespace t
+        search-whitespace-regexp (rx (minimal-match (0+ not-newline))))
 
   ;;;; Keybindings
   ;;;;; Regular expressions
@@ -1470,9 +1470,9 @@ See also Info node `(eshell)Top'."
 ;;; Org
 (p@ckage org
   ~(straight-use-package '($ :type git
-			     :repo "https://code.orgmode.org/bzg/org-mode.git"
-			     :local-repo "org"
-			     :files (:defaults "contrib/lisp/*.el")))
+                             :repo "https://code.orgmode.org/bzg/org-mode.git"
+                             :local-repo "org"
+                             :files (:defaults "contrib/lisp/*.el")))
   ~(my/package-autoloads $)
   ~^
 
@@ -1486,14 +1486,14 @@ See also Info node `(eshell)Top'."
 
       ;;;; Styles
       !((defvar $-styles-dirs)
-	(setq $-styles-dirs ~(list (expand-file-name
-				    (apply #'concat
-					   (mapcar #'file-name-as-directory
-						   '("straight"
-						     "repos"
-						     "org-vcard"
-						     "styles")))
-				    user-emacs-directory))))
+        (setq $-styles-dirs ~(list (expand-file-name
+                                    (apply #'concat
+                                           (mapcar #'file-name-as-directory
+                                                   '("straight"
+                                                     "repos"
+                                                     "org-vcard"
+                                                     "styles")))
+                                    user-emacs-directory))))
 
       ~^
 
@@ -1508,39 +1508,39 @@ See also Info node `(eshell)Top'."
     "")
   (setq org-agenda-files (list my/org-todo-file))
   (setq org-todo-keywords '((sequence
-			     "TODO(t)"
-			     "BLOCKED(b)"
-			     "|"
-			     "DONE(d)")))
+                             "TODO(t)"
+                             "BLOCKED(b)"
+                             "|"
+                             "DONE(d)")))
 
   ;;;; Capture
   (p@ckage $-capture
     ~^
     ;;;;; Templates
     (setq $-templates '(("a"
-			 "Append"
-			 entry
-			 (clock)
-			 "* TODO %?
+                         "Append"
+                         entry
+                         (clock)
+                         "* TODO %?
 %a")
-			("p"
-			 "Appointment"
-			 entry
-			 (file+function my/org-todo-file
-					org-goto)
-			 "* APPOINTMENT %?
+                        ("p"
+                         "Appointment"
+                         entry
+                         (file+function my/org-todo-file
+                                        org-goto)
+                         "* APPOINTMENT %?
 %a")
-			("c"
-			 "Contact"
-			 entry
-			 (file my/org-contacts-file)
-			 "* %?")
-			("t"
-			 "Todo"
-			 entry
-			 (file+fuction my/org-todo-file
-				       org-goto)
-			 "* TODO %?
+                        ("c"
+                         "Contact"
+                         entry
+                         (file my/org-contacts-file)
+                         "* %?")
+                        ("t"
+                         "Todo"
+                         entry
+                         (file+fuction my/org-todo-file
+                                       org-goto)
+                         "* TODO %?
 %a"))))
 
   ;;;; Indent
@@ -1596,7 +1596,7 @@ See also Info node `(eshell)Top'."
 
   ;;;; Pretty
   (setq $-pretty-entities t
-	$-hide-emphasis-markers t)
+        $-hide-emphasis-markers t)
 
   ;;;; Entities
   (p@ckage $-entities
@@ -1604,25 +1604,25 @@ See also Info node `(eshell)Top'."
     ~(require 'tex-mode)
 
     (setq $-user ~(append $
-			  '("* TeX")
-			  (mapcar (lambda (entry)
-				    (let* ((name (replace-regexp-in-string (rx ?\{ (group-n 1 (1+ alpha)) ?\}
-									       string-end)
-									   (rx (backref 1))
-									   (car entry)
-									   :fixedcase
-									   nil
-									   nil
-									   1))
-					   (fallback (concat "[" name "]")))
-				      (list name
-					    (car entry) ; LaTeX replacement.
-					    (string-prefix-p "text" name) ; LaTeX mathp.
-					    fallback ; HTML replacement
-					    fallback ; ASCII replacement
-					    fallback ; Latin1 replacement
-					    (string (cdr entry)))))
-				  tex--prettify-symbols-alist))))
+                          '("* TeX")
+                          (mapcar (lambda (entry)
+                                    (let* ((name (replace-regexp-in-string (rx ?\{ (group-n 1 (1+ alpha)) ?\}
+                                                                               string-end)
+                                                                           (rx (backref 1))
+                                                                           (car entry)
+                                                                           :fixedcase
+                                                                           nil
+                                                                           nil
+                                                                           1))
+                                           (fallback (concat "[" name "]")))
+                                      (list name
+                                            (car entry) ; LaTeX replacement.
+                                            (string-prefix-p "text" name) ; LaTeX mathp.
+                                            fallback ; HTML replacement
+                                            fallback ; ASCII replacement
+                                            fallback ; Latin1 replacement
+                                            (string (cdr entry)))))
+                                  tex--prettify-symbols-alist))))
 
   ;;;; Appear
   (p@ckage $-appear
@@ -1631,7 +1631,7 @@ See also Info node `(eshell)Top'."
     ~^
 
     (setq org-hide-emphasis-markers t
-	  $-autolinks t)
+          $-autolinks t)
 
     (add-hook 'org-mode-hook @'$-mode))
 
@@ -1689,9 +1689,9 @@ See also Info node `(eshell)Top'."
   !(defun my/show-paren-data-function (oldfun &rest args)
      ""
      (if (looking-at-p (rx (syntax close-parenthesis)))
-	 (save-excursion
-	   (forward-char 1)
-	   (apply oldfun args))
+         (save-excursion
+           (forward-char 1)
+           (apply oldfun args))
        (apply oldfun args)))
   (add-function :around show-paren-data-function #'my/show-paren-data-function))
 
@@ -1707,7 +1707,7 @@ See also Info node `(eshell)Top'."
   ;;;;; Org source blocks
   !(defun my/org-in-src-block-p (&rest _ignored)
      (when (and (derived-mode-p 'org-mode)
-		(org-in-src-block-p))
+                (org-in-src-block-p))
        (self-insert-command 1)
        t))
   _(advice-add 'smart-quotes-insert-single :before-until #'my/org-in-src-block-p)
@@ -1760,18 +1760,18 @@ See also Info node `(eshell)Top'."
      (forward-line 2)
      (let (buffer-read-only)
        (with-silent-modifications
-	 (delete-region (point-min) (point)))))
+         (delete-region (point-min) (point)))))
   (add-hook '$-mode-hook #'my/$-header-line)
 
   ;;;; Fontify headings
   !(defun my/$-fontify-headings ()
      (goto-char (point-min))
      (while (re-search-forward (rx line-start
-				   (? (= 3 ?\s))
-				   (group-n 1
-				     (any (?A . ?Z))
-				     (0+ not-newline)))
-			       nil t)
+                                   (? (= 3 ?\s))
+                                   (group-n 1
+                                     (any (?A . ?Z))
+                                     (0+ not-newline)))
+                               nil t)
        (@$-set-face (match-beginning 1) (match-end 1) 'heading-1)))
   (add-hook '$-post-format-hook #'my/$-fontify-headings)
 
@@ -1791,13 +1791,13 @@ See also Info node `(eshell)Top'."
 
   ;;;; Box drawing
   (setq cfw:fchar-junction         ?┼
-	cfw:fchar-vertical-line    ?│
-	cfw:fchar-horizontal-line  ?─
-	cfw:fchar-left-junction    ?├
-	cfw:fchar-right-junction   ?┤
-	cfw:fchar-top-junction     ?┬
-	cfw:fchar-top-left-corner  ?╭
-	cfw:fchar-top-right-corner ?╮)
+        cfw:fchar-vertical-line    ?│
+        cfw:fchar-horizontal-line  ?─
+        cfw:fchar-left-junction    ?├
+        cfw:fchar-right-junction   ?┤
+        cfw:fchar-top-junction     ?┬
+        cfw:fchar-top-left-corner  ?╭
+        cfw:fchar-top-right-corner ?╮)
 
   (bind-key "C-c c C-m" @'cfw:open-calendar-buffer))
 
@@ -1812,28 +1812,28 @@ See also Info node `(eshell)Top'."
     ~^
 
     (setq $-border-style [?\s
-			  ?\s
-			  ?\s
-			  ?│
-			  ?\s
-			  ?╰
-			  ?─
-			  ?\s]
-	  $-black-square-char ?█
-	  $-white-square-char ?\s
-	  $-spacing 0
-	  $-piece-chars '((?K . ?♔)
-			  (?Q . ?♕)
-			  (?R . ?♖)
-			  (?B . ?♗)
-			  (?N . ?♘)
-			  (?P . ?♙)
-			  (?k . ?♚)
-			  (?q . ?♛)
-			  (?r . ?♜)
-			  (?b . ?♝)
-			  (?n . ?♞)
-			  (?p . ?♟)))))
+                          ?\s
+                          ?\s
+                          ?│
+                          ?\s
+                          ?╰
+                          ?─
+                          ?\s]
+          $-black-square-char ?█
+          $-white-square-char ?\s
+          $-spacing 0
+          $-piece-chars '((?K . ?♔)
+                          (?Q . ?♕)
+                          (?R . ?♖)
+                          (?B . ?♗)
+                          (?N . ?♘)
+                          (?P . ?♙)
+                          (?k . ?♚)
+                          (?q . ?♛)
+                          (?r . ?♜)
+                          (?b . ?♝)
+                          (?n . ?♞)
+                          (?p . ?♟)))))
 
 ;;; Fontfile
 (p@ckage fontfile
@@ -1854,8 +1854,8 @@ See also Info node `(eshell)Top'."
 
     ;;;;; Init file
     (setq gnus-init-file (expand-file-name (concat (file-name-as-directory "gnus")
-						   "gnus.el")
-					   user-emacs-directory)))
+                                                   "gnus.el")
+                                           user-emacs-directory)))
 
   ;;;; Select methods
   (setq $-select-method '(nnnil "")))
@@ -1881,9 +1881,9 @@ See also Info node `(eshell)Top'."
     !(defun my/$-beginning-of-line-or-section ()
        (interactive)
        (if (or (= (point) (line-beginning-position))
-	       (eq last-command this-command))
-	   (@magit-section-backward)
-	 (xah-beginning-of-line-or-block)))
+               (eq last-command this-command))
+           (@magit-section-backward)
+         (xah-beginning-of-line-or-block)))
     (with-eval-after-load 'magit
       (bind-key [remap xah-beginning-of-line-or-block] #'my/$-beginning-of-line-or-section magit-mode-map))
 
@@ -1891,9 +1891,9 @@ See also Info node `(eshell)Top'."
     !(defun my/$-end-of-line-or-section ()
        (interactive)
        (if (or (= (point) (line-end-position))
-	       (eq last-command this-command))
-	   (@magit-section-forward)
-	 (xah-end-of-line-or-block)))
+               (eq last-command this-command))
+           (@magit-section-forward)
+         (xah-end-of-line-or-block)))
     (with-eval-after-load 'magit
       (bind-key [remap xah-end-of-line-or-block] #'my/$-end-of-line-or-section magit-mode-map)))
 
@@ -1939,10 +1939,10 @@ See also Info node `(eshell)Top'."
 
   ;;;; Auto mode
   (add-to-list 'auto-mode-alist (cons (rx ?.
-					  (or "md"
-					      "jmd")
-					  string-end)
-				      @'$))
+                                          (or "md"
+                                              "jmd")
+                                          string-end)
+                                      @'$))
 
   ;;;; Code lang modes
   ;;;;; Julia
@@ -2002,18 +2002,18 @@ See also Info node `(eshell)Top'."
 
   ;;;; Display
   (setq whitespace-display-mappings '((space-mark ?\s
-						  [?·]
-						  [?.])
-				      (space-mark ? 
-						  [?¤]
-						  [?_])
-				      (newline-mark ?\C-j
-						    [?¶ ?\C-j]
-						    [?$ ?\C-j])
-				      (tab-mark ?\C-i
-						[?\s ?→ ?\C-i]
-						[?\s ?» ?\C-i]
-						[?\\    ?\C-i]))))
+                                                  [?·]
+                                                  [?.])
+                                      (space-mark ? 
+                                                  [?¤]
+                                                  [?_])
+                                      (newline-mark ?\C-j
+                                                    [?¶ ?\C-j]
+                                                    [?$ ?\C-j])
+                                      (tab-mark ?\C-i
+                                                [?\s ?→ ?\C-i]
+                                                [?\s ?» ?\C-i]
+                                                [?\\    ?\C-i]))))
 
 ;;; Outline Minor Faces
 (p@ckage outline-minor-faces
@@ -2057,35 +2057,35 @@ See also Info node `(eshell)Top'."
   !(defun my/$-outline-level ()
      (let ((match (match-string-no-properties 1)))
        (cond (match
-	      (length match))
-	     ((looking-at (rx ?\s (not blank)))
-	      2)
-	     (t
-	      1))))
+              (length match))
+             ((looking-at (rx ?\s (not blank)))
+              2)
+             (t
+              1))))
   !(defun my/$-set-outline ()
      (rx-let ((indent (0+ (any ?\s ?\t)))
-	      (levels (and
-		       ?\;
-		       (group-n 3
-			 ?\;
-			 (group-n 1
-			   (1+ ?\;)))
-		       (not ?#))))
+              (levels (and
+                       ?\;
+                       (group-n 3
+                         ?\;
+                         (group-n 1
+                           (1+ ?\;)))
+                       (not ?#))))
        (setq-local outline-regexp (rx indent levels))
        (setq-local outline-minor-faces-regexp (rx line-start
-						  indent
-						  (group-n 2
-						    levels
-						    (0+ not-newline)
-						    (? ?\n)))))
+                                                  indent
+                                                  (group-n 2
+                                                    levels
+                                                    (0+ not-newline)
+                                                    (? ?\n)))))
      (setq-local outline-minor-faces--font-lock-keywords
-		 `((eval . (list (outline-minor-faces--syntactic-matcher outline-minor-faces-regexp)
+                 `((eval . (list (outline-minor-faces--syntactic-matcher outline-minor-faces-regexp)
                                  '(2 `(face ,(outline-minor-faces--get-face)) t)
                                  '(3 '( face default
                                         ;; Not using `invisible' so deleting one character does not delete the entire invisble range:
-					display "")
-				     t)))
-		   (,(rx "-*-" (0+ not-newline) "-*-") 0 'outline-minor-file-local-prop-line t)))
+                                        display "")
+                                     t)))
+                   (,(rx "-*-" (0+ not-newline) "-*-") 0 'outline-minor-file-local-prop-line t)))
      (setq-local outline-level #'my/$-outline-level)
      (unless (memq 'display font-lock-extra-managed-props)
        (push 'display font-lock-extra-managed-props)))
@@ -2093,12 +2093,17 @@ See also Info node `(eshell)Top'."
   (add-hook '$-mode-hook #'my/$-set-outline)
   (add-hook '$-mode-hook #'outline-minor-mode :append)
 
+  ;;;; Indentation
+  !(defun my/$-indent-spaces ()
+     (indent-tabs-mode -1))
+  (add-hook '$-mode-hook #'my/$-indent-spaces)
+
   ;;;; Compile
   ;;;;; Command
   !(defun my/$-set-compile-command ()
      (setq-local compile-command (format "\"%s\" -Q --batch -f batch-byte-compile %s "
-					 (expand-file-name invocation-name invocation-directory)
-					 buffer-file-name)))
+                                         (expand-file-name invocation-name invocation-directory)
+                                         buffer-file-name)))
   (add-hook '$-mode-hook #'my/$-set-compile-command)
 
   ;;;; Completion
@@ -2156,10 +2161,10 @@ See also Info node `(eshell)Top'."
     '(top :periodic))
   !(defun my/$-fringe-bmp (type _pos)
      (if (eq type 'delete)
-	 'my/$-bmp-delete
+         'my/$-bmp-delete
        'my/$-bmp-middle))
   (setq $-fringe-bmp-function #'my/$-fringe-bmp
-	$-draw-borders nil)
+        $-draw-borders nil)
 
   ;;;; Magit
   (add-hook 'magit-post-refresh-hook #'$-magit-post-refresh))
@@ -2194,17 +2199,17 @@ See also Info node `(eshell)Top'."
   (p@ckage apt-sources
     ;;;;; Auto mode
     (add-to-list 'auto-mode-alist (cons (rx "sources.list"
-					    (? ".d/"
-					       (0+ not-newline)
-					       ".list")
-					    string-end)
-					@'apt-sources-mode))))
+                                            (? ".d/"
+                                               (0+ not-newline)
+                                               ".list")
+                                            string-end)
+                                        @'apt-sources-mode))))
 
 ;;; Guix
 (p@ckage guix
   ;;;; Build
   ~(straight-use-package '($ :type git :host github :repo "alezost/guix.el"
-			     :fork (:host github :repo "ROCKTAKEY/guix.el" :branch "remove-geiser-company--setup")))
+                             :fork (:host github :repo "ROCKTAKEY/guix.el" :branch "remove-geiser-company--setup")))
 
   ;;;; Autoloads
   (my/package-autoloads $))
@@ -2247,9 +2252,9 @@ See also Info node `(eshell)Top'."
     ~^
 
     (setq $-confirmation t
-	  $-save-interval nil
-	  ;; Reject all cookies for now:
-	  $-untrusted-urls '(".*"))))
+          $-save-interval nil
+          ;; Reject all cookies for now:
+          $-untrusted-urls '(".*"))))
 
 ;;; SHR
 (p@ckage shr
@@ -2263,118 +2268,118 @@ See also Info node `(eshell)Top'."
   ;; Patch the following functions to avoid placing images on their own line when not needed:
   _(defun shr-insert (text)
      (when (and (not (bolp))
-		(get-text-property (1- (point)) 'image-url))
+                (get-text-property (1- (point)) 'image-url))
        (insert " "))
      (cond
       ((eq shr-folding-mode 'none)
        (let ((start (point)))
-	 (insert text)
-	 (save-restriction
-	   (narrow-to-region start (point))
+         (insert text)
+         (save-restriction
+           (narrow-to-region start (point))
            (shr--translate-insertion-chars)
-	   (goto-char (point-max)))))
+           (goto-char (point-max)))))
       (t
        (let ((font-start (point)))
-	 (when (and (string-match-p "\\`[ \t\n\r]" text)
-		    (not (bolp))
-		    (not (eq (char-after (1- (point))) ? )))
-	   (insert " "))
-	 (let ((start (point))
-	       (bolp (bolp)))
-	   (insert text)
-	   (save-restriction
-	     (narrow-to-region start (point))
-	     (goto-char start)
-	     (when (looking-at "[ \t\n\r]+")
-	       (replace-match "" t t))
-	     (while (re-search-forward "[\t\n\r]+" nil t)
-	       (replace-match " " t t))
-	     (goto-char start)
+         (when (and (string-match-p "\\`[ \t\n\r]" text)
+                    (not (bolp))
+                    (not (eq (char-after (1- (point))) ? )))
+           (insert " "))
+         (let ((start (point))
+               (bolp (bolp)))
+           (insert text)
+           (save-restriction
+             (narrow-to-region start (point))
+             (goto-char start)
+             (when (looking-at "[ \t\n\r]+")
+               (replace-match "" t t))
+             (while (re-search-forward "[\t\n\r]+" nil t)
+               (replace-match " " t t))
+             (goto-char start)
              (while (re-search-forward "  +" nil t)
-	       (replace-match " " t t))
+               (replace-match " " t t))
              (shr--translate-insertion-chars)
-	     (goto-char (point-max)))
-	   ;; We may have removed everything we inserted if it was just
-	   ;; spaces.
-	   (unless (= font-start (point))
-	     ;; Mark all lines that should possibly be folded afterwards.
-	     (when bolp
-	       (shr-mark-fill start))
-	     (when shr-use-fonts
-	       (put-text-property font-start (point)
-				  'face
-				  (or shr-current-font 'shr-text)))))))))
+             (goto-char (point-max)))
+           ;; We may have removed everything we inserted if it was just
+           ;; spaces.
+           (unless (= font-start (point))
+             ;; Mark all lines that should possibly be folded afterwards.
+             (when bolp
+               (shr-mark-fill start))
+             (when shr-use-fonts
+               (put-text-property font-start (point)
+                                  'face
+                                  (or shr-current-font 'shr-text)))))))))
   _(defun shr-tag-img (dom &optional url)
      (when (or url
-	       (and dom
-		    (or (> (length (dom-attr dom 'src)) 0)
-			(> (length (dom-attr dom 'srcset)) 0))))
+               (and dom
+                    (or (> (length (dom-attr dom 'src)) 0)
+                        (> (length (dom-attr dom 'srcset)) 0))))
        (let ((alt (dom-attr dom 'alt))
              (width (shr-string-number (dom-attr dom 'width)))
              (height (shr-string-number (dom-attr dom 'height)))
-	     (url (shr-expand-url (or url (shr--preferred-image dom)))))
-	 (let ((start (point-marker)))
-	   (when (zerop (length alt))
-	     (setq alt "*"))
-	   (cond
+             (url (shr-expand-url (or url (shr--preferred-image dom)))))
+         (let ((start (point-marker)))
+           (when (zerop (length alt))
+             (setq alt "*"))
+           (cond
             ((null url)
              ;; After further expansion, there turned out to be no valid
              ;; src in the img after all.
              )
-	    ((or (member (dom-attr dom 'height) '("0" "1"))
-		 (member (dom-attr dom 'width) '("0" "1")))
-	     ;; Ignore zero-sized or single-pixel images.
-	     )
-	    ((and (not shr-inhibit-images)
-		  (string-match "\\`data:" url))
-	     (let ((image (shr-image-from-data (substring url (match-end 0)))))
-	       (if image
-		   (funcall shr-put-image-function image alt
+            ((or (member (dom-attr dom 'height) '("0" "1"))
+                 (member (dom-attr dom 'width) '("0" "1")))
+             ;; Ignore zero-sized or single-pixel images.
+             )
+            ((and (not shr-inhibit-images)
+                  (string-match "\\`data:" url))
+             (let ((image (shr-image-from-data (substring url (match-end 0)))))
+               (if image
+                   (funcall shr-put-image-function image alt
                             (list :width width :height height))
-		 (insert alt))))
-	    ((and (not shr-inhibit-images)
-		  (string-match "\\`cid:" url))
-	     (let ((url (substring url (match-end 0)))
-		   image)
-	       (if (or (not shr-content-function)
-		       (not (setq image (funcall shr-content-function url))))
-		   (insert alt)
-		 (funcall shr-put-image-function image alt
-			  (list :width width :height height)))))
-	    ((or shr-inhibit-images
-		 (shr-image-blocked-p url))
-	     (setq shr-start (point))
+                 (insert alt))))
+            ((and (not shr-inhibit-images)
+                  (string-match "\\`cid:" url))
+             (let ((url (substring url (match-end 0)))
+                   image)
+               (if (or (not shr-content-function)
+                       (not (setq image (funcall shr-content-function url))))
+                   (insert alt)
+                 (funcall shr-put-image-function image alt
+                          (list :width width :height height)))))
+            ((or shr-inhibit-images
+                 (shr-image-blocked-p url))
+             (setq shr-start (point))
              (shr-insert alt))
-	    ((and (not shr-ignore-cache)
-		  (url-is-cached url))
-	     (funcall shr-put-image-function (shr-get-image-data url) alt
+            ((and (not shr-ignore-cache)
+                  (url-is-cached url))
+             (funcall shr-put-image-function (shr-get-image-data url) alt
                       (list :width width :height height)))
-	    (t
-	     (when (and shr-ignore-cache
-			(url-is-cached url))
-	       (let ((file (url-cache-create-filename url)))
-		 (when (file-exists-p file)
-		   (delete-file file))))
+            (t
+             (when (and shr-ignore-cache
+                        (url-is-cached url))
+               (let ((file (url-cache-create-filename url)))
+                 (when (file-exists-p file)
+                   (delete-file file))))
              (when (image-type-available-p 'svg)
                (insert-image
-		(shr-make-placeholder-image dom)
-		(or alt "")))
+                (shr-make-placeholder-image dom)
+                (or alt "")))
              (insert " ")
-	     (url-queue-retrieve
+             (url-queue-retrieve
               url #'shr-image-fetched
-	      (list (current-buffer) start (set-marker (make-marker) (point))
+              (list (current-buffer) start (set-marker (make-marker) (point))
                     (list :width width :height height))
-	      t
+              t
               (not (shr--use-cookies-p url shr-base)))))
-	   (when (zerop shr-table-depth) ;; We are not in a table.
-	     (put-text-property start (point) 'keymap shr-image-map)
-	     (put-text-property start (point) 'shr-alt alt)
-	     (put-text-property start (point) 'image-url url)
-	     (put-text-property start (point) 'image-displayer
-				(shr-image-displayer shr-content-function))
-	     (put-text-property start (point) 'help-echo
-				(shr-fill-text
-				 (or (dom-attr dom 'title) alt)))))))))
+           (when (zerop shr-table-depth) ;; We are not in a table.
+             (put-text-property start (point) 'keymap shr-image-map)
+             (put-text-property start (point) 'shr-alt alt)
+             (put-text-property start (point) 'image-url url)
+             (put-text-property start (point) 'image-displayer
+                                (shr-image-displayer shr-content-function))
+             (put-text-property start (point) 'help-echo
+                                (shr-fill-text
+                                 (or (dom-attr dom 'title) alt)))))))))
 
 ;;; EWW
 (p@ckage eww
@@ -2390,8 +2395,8 @@ See also Info node `(eshell)Top'."
       ("Wikipedia" . "https://en.wikipedia.org/wiki/Special:Search?search=")))
   !(defun my/$-search-prefix (url)
      (if (string-prefix-p $-search-prefix url)
-	 (concat (cdr (assoc (completing-read "Search engine: " my/$-search-engines nil t) my/$-search-engines))
-		 (substring url (length $-search-prefix)))
+         (concat (cdr (assoc (completing-read "Search engine: " my/$-search-engines nil t) my/$-search-engines))
+                 (substring url (length $-search-prefix)))
        url))
   (advice-add #'eww--dwim-expand-url :filter-return #'my/$-search-prefix)
 
@@ -2401,8 +2406,8 @@ See also Info node `(eshell)Top'."
   ;;;;; Google Drive
   !(defun my/$-google-drive-direct (url)
      (replace-regexp-in-string "\\`https?://drive.google.com/file/d/\\(?1:[^/]+\\).*\\'"
-			       "https://drive.google.com/uc?export=download&id=\\1"
-			       url))
+                               "https://drive.google.com/uc?export=download&id=\\1"
+                               url))
   (add-hook 'eww-url-transformers #'my/$-google-drive-direct)
 
   ;;;; Download directory
@@ -2459,10 +2464,10 @@ See also Info node `(eshell)Top'."
   (add-to-list 'auto-mode-alist (cons (rx ".tsx" string-end) @'$))
   ;;;;; HTML
   (add-to-list 'auto-mode-alist (cons (rx ?.
-					  (or "htm"
-					      "html")
-					  string-end)
-				      @'$)))
+                                          (or "htm"
+                                              "html")
+                                          string-end)
+                                      @'$)))
 
 ;;; Rust
 (p@ckage rust-mode
@@ -2495,26 +2500,26 @@ See also Info node `(eshell)Top'."
 
   ;;;; Auto mode
   (add-to-list 'auto-mode-alist (cons (rx ?.
-					  (or "yml"
-					      "yaml"
-					      "eyml"
-					      "eyaml"
-					      "raml")
-					  string-end)
-				      @'yaml-mode))
+                                          (or "yml"
+                                              "yaml"
+                                              "eyml"
+                                              "eyaml"
+                                              "raml")
+                                          string-end)
+                                      @'yaml-mode))
 
   ;;;; Magic mode
   (add-to-list 'magic-mode-alist (cons (rx line-start
-					   "%YAML"
-					   (1+ (syntax whitespace))
-					   (1+ digit)
-					   ?.
-					   (1+ digit)
-					   (or
-					    (1+ (syntax whitespace))
-					    (and (0+ (syntax whitespace))
-						 line-end)))
-				       @'yaml-mode)))
+                                           "%YAML"
+                                           (1+ (syntax whitespace))
+                                           (1+ digit)
+                                           ?.
+                                           (1+ digit)
+                                           (or
+                                            (1+ (syntax whitespace))
+                                            (and (0+ (syntax whitespace))
+                                                 line-end)))
+                                       @'yaml-mode)))
 
 ;;; Tuareg
 (p@ckage tuareg
@@ -2523,13 +2528,13 @@ See also Info node `(eshell)Top'."
 
   ;;;; Auto mode
   (add-to-list 'auto-mode-alist (cons (rx ?.
-					  (or "ml"
-					      "mli"
-					      "mlp"
-					      "eliom"
-					      "eliomi")
-					  string-end)
-				      @'$-mode))
+                                          (or "ml"
+                                              "mli"
+                                              "mlp"
+                                              "eliom"
+                                              "eliomi")
+                                          string-end)
+                                      @'$-mode))
 
   ;;;; Interpreter mode
   (add-to-list 'interpreter-mode-alist (cons "ocamlrun" @'$-mode))
@@ -2553,10 +2558,10 @@ See also Info node `(eshell)Top'."
 
   ;;;; Auto mode
   (add-to-list 'auto-mode-alist (cons (rx ?.
-					  (or "g"
-					      "gap")
-					  string-end)
-				      @'$))
+                                          (or "g"
+                                              "gap")
+                                          string-end)
+                                      @'$))
 
   ;;;; Process
   @$-process)
@@ -2626,10 +2631,10 @@ See also Info node `(eshell)Top'."
 
   ;;;; Auto mode
   (add-to-list 'auto-mode-alist (cons (rx ?.
-					  (or "lean"
-					      "hlean")
-					  string-end)
-				      @'$)))
+                                          (or "lean"
+                                              "hlean")
+                                          string-end)
+                                      @'$)))
 
 ;;; TOTP
 (p@ckage totp
@@ -2686,11 +2691,11 @@ See also Info node `(eshell)Top'."
 
   ;;;; Auto mode
   (add-to-list 'auto-mode-alist (cons (rx ?.
-					  (or "groovy"
-					      "gradle"
-					      "gant")
-					  string-end)
-				      @'$)))
+                                          (or "groovy"
+                                              "gradle"
+                                              "gant")
+                                          string-end)
+                                      @'$)))
 
 ;;; Haskell
 (p@ckage haskell-mode
@@ -2699,20 +2704,20 @@ See also Info node `(eshell)Top'."
 
   ;;;; Auto mode
   (add-to-list 'auto-mode-alist (cons (rx ?.
-					  (or "hs"
-					      "ghs"
-					      "hsig"
-					      "hsc")
-					  string-end)
-				      @'$))
+                                          (or "hs"
+                                              "ghs"
+                                              "hsig"
+                                              "hsc")
+                                          string-end)
+                                      @'$))
   (add-to-list 'auto-mode-alist (cons (rx ?.
-					  (or "lgs"
-					      "lhs")
-					  string-end)
-				      @'haskell-literate-mode))
+                                          (or "lgs"
+                                              "lhs")
+                                          string-end)
+                                      @'haskell-literate-mode))
   (add-to-list 'interpreter-mode-alist (cons (rx (or "runghc"
-						     "runhaskell"))
-					     @'$))
+                                                     "runhaskell"))
+                                             @'$))
   (add-to-list 'completion-ignored-extensions ".hi"))
 
 ;;; Graphviz DOT
@@ -2722,10 +2727,10 @@ See also Info node `(eshell)Top'."
 
   ;;;; Auto mode
   (add-to-list 'auto-mode-alist (cons (rx ?.
-					  (or "dot"
-					      "gv")
-					  string-end)
-				      @'$)))
+                                          (or "dot"
+                                              "gv")
+                                          string-end)
+                                      @'$)))
 
 ;;; Go
 (p@ckage go-mode
@@ -2759,11 +2764,11 @@ See also Info node `(eshell)Top'."
 
   ;;;; Auto mode
   (add-to-list 'auto-mode-alist (cons (rx ?.
-					  (or "hcl"
-					      "nomad"
-					      "tf")
-					  string-end)
-				      @'$)))
+                                          (or "hcl"
+                                              "nomad"
+                                              "tf")
+                                          string-end)
+                                      @'$)))
 
 ;;; XWWP
 (p@ckage xwwp
