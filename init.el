@@ -253,7 +253,7 @@ Optional argument FILE-OVERRIDE is a string to be passed as the FILE parameter t
 
   ;;;; Load
   ^
-  (load-theme 'modus-operandi :no-confirm))
+  (load-theme 'modus-operandi-tinted :no-confirm))
 
 ;;; emaχ
 (p@ckage emaχ
