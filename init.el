@@ -549,20 +549,6 @@ Optional argument FILE-OVERRIDE is a string to be passed as the FILE parameter t
   ;;;; Disable
   ($-mode -1))
 
-;;; Window Divider
-(p@ckage window-divider
-  ;;;; Places
-  (setq $-default-places t) ; Both right and bottom.
-
-  ;;;; Width
-  ;;;;; Right
-  (setq $-default-right-width 1)
-  ;;;;; Bottom
-  (setq $-default-bottom-width 1)
-
-  ;;;; Enable
-  ($-mode))
-
 ;;; Adaptive Wrap
 ;; TODO make adaptive wrap better by replacing tabs with a space with an :align-to property that aligns to wherever the last tab ended
 (p@ckage adaptive-wrap
