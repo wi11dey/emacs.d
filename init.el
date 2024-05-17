@@ -2053,46 +2053,6 @@ See also Info node `(eshell)Top'."
 
 ;;; Emacs Lisp
 (p@ckage emacs-lisp
-  ;;;; Outline
-  !(defun my/$-outline-level ()
-     (let ((match (match-string-no-properties 1)))
-       (cond (match
-              (length match))
-             ((looking-at (rx ?\s (not blank)))
-              2)
-             (t
-              1))))
-  !(defun my/$-set-outline ()
-     (rx-let ((indent (0+ (any ?\s ?\t)))
-              (levels (and
-                       ?\;
-                       (group-n 3
-                         ?\;
-                         (group-n 1
-                           (1+ ?\;)))
-                       (not ?#))))
-       (setq-local outline-regexp (rx indent levels))
-       (setq-local outline-minor-faces-regexp (rx line-start
-                                                  indent
-                                                  (group-n 2
-                                                    levels
-                                                    (0+ not-newline)
-                                                    (? ?\n)))))
-     (setq-local outline-minor-faces--font-lock-keywords
-                 `((eval . (list (outline-minor-faces--syntactic-matcher outline-minor-faces-regexp)
-                                 '(2 `(face ,(outline-minor-faces--get-face)) t)
-                                 '(3 '( face default
-                                        ;; Not using `invisible' so deleting one character does not delete the entire invisble range:
-                                        display "")
-                                     t)))
-                   (,(rx "-*-" (0+ not-newline) "-*-") 0 'outline-minor-file-local-prop-line t)))
-     (setq-local outline-level #'my/$-outline-level)
-     (unless (memq 'display font-lock-extra-managed-props)
-       (push 'display font-lock-extra-managed-props)))
-  ;; `my/emacs-lisp-set-outline' must come before `outline-minor-mode' in `emacs-lisp-mode-hook' so that `outline-minor-faces' caches the right Outline settings when fontifying the buffer for the first time.
-  (add-hook '$-mode-hook #'my/$-set-outline)
-  (add-hook '$-mode-hook #'outline-minor-mode :append)
-
   ;;;; Indentation
   !(defun my/$-indent-spaces ()
      (indent-tabs-mode -1))
@@ -2107,7 +2067,7 @@ See also Info node `(eshell)Top'."
   (add-hook '$-mode-hook #'my/$-set-compile-command)
 
   ;;;; Completion
-  (setq elisp--local-variables-completion-table nil) ; Disable: Completing local variables causes macro expansion which can have side-effects on the editor.
+  (setq elisp--local-variables-completion-table nil) ; Completing local variables causes macro expansion which can have side-effects on the editor.
   )
 
 ;;; Tabulated List
