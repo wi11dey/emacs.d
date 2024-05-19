@@ -1390,15 +1390,6 @@ See also Info node `(eshell)Top'."
   ;;;; Enable
   ($-mode))
 
-;;; Asemantic Stickyfunc
-(p@ckage asemantic-stickyfunc
-  ;;;; Build
-  ~(straight-use-package '($ :type git :host github :repo "wi11dey/asemantic-stickyfunc"))
-
-  ;;;; Enable
-  ;;;;; Programming modes
-  (add-hook 'prog-mode-hook @'$-mode))
-
 ;;; Semantic
 (p@ckage semantic)
 
