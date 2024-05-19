@@ -1529,9 +1529,6 @@ See also Info node `(eshell)Top'."
                          "* TODO %?
 %a"))))
 
-  ;;;; Indent
-  (setq org-startup-indented t)
-
   ;;;; Outline path completion
   ~(require 'org-goto)
   (setq org-goto-interface 'outline-path-completion)
