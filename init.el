@@ -625,15 +625,6 @@ Optional argument FILE-OVERRIDE is a string to be passed as the FILE parameter t
                                 (TeX-active-master (TeX-output-extension)))))))
     (advice-add @'TeX-TeX-sentinel :after #'my/TeX-run-after-compilation-finished-functions)))
 
-;;; Auto Dim Other Buffers
-(p@ckage auto-dim-other-buffers
-  ;;;; Build
-  ~(straight-use-package '$)
-  !^
-
-  ;;;; Enable
-  ($-mode))
-
 ;;; Text Scale
 (p@ckage text-scale
   !((autoload '$-mode "face-remap" nil t)
