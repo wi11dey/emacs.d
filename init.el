@@ -1192,11 +1192,6 @@ See also Info node `(eshell)Top'."
   ;;;; Enable
   ($-mode))
 
-;;; Mode Line
-(p@ckage mode-line
-  ;;;; Disable
-  (setq-default $-format nil))
-
 ;;; Ibuffer
 (p@ckage ibuffer
   ~^
