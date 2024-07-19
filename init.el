@@ -2789,4 +2789,16 @@ See also Info node `(eshell)Top'."
 
   @$)
 
+;;; Vala
+(p@ckage vala-mode
+  ~(straight-use-package '$)
+  ~^
+
+  ;;;; Auto mode
+  (add-to-list 'auto-mode-alist (cons (rx ?. (or
+					      "vala"
+					      "vapi")
+					  string-end)
+				      @'$)))
+
 ;;; init.el ends here
