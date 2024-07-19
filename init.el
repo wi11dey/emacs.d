@@ -2662,6 +2662,7 @@ See also Info node `(eshell)Top'."
   (add-to-list 'auto-mode-alist (cons (rx ".go" string-end) @'$)))
 
 ;;; Kubernetes
+;; TODO Switch completely to Kubel:
 (p@ckage kubernetes
   ;;;; Build
   ~(straight-use-package '$)
@@ -2779,5 +2780,13 @@ See also Info node `(eshell)Top'."
 
     ;; TODO setup
     ))
+
+;;; Kubel
+(p@ckage kubel
+  ;;;; Build
+  ~(straight-use-package '$)
+  ~^
+
+  @$)
 
 ;;; init.el ends here
