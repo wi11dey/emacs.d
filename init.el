@@ -198,6 +198,15 @@ Optional argument FILE-OVERRIDE is a string to be passed as the FILE parameter t
   ;; Allow requiring p@ckage from local eval:
   (push '(require 'p@ckage) safe-local-eval-forms))
 
+;;; Exec Path From Shell
+(p@ckage exec-path-from-shell
+  ;;;; Build
+  ~(straight-use-package '$)
+
+  ;;;; Enable
+  (when (memq window-system '(mac ns x))
+    (@$-initialize)))
+
 ;;; Bytecomp Simplify
 (p@ckage bytecomp-simplify
   ;;;; Build
