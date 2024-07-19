@@ -2619,9 +2619,9 @@ See also Info node `(eshell)Top'."
                                       @'$)))
 
 ;;; Haskell
-(p@ckage haskell-mode
+(p@ckage haskell
   ;;;; Build
-  ~(straight-use-package '$)
+  ~(straight-use-package '$-mode)
 
   ;;;; Auto mode
   (add-to-list 'auto-mode-alist (cons (rx ?.
@@ -2630,15 +2630,15 @@ See also Info node `(eshell)Top'."
                                               "hsig"
                                               "hsc")
                                           string-end)
-                                      @'$))
+                                      @'$-mode))
   (add-to-list 'auto-mode-alist (cons (rx ?.
                                           (or "lgs"
                                               "lhs")
                                           string-end)
-                                      @'haskell-literate-mode))
+                                      @'$-literate-mode))
   (add-to-list 'interpreter-mode-alist (cons (rx (or "runghc"
                                                      "runhaskell"))
-                                             @'$))
+                                             @'$-home))
   (add-to-list 'completion-ignored-extensions ".hi"))
 
 ;;; Graphviz DOT
