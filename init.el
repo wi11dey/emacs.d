@@ -2801,4 +2801,17 @@ See also Info node `(eshell)Top'."
 					  string-end)
 				      @'$)))
 
+;;; Meson
+(p@ckage meson-mode
+  ~(straight-use-package '$)
+  ~^
+
+  ;;;; Auto mode
+  (add-to-list 'auto-mode-alist (cons (rx "/meson" (or
+						    ".build"
+						    "_options.txt"
+						    ".options")
+					  string-end)
+				      @'$)))
+
 ;;; init.el ends here
