@@ -28,7 +28,7 @@
 
 ;; Documentation is an ongoing effort.
 
-;; heading-1 is All Capitalized.
+;; `heading-1' is All Capitalized.
 ;; All headings below are Sentence case.
 
 ;; TODO Test all possibilities of compilation orders and init orders (including daemonized vs not) for maximum reliability
