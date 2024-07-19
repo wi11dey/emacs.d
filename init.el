@@ -796,14 +796,6 @@ Optional argument FILE-OVERRIDE is a string to be passed as the FILE parameter t
     ~(straight-use-package '$)
     ~^
 
-    ;;;;; Line prefix
-    (setq $-line-prefix (propertize "  ·"
-                                    'face 'highlight-indent-guides-character-face)
-          $-line-prefix-face nil)
-
-    ;;;;; Use backgrounds
-    (setq $-use-backgrounds nil)
-
     @$-toggle)
   _(bind-key "i" #'$-subtree-toggle $-mode-map)
 
