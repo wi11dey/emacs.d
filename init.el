@@ -2814,4 +2814,18 @@ See also Info node `(eshell)Top'."
 					  string-end)
 				      @'$)))
 
+;;; PlantUML
+(p@ckage plantuml
+  ~(straight-use-package '$)
+  ~^
+
+  (setq plantuml-default-exec-mode 'executable)
+
+  ;;;; Auto mode
+  (add-to-list 'auto-mode-alist (cons (rx ?. (or
+					      "puml"
+					      "plantuml")
+					  string-end)
+				      @'$)))
+
 ;;; init.el ends here
