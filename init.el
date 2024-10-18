@@ -2840,10 +2840,8 @@ See also Info node `(eshell)Top'."
   ~(straight-use-package '($ :type git :host github :repo "idris-community/idris2-mode"))
   ~^
 
-  ;;;; Indent
-  !(defun my/$-no-indent-region ()
-     (setq-local indent-region-function #'ignore))
-  (add-hook 'idris2-simple-indent-mode-hook #'my/$-no-indent-region)
+  ;;;; Aggressive indent mode
+  (add-to-list 'aggressive-indent-excluded-modes #'$)
 
   ;;;; Auto mode
   (add-to-list 'auto-mode-alist (cons (rx ?. "idr" string-end) @'$)))
