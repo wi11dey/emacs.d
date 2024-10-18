@@ -260,6 +260,9 @@ Optional argument FILE-OVERRIDE is a string to be passed as the FILE parameter t
   ;;;; Build
   ~(straight-use-package '$)
 
+  ;;;; Bold
+  (setq $-bold-constructs t)
+
   ;;;; Load
   ^
   (load-theme 'modus-operandi-tinted :no-confirm))
