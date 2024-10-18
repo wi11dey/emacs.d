@@ -2817,7 +2817,7 @@ See also Info node `(eshell)Top'."
 				      @'$)))
 
 ;;; PlantUML
-(p@ckage plantuml
+(p@ckage plantuml-mode
   ;;;; Build
   ~(straight-use-package '$)
   ~^
