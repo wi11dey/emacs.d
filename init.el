@@ -2791,6 +2791,7 @@ See also Info node `(eshell)Top'."
 
 ;;; Vala
 (p@ckage vala-mode
+  ;;;; Build
   ~(straight-use-package '$)
   ~^
 
@@ -2803,6 +2804,7 @@ See also Info node `(eshell)Top'."
 
 ;;; Meson
 (p@ckage meson-mode
+  ;;;; Build
   ~(straight-use-package '$)
   ~^
 
@@ -2816,6 +2818,7 @@ See also Info node `(eshell)Top'."
 
 ;;; PlantUML
 (p@ckage plantuml
+  ;;;; Build
   ~(straight-use-package '$)
   ~^
 
@@ -2827,5 +2830,19 @@ See also Info node `(eshell)Top'."
 					      "plantuml")
 					  string-end)
 				      @'$)))
+
+;;; Idris2
+(p@ckage idris2-mode
+  ;;;; Build
+  ~(straight-use-package '($ :type git :host github :repo "idris-community/idris2-mode"))
+  ~^
+
+  ;;;; Indent
+  !(defun my/$-no-indent-region ()
+     (setq-local indent-region-function #'ignore))
+  (add-hook 'idris2-simple-indent-mode-hook #'my/$-no-indent-region)
+
+  ;;;; Auto mode
+  (add-to-list 'auto-mode-alist (cons (rx ?. "idr" string-end) @'$)))
 
 ;;; init.el ends here
