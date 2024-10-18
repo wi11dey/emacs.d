@@ -274,7 +274,7 @@ Optional argument FILE-OVERRIDE is a string to be passed as the FILE parameter t
 
   ;;;; Load
   (require '$-theme)
-  (load-theme '$ :no-confirm))
+  (enable-theme '$))
 
 ;;; Solarized
 (p@ckage solarized
