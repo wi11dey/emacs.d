@@ -2521,9 +2521,6 @@ See also Info node `(eshell)Top'."
   ;;;; Build
   ~(straight-use-package '($ :type git :host github :repo "wi11dey/sysyphus.el"))
 
-  ;;;; Auto sleep mode
-  (add-hook 'exwm-init-hook @'$-auto-sleep-mode)
-
   ;;;; Keybindings
   (global-set-key [XF86PowerOff] @'$-sleep)
   (global-set-key [XF86Sleep] @'$-sleep)
