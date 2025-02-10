@@ -2013,7 +2013,19 @@ See also Info node `(eshell)Top'."
 
 ;;; Compile
 (p@ckage compile
-  (bind-key "C-c C-a" @'recompile))
+  ;;;; Recompile
+  (keymap-global-set "C-c C-a" @'recompile))
+
+;;; ANSI Color
+(p@ckage ansi-color
+  ~^
+
+  !(defun my/$-buffer ()
+     (interactive)
+     ($-apply-on-region (point-min) (point-max)))
+
+  ;;;; Compile
+  (add-hook 'compilation-filter-hook #'my/$-buffer))
 
 ;;; Emacs Lisp
 (p@ckage emacs-lisp
