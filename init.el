@@ -2560,14 +2560,24 @@ See also Info node `(eshell)Top'."
 
   ;;;; Memory limit
   ;; Use at most 2GiB of memory:
-  (setq lean-memory-limit 2048)
+  (setq lean-memory-limit 2048))
+
+;;; Lean 4
+(p@ckage lean4-mode
+  ;;;; Build
+  ~(straight-use-package '($
+                           :type git
+                           :host github
+                           :repo "leanprover-community/lean4-mode"
+                           :files ("*.el" "data")))
+  ~^
+
+  ;;;; Memory limit
+  ;; Use at most 2GiB of memory:
+  (setq lean4-memory-limit 2048)
 
   ;;;; Auto mode
-  (add-to-list 'auto-mode-alist (cons (rx ?.
-                                          (or "lean"
-                                              "hlean")
-                                          string-end)
-                                      @'$)))
+  (add-to-list 'auto-mode-alist (cons (rx ?. "lean" string-end) @'$)))
 
 ;;; TOTP
 (p@ckage totp
