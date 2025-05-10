@@ -1829,6 +1829,12 @@ See also Info node `(eshell)Top'."
   ;;;; Build
   ~(straight-use-package '$))
 
+;;; Calendar
+(p@ckage calendar
+  ;;;; Faces
+  ;;;;; Fixed pitch
+  (add-hook '$-mode-hook #'fixed-pitch-mode))
+
 ;;; Magit
 (p@ckage magit
   ;;;; Build
