@@ -2863,4 +2863,9 @@ See also Info node `(eshell)Top'."
   ;;;; Auto mode
   (add-to-list 'auto-mode-alist (cons (rx ?. "idr" string-end) @'$)))
 
+;;; Isar
+(p@ckage isar-mode
+  ;;;; Build
+  ~(straight-use-package '($ :type git :host github :repo "m-fleury/isar-mode")))
+
 ;;; init.el ends here
