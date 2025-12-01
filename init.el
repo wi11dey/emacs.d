@@ -2867,5 +2867,19 @@ See also Info node `(eshell)Top'."
 (p@ckage isar-mode
   ;;;; Build
   ~(straight-use-package '($ :type git :host github :repo "m-fleury/isar-mode")))
+  ~(straight-use-package '($ :type git :host github :repo "m-fleury/isar-mode"))
+  ~^
+
+  ;;;; Font lock
+  ;; TODO: move to emaX-theme
+  (setq isar-font-lock-keywords
+        `((,(concat "\\<" isar-outer-keyword "\\>") . 'font-lock-type-face)
+	  (,(concat "\\<" isar-inner-keyword "\\>") . 'font-lock-type-face)
+	  (,(concat "\\<" isar-tactics "\\>") . 'font-lock-variable-name-face)
+	  (,(concat "\\<" isar-most-outer-keyword "\\>") . 'font-lock-preprocessor-face)))
+
+  ;;;; Auto mode
+  (add-to-list 'auto-mode-alist (cons (rx ?. "thy" string-end) @'$)))
+
 
 ;;; init.el ends here
