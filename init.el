@@ -31,8 +31,6 @@
 ;; `heading-1' is All Capitalized.
 ;; All headings below are Sentence case.
 
-;; TODO Test all possibilities of compilation orders and init orders (including daemonized vs not) for maximum reliability
-;; TODO make first installation idempotent, reliable, and reproducible
 ;; TODO Outline-minor-mode C-ret and M-ret keybindings
 ;; TODO Outline minor mode heading indentation
 ;; TODO Use $ whenever possible
@@ -64,59 +62,6 @@
     (startup-redirect-eln-cache
      (convert-standard-filename
       (expand-file-name  "var/eln-cache/" user-emacs-directory)))))
-
-;;; Autoloads
-(eval-when-compile
-  (defun my/package-autoloads--clean-p (func
-                                        file
-                                        &optional
-                                        docstring
-                                        interactive
-                                        type)
-    (pcase nil
-      ((and (let `(quote ,(pred symbolp)) func)
-            (let (pred stringp) file)
-            (let (or (pred stringp)
-                     (pred null))
-              docstring)
-            (let (pred symbolp) interactive)
-            (let (pred symbolp) type))
-       t)))
-  (defmacro my/package-autoloads (package &optional file-override)
-    "Generate autoloads for PACKAGE, but return a form of only `autoload' calls. This removes any code that may automatically execute when activating a package, and only makes the functions available so that they may be explicitly called by the user.
-
-PACKAGE is a folder name under \"~/.emacs.d/straight/build/\" to generate autoloads for by means of `make-directory-autoloads'. However, as noted above, nothing other than a `progn' consisting of `autoload' calls will ever be evaluated by this macro for security and user-choice-only reasons.
-
-Optional argument FILE-OVERRIDE is a string to be passed as the FILE parameter to all `autoload' calls in place of the generated parameter. This is useful when loading one file will make all the functions in the package available, like in the case of straight.el's \"bootstrap.el\" file."
-    (defvar autoload-timestamps)
-    (defvar version-control)
-    (defvar my/straight-build-dir)
-    (when file-override
-      (setq file-override (eval file-override lexical-binding)))
-    (let* ((package-name (symbol-name package))
-           (directory (concat my/straight-build-dir package-name))
-           (autoload-file (expand-file-name (concat package-name "-autoloads.el")
-                                            directory))
-           (noninteractive t)
-           (backup-inhibited t)
-           (version-control 'never)
-           (inhibit-message t)
-           sexp
-           autoloads)
-      (make-directory-autoloads directory autoload-file)
-      (with-current-buffer (find-file-noselect autoload-file)
-        (goto-char (point-min))
-        (prog1
-            (condition-case nil
-                (while t
-                  (setq sexp (read (current-buffer)))
-                  (pcase sexp
-                    (`(autoload . ,(pred (apply #'my/package-autoloads--clean-p)))
-                     (when file-override
-                       (setf (nth 2 sexp) file-override))
-                     (push sexp autoloads))))
-              (end-of-file (cons 'progn autoloads)))
-          (kill-buffer))))))
 
 ;;; Straight.el
 ;; TODO disable straight build and manually rebuild based on timestamps
@@ -163,8 +108,6 @@ Optional argument FILE-OVERRIDE is a string to be passed as the FILE parameter t
         (goto-char (point-max))
         (eval-print-last-sexp)))
     (load bootstrap-file nil 'nomessage)))
-;;;; Autoloads
-(my/package-autoloads straight (expand-file-name "straight-init" user-emacs-directory))
 
 ;;; Paths
 (eval-and-compile
@@ -207,14 +150,6 @@ Optional argument FILE-OVERRIDE is a string to be passed as the FILE parameter t
   (when (memq window-system '(mac ns x))
     (@$-initialize)))
 
-;;; Bytecomp Simplify
-(p@ckage bytecomp-simplify
-  ;;;; Build
-  ~(straight-use-package '$)
-  ~^
-
-  @$-warn)
-
 ;;; Compat
 (p@ckage compat
   ;;;; Build
@@ -232,67 +167,6 @@ Optional argument FILE-OVERRIDE is a string to be passed as the FILE parameter t
 
 ;; Bootstrapped.
 
-
-;;; Xtended Faces
-(p@ckage xtended-faces
-  ;;;; Build
-  ~(straight-use-package '($ :type git :host github :repo "wi11dey/xtended-faces"))
-  !^
-
-  ;;;; Prose mode
-  ;;;;; Help
-  (add-hook 'help-mode-hook #'prose-mode)
-  ;;;;; Info
-  (add-hook 'Info-mode-hook #'prose-mode)
-  ;;;;; Text modes
-  (add-hook 'text-mode-hook #'prose-mode)
-  ;;;;; WoMan
-  (add-hook 'woman-mode-hook #'prose-mode)
-
-  ;;;; Fixed pitch mode
-  ;;;;; Dired
-  (add-hook 'dired-mode-hook #'fixed-pitch-mode)
-  ;;;;; Undo tree visualizer
-  (add-hook 'undo-tree-visualizer-mode-hook #'fixed-pitch-mode))
-
-;;; Modus Themes
-(p@ckage modus-themes
-  ;;;; Build
-  ~(straight-use-package '$)
-  ~^
-
-  ;;;; Bold
-  (setq $-bold-constructs t)
-
-  ;;;; Load
-  ^
-  (load-theme 'modus-operandi-tinted :no-confirm))
-
-;;; emaχ
-(p@ckage emaχ
-  ;;;; Build
-  ~(straight-use-package '($ :type git :host github :repo "wi11dey/emaX"))
-
-  ;;;; Load
-  (require '$-theme)
-  (enable-theme '$))
-
-;;; Solarized
-(p@ckage solarized
-  ;;;; Build
-  ~(straight-use-package 'color-theme-$)
-
-  ;;;; macOS
-  ;;;;; Color space
-  (when (boundp 'ns-use-srgb-colorspace)
-    ;; Consistenly use Apple RGB across faces and XPM images, so use altered Solarized values intended for Apple RGB:
-    (setq ns-use-srgb-colorspace nil))
-
-  ;;;; Load
-  (require '$-theme)
-  ;; (load-theme '$ :no-confirm)
-  ;; (load-theme 'custom-$ :no-confirm)
-  )
 
 ;;; Bind Key
 (p@ckage bind-key
@@ -356,11 +230,6 @@ Optional argument FILE-OVERRIDE is a string to be passed as the FILE parameter t
 
   ;;;; Enable
   ($-mode))
-
-;;; Repeat
-(p@ckage repeat
-  ;;;; Keybindings
-  (bind-key "C-z" @'$))
 
 ;;; Novice
 (p@ckage novice
@@ -523,7 +392,7 @@ Optional argument FILE-OVERRIDE is a string to be passed as the FILE parameter t
 ;;; Tool Bar
 (p@ckage tool-bar
   ;;;; Disable
-  ($-mode -1))
+  ($-mode (if (eq window-system 'mac) 1 -1)))
 
 ;;;; Kill current buffer
 (bind-key [remap kill-buffer] #'kill-current-buffer)
@@ -606,7 +475,6 @@ Optional argument FILE-OVERRIDE is a string to be passed as the FILE parameter t
 (p@ckage auctex
   ;;;; Build
   ~(straight-use-package '$)
-  ~(my/package-autoloads $)
 
   (p@ckage tex
     ~^
@@ -1165,37 +1033,6 @@ See also Info node `(eshell)Top'."
   ;;;; Enable
   (display-$-mode))
 
-;;; Minibuffer Line
-(p@ckage minibuffer-line
-  ;;;; Build
-  ~(straight-use-package '$)
-  !^
-
-  ;;;; Refresh
-  ;;;;; Interval
-  (setq $-refresh-interval 1)
-  ;;;;; Xah Fly Keys
-  ;; Refresh immediately on any Xah Fly Keys mode change:
-  (add-hook 'xah-fly-command-mode-activate-hook #'$--update)
-  (add-hook 'xah-fly-insert-mode-activate-hook  #'$--update)
-
-  ;;;; Format
-  (setq $-format '("%e"
-                   ;;;;; Time
-                   (:propertize (:eval (format-time-string "%T"))
-                                face italic)
-                   " "
-                   ;;;;; Date
-                   (:eval (format-time-string "%A %+4Y/%m/%d %Z"))
-                   ;;;;; Battery
-                   (:eval `((:propertize " "
-                                         display (space :align-to (- right ,(length battery-mode-line-string) 1)))
-                            (:propertize battery-mode-line-string
-                                         face fixed-pitch)))))
-
-  ;;;; Enable
-  ($-mode))
-
 ;;; Ibuffer
 (p@ckage ibuffer
   ~^
@@ -1236,7 +1073,6 @@ See also Info node `(eshell)Top'."
   ;;;; Build
   ~(straight-use-package '$)
   ~^
-  ~(my/package-autoloads $)
 
   ;;;; Run for all
   (setq mc/always-run-for-all t)
@@ -1385,6 +1221,7 @@ See also Info node `(eshell)Top'."
 
 ;;; Smartparens
 ;; TODO set appropriate xah-fly-keys remappings and make it act like paredit
+;; TODO switch to paredit for lisp
 (p@ckage smartparens
   ;;;; Build
   ~(straight-use-package '$)
@@ -1418,57 +1255,15 @@ See also Info node `(eshell)Top'."
      (sp-update-local-pairs '(:open "'" :close nil :actions nil)))
   (add-hook '$-minibuffer-setup-hook #'my/$-sp-local-pairs))
 
-;;; Major Extension
-(p@ckage major-extension
-  ;;;; Build
-  ~(straight-use-package '($ :type git :host github :repo "wi11dey/major-extension")))
-
-;;; Notes
-(p@ckage notes
-  ;;;; Build
-  ~(straight-use-package '($ :type git :host github :repo "wi11dey/notes.el"))
-  ~^
-
-  ;;;; Smartparens
-  (add-hook '$-new-hook #'turn-off-smartparens-strict-mode)
-
-  @note)
-
 ;;; Org
 (p@ckage org
   ~(straight-use-package '($ :type git
                              :repo "https://code.orgmode.org/bzg/org-mode.git"
                              :local-repo "org"
                              :files (:defaults "contrib/lisp/*.el")))
-  ~(my/package-autoloads $)
   ~^
 
   @$-mode
-
-  ;;;; Contacts
-  (p@ckage $-contacts
-    ;;;; vCard
-    (p@ckage org-vcard
-      ~(straight-use-package '$)
-
-      ;;;; Styles
-      !((defvar $-styles-dirs)
-        (setq $-styles-dirs ~(list (expand-file-name
-                                    (apply #'concat
-                                           (mapcar #'file-name-as-directory
-                                                   '("straight"
-                                                     "repos"
-                                                     "org-vcard"
-                                                     "styles")))
-                                    user-emacs-directory))))
-
-      ~^
-
-      ;;;; Autoloads
-      @$-import
-      @$-export))
-  (defvar my/org-contacts-file (getenv "ORG_CONTACTS_FILE")
-    "")
 
   ;;;; Todo
   (defvar my/org-todo-file (getenv "ORG_TODO_FILE")
@@ -1479,36 +1274,6 @@ See also Info node `(eshell)Top'."
                              "BLOCKED(b)"
                              "|"
                              "DONE(d)")))
-
-  ;;;; Capture
-  (p@ckage $-capture
-    ~^
-    ;;;;; Templates
-    (setq $-templates '(("a"
-                         "Append"
-                         entry
-                         (clock)
-                         "* TODO %?
-%a")
-                        ("p"
-                         "Appointment"
-                         entry
-                         (file+function my/org-todo-file
-                                        org-goto)
-                         "* APPOINTMENT %?
-%a")
-                        ("c"
-                         "Contact"
-                         entry
-                         (file my/org-contacts-file)
-                         "* %?")
-                        ("t"
-                         "Todo"
-                         entry
-                         (file+fuction my/org-todo-file
-                                       org-goto)
-                         "* TODO %?
-%a"))))
 
   ;;;; Outline path completion
   ~(require 'org-goto)
@@ -1790,10 +1555,6 @@ See also Info node `(eshell)Top'."
                           (?b . ?♝)
                           (?n . ?♞)
                           (?p . ?♟)))))
-
-;;; Fontfile
-(p@ckage fontfile
-  ~(straight-use-package '($ :type git :host github :repo "wi11dey/fontfile.el")))
 
 ;;; NNReddit
 (p@ckage nnreddit
@@ -2143,10 +1904,7 @@ See also Info node `(eshell)Top'."
 (p@ckage guix
   ;;;; Build
   ~(straight-use-package '($ :type git :host github :repo "alezost/guix.el"
-                             :fork (:host github :repo "ROCKTAKEY/guix.el" :branch "remove-geiser-company--setup")))
-
-  ;;;; Autoloads
-  (my/package-autoloads $))
+                             :fork (:host github :repo "ROCKTAKEY/guix.el" :branch "remove-geiser-company--setup"))))
 
 ;;; Pwdgen
 (p@ckage pwdgen
@@ -2866,7 +2624,6 @@ See also Info node `(eshell)Top'."
 ;;; Isar
 (p@ckage isar-mode
   ;;;; Build
-  ~(straight-use-package '($ :type git :host github :repo "m-fleury/isar-mode")))
   ~(straight-use-package '($ :type git :host github :repo "m-fleury/isar-mode"))
   ~^
 
@@ -2881,5 +2638,10 @@ See also Info node `(eshell)Top'."
   ;;;; Auto mode
   (add-to-list 'auto-mode-alist (cons (rx ?. "thy" string-end) @'$)))
 
+;;; Agda
+(p@ckage agda-mode
+  (load-file
+   (let ((coding-system-for-read 'utf-8))
+     (shell-command-to-string "agda --emacs-mode locate"))))
 
 ;;; init.el ends here
