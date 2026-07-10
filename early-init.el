@@ -5,7 +5,4 @@
    (convert-standard-filename
     (expand-file-name  "var/eln-cache/" user-emacs-directory))))
 (setq load-prefer-newer nil
-      package-enable-at-startup nil
-      ;; TODO remove:
-      ;; inhibit-automatic-native-compilation t
-      )
+      package-enable-at-startup nil)

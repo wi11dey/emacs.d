@@ -220,6 +220,18 @@
 
   ($))
 
+;;; Modus Themes
+(p@ckage modus-themes
+  ;;;; Build
+  ~(straight-use-package '$)
+
+  (setq modus-themes-bold-constructs t)
+
+  ;;;; Load
+  !^
+
+  (load-theme 'modus-operandi-tinted :no-confirm))
+
 ;;; Symb0l
 (p@ckage symb0l
   ;;;; Build
@@ -278,12 +290,6 @@
 (p@ckage blink-cursor
   ;;;; Disable
   ($-mode -1))
-
-;;; Faces
-(p@ckage faces
-  ;; TODO fontsets
-  ;; (set-face-attribute FACE nil :fontset "x") works on everything but default face
-  )
 
 ;;; Save
 (p@ckage save
@@ -579,31 +585,6 @@
 
   ;; TODO keybindings
   )
-
-;;; Highlight Indent Guides
-;; TODO Use font-lock "stealth" to add guides to buffers
-(p@ckage highlight-indent-guides
-  ;;;; Build
-  ~(straight-use-package '$)
-  ~^
-
-  ;;;; Delay
-  (setq $-delay 0.05)
-
-  ;;;; Character
-  (setq $-method 'character
-        $-character ?|)
-
-  ;;;; Responsive
-  (setq $-responsive 'top)
-
-  ;;;; Enable
-  ;;;;; Programming modes
-  ;; (add-hook 'prog-mode-hook @'$-mode)
-
-  ;;;; Faces
-  ;; Don't automatically calculate face colors:
-  (setq $-auto-enabled nil))
 
 ;;; REST Client
 (p@ckage restclient
@@ -2643,5 +2624,14 @@ See also Info node `(eshell)Top'."
   (load-file
    (let ((coding-system-for-read 'utf-8))
      (shell-command-to-string "agda --emacs-mode locate"))))
+
+;;; Clojure
+(p@ckage clojure-mode
+  ;;;; Build
+  ~(straight-use-package '$)
+  ~^
+
+  ;;;; Auto mode
+  (add-to-list 'auto-mode-alist (cons (rx ?. (or "clj" "cljs" "cljc") string-end) @'$)))
 
 ;;; init.el ends here
