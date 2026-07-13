@@ -2632,6 +2632,7 @@ See also Info node `(eshell)Top'."
   ~^
 
   ;;;; Auto mode
-  (add-to-list 'auto-mode-alist (cons (rx ?. (or "clj" "cljs" "cljc") string-end) @'$)))
+  (add-to-list 'auto-mode-alist (cons (rx ?. (or "clj" "cljc") string-end) @'$))
+  (add-to-list 'auto-mode-alist (cons (rx ?. (or "cljs") string-end) @'clojurescript-mode)))
 
 ;;; init.el ends here
