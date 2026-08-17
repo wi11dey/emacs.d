@@ -38,7 +38,6 @@
 ;; TODO defvar+setq -> defconst where possible
 ;; TODO Go through and reorganize
 ;; TODO Break up "Keybindings" headings
-;; TODO remove bind-key and replace all with keymap-set
 ;; TODO make everything after  independent of order in file
 ;; TODO make all regexes use rx
 ;; TODO move all advice-add to define-advice
@@ -168,12 +167,6 @@
 ;; Bootstrapped.
 
 
-;;; Bind Key
-(p@ckage bind-key
-  ;;;; Build
-  ~(straight-use-package '$)
-  !^)
-
 ;;; Xah Fly Keys
 ;; FIXME properly respect `delete-selection-temporary-region'
 (p@ckage xah-fly-keys
@@ -211,7 +204,7 @@
   ;; Still use the binding M-SPC to enable command mode:
   (global-set-key (kbd "M-SPC") #'xah-fly-command-mode-activate)
   ;; Allow menu key to be sent through to other keymaps:
-  (define-key xah-fly-command-map [menu] nil)
+  (keymap-set xah-fly-command-map "<menu>" nil)
   ;; Always use normal `kill-current-buffer':
   (keymap-global-set "<remap> <xah-save-close-current-buffer>" #'kill-current-buffer)
   (keymap-global-set "<remap> <xah-close-current-buffer>" #'kill-current-buffer)
@@ -401,7 +394,7 @@
   ($-mode (if (eq window-system 'mac) 1 -1)))
 
 ;;;; Kill current buffer
-(bind-key [remap kill-buffer] #'kill-current-buffer)
+(keymap-set global-map "<remap> <kill-buffer>" #'kill-current-buffer)
 
 ;; Keep the suggested keybinding visible for 5 seconds:
 ;; (The default 2 seconds is too short for me to read through some of the suggestions).
@@ -518,14 +511,14 @@
       (interactive)
       ($-mode -1)))
 
-  (bind-key "C-x C-+" #'$-increase)
-  (bind-key "C-x C-=" #'$-increase)
-  (bind-key "C-x C--" #'$-decrease)
-  (bind-key "C-x C-0" #'my/$-reset))
+  (keymap-set global-map "C-x C-+" #'$-increase)
+  (keymap-set global-map "C-x C-=" #'$-increase)
+  (keymap-set global-map "C-x C--" #'$-decrease)
+  (keymap-set global-map "C-x C-0" #'my/$-reset))
 
 ;;; Calculator
 (p@ckage calculator
-  (bind-key "<XF86Calculator>" #'calculator))
+  (keymap-set global-map "<XF86Calculator>" #'calculator))
 
 ;;; Rainbow
 (p@ckage rainbow-mode
@@ -637,7 +630,7 @@
   (setq $-dwim-target t)
 
   ;;;; Launch
-  (bind-key "<XF86Explorer>" #'$)
+  (keymap-set global-map "<XF86Explorer>" #'$)
 
   ;;;; Switches
   (setq $-listing-switches "-AlhX")
@@ -649,7 +642,7 @@
     ~^
 
     @$-toggle)
-  _(bind-key "i" #'$-subtree-toggle $-mode-map)
+  _(keymap-set $-mode-map "i" #'$-subtree-toggle)
 
   ;;;; Rainbow
   (p@ckage $-rainbow
@@ -712,7 +705,7 @@
     (keymap-set $-mode-map "n" @'$-next-file)
 
     @$)
-  _(bind-key ";" #'peep-$ $-mode-map)
+  _(keymap-set $-mode-map ";" #'peep-$)
 
   ;;;; Truncate lines
   !(defun my/$-truncate-lines ()
@@ -776,7 +769,7 @@
   ~(straight-use-package '$)
 
   ;;;; No suspend frame
-  (unbind-key [remap suspend-frame])
+  (keymap-unset global-map "<remap> <suspend-frame>")
 
   ;;;; Load
   !^
@@ -793,11 +786,11 @@
 
     ;;;;; Simulation keys
     ;; TODO split out into separate library and use for symb0l, EXWM, and ansi-term
-    (define-key exwm-mode-map [remap quoted-insert] #'$-send-next-key)
+    (keymap-set exwm-mode-map "<remap> <quoted-insert>" #'$-send-next-key)
     !(defun my/$-fake-last-key ()
        (interactive)
        ($--fake-key last-command-event))
-    (define-key exwm-mode-map [remap self-insert-command] #'my/$-fake-last-key)
+    (keymap-set exwm-mode-map "<remap> <self-insert-command>" #'my/$-fake-last-key)
     !(defmacro my/$-fake-key (&rest events)
        `(lambda ()
           ,(format-message "Equivalent to pressing `%s'." (key-description events))
@@ -805,73 +798,73 @@
           ,@(mapcar (lambda (event)
                       `($--fake-key ',event))
                     events)))
-    (define-key exwm-mode-map [remap delete-backward-char]                     (my/$-fake-key backspace))
-    (define-key exwm-mode-map [remap xah-delete-backward-char-or-bracket-text] (my/$-fake-key backspace))
+    (keymap-set exwm-mode-map "<remap> <delete-backward-char>" (my/$-fake-key backspace))
+    (keymap-set exwm-mode-map "<remap> <xah-delete-backward-char-or-bracket-text>" (my/$-fake-key backspace))
 
-    (define-key exwm-mode-map [remap delete-char]                              (my/$-fake-key delete))
-    (define-key exwm-mode-map [remap delete-forward-char]                      (my/$-fake-key delete))
+    (keymap-set exwm-mode-map "<remap> <delete-char>" (my/$-fake-key delete))
+    (keymap-set exwm-mode-map "<remap> <delete-forward-char>" (my/$-fake-key delete))
 
-    (define-key exwm-mode-map [remap backward-kill-word]                       (my/$-fake-key C-backspace))
-    (define-key exwm-mode-map [remap xah-backward-kill-word]                   (my/$-fake-key C-backspace))
+    (keymap-set exwm-mode-map "<remap> <backward-kill-word>" (my/$-fake-key C-backspace))
+    (keymap-set exwm-mode-map "<remap> <xah-backward-kill-word>" (my/$-fake-key C-backspace))
 
-    (define-key exwm-mode-map [remap kill-word]                                (my/$-fake-key C-delete))
-    (define-key exwm-mode-map [remap xah-kill-word]                            (my/$-fake-key C-delete))
+    (keymap-set exwm-mode-map "<remap> <kill-word>" (my/$-fake-key C-delete))
+    (keymap-set exwm-mode-map "<remap> <xah-kill-word>" (my/$-fake-key C-delete))
 
-    (define-key exwm-mode-map [remap kill-line]                                (my/$-fake-key S-end ?\C-x))
+    (keymap-set exwm-mode-map "<remap> <kill-line>" (my/$-fake-key S-end ?\C-x))
 
-    (define-key exwm-mode-map [remap kill-ring-save]                           (my/$-fake-key ?\C-c))
-    (define-key exwm-mode-map [remap xah-copy-line-or-region]                  (my/$-fake-key ?\C-c))
+    (keymap-set exwm-mode-map "<remap> <kill-ring-save>" (my/$-fake-key ?\C-c))
+    (keymap-set exwm-mode-map "<remap> <xah-copy-line-or-region>" (my/$-fake-key ?\C-c))
 
-    (define-key exwm-mode-map [remap kill-region]                              (my/$-fake-key ?\C-x))
-    (define-key exwm-mode-map [remap xah-cut-line-or-region]                   (my/$-fake-key ?\C-x))
+    (keymap-set exwm-mode-map "<remap> <kill-region>" (my/$-fake-key ?\C-x))
+    (keymap-set exwm-mode-map "<remap> <xah-cut-line-or-region>" (my/$-fake-key ?\C-x))
 
-    (define-key exwm-mode-map [remap yank]                                     (my/$-fake-key ?\C-v))
-    (define-key exwm-mode-map [remap xah-paste-or-paste-previous]              (my/$-fake-key ?\C-v))
+    (keymap-set exwm-mode-map "<remap> <yank>" (my/$-fake-key ?\C-v))
+    (keymap-set exwm-mode-map "<remap> <xah-paste-or-paste-previous>" (my/$-fake-key ?\C-v))
 
-    (define-key exwm-mode-map [remap newline]                                  (my/$-fake-key   return))
-    (define-key exwm-mode-map [S-return]                                       (my/$-fake-key S-return))
-    (define-key exwm-mode-map [remap open-line]                                (my/$-fake-key   return left))
+    (keymap-set exwm-mode-map "<remap> <newline>" (my/$-fake-key   return))
+    (keymap-set exwm-mode-map "S-<return>" (my/$-fake-key S-return))
+    (keymap-set exwm-mode-map "<remap> <open-line>" (my/$-fake-key   return left))
 
-    (define-key exwm-mode-map [remap keyboard-quit]                            (my/$-fake-key escape))
-    (define-key exwm-mode-map [escape]                                         (my/$-fake-key escape))
+    (keymap-set exwm-mode-map "<remap> <keyboard-quit>" (my/$-fake-key escape))
+    (keymap-set exwm-mode-map "<escape>" (my/$-fake-key escape))
 
-    (define-key exwm-mode-map [remap next-line]                                (my/$-fake-key down))
-    (define-key exwm-mode-map [remap previous-line]                            (my/$-fake-key up))
+    (keymap-set exwm-mode-map "<remap> <next-line>" (my/$-fake-key down))
+    (keymap-set exwm-mode-map "<remap> <previous-line>" (my/$-fake-key up))
 
-    (define-key exwm-mode-map [remap move-beginning-of-line]                   (my/$-fake-key home))
-    (define-key exwm-mode-map [remap xah-beginning-of-line-or-block]           (my/$-fake-key home))
+    (keymap-set exwm-mode-map "<remap> <move-beginning-of-line>" (my/$-fake-key home))
+    (keymap-set exwm-mode-map "<remap> <xah-beginning-of-line-or-block>" (my/$-fake-key home))
 
-    (define-key exwm-mode-map [remap move-end-of-line]                         (my/$-fake-key end))
-    (define-key exwm-mode-map [remap xah-end-of-line-or-block]                 (my/$-fake-key end))
+    (keymap-set exwm-mode-map "<remap> <move-end-of-line>" (my/$-fake-key end))
+    (keymap-set exwm-mode-map "<remap> <xah-end-of-line-or-block>" (my/$-fake-key end))
 
-    (define-key exwm-mode-map [remap backward-char]                            (my/$-fake-key left))
-    (define-key exwm-mode-map [remap left-char]                                (my/$-fake-key left))
-    (define-key exwm-mode-map [remap forward-char]                             (my/$-fake-key right))
-    (define-key exwm-mode-map [remap right-char]                               (my/$-fake-key right))
+    (keymap-set exwm-mode-map "<remap> <backward-char>" (my/$-fake-key left))
+    (keymap-set exwm-mode-map "<remap> <left-char>" (my/$-fake-key left))
+    (keymap-set exwm-mode-map "<remap> <forward-char>" (my/$-fake-key right))
+    (keymap-set exwm-mode-map "<remap> <right-char>" (my/$-fake-key right))
 
-    (define-key exwm-mode-map [remap forward-word]                             (my/$-fake-key C-right))
-    (define-key exwm-mode-map [remap backward-word]                            (my/$-fake-key C-left))
+    (keymap-set exwm-mode-map "<remap> <forward-word>" (my/$-fake-key C-right))
+    (keymap-set exwm-mode-map "<remap> <backward-word>" (my/$-fake-key C-left))
 
-    (define-key exwm-mode-map [remap scroll-up-command]                        (my/$-fake-key next))
-    (define-key exwm-mode-map [remap scroll-down-command]                      (my/$-fake-key prior))
+    (keymap-set exwm-mode-map "<remap> <scroll-up-command>" (my/$-fake-key next))
+    (keymap-set exwm-mode-map "<remap> <scroll-down-command>" (my/$-fake-key prior))
 
-    (define-key exwm-mode-map "\t"                                             (my/$-fake-key tab))
-    (define-key exwm-mode-map [backtab]                                        (my/$-fake-key S-tab))
+    (keymap-set exwm-mode-map "TAB" (my/$-fake-key tab))
+    (keymap-set exwm-mode-map "<backtab>" (my/$-fake-key S-tab))
 
-    (define-key exwm-mode-map [remap save-buffer]                              (my/$-fake-key ?\C-s))
+    (keymap-set exwm-mode-map "<remap> <save-buffer>" (my/$-fake-key ?\C-s))
 
-    (define-key exwm-mode-map [remap isearch-forward]                          (my/$-fake-key ?\C-f))
+    (keymap-set exwm-mode-map "<remap> <isearch-forward>" (my/$-fake-key ?\C-f))
 
-    (define-key exwm-mode-map [remap mark-whole-buffer]                        (my/$-fake-key ?\C-a))
+    (keymap-set exwm-mode-map "<remap> <mark-whole-buffer>" (my/$-fake-key ?\C-a))
 
-    (define-key exwm-mode-map [remap undo]                                     (my/$-fake-key ?\C-z))
-    (define-key exwm-mode-map [remap undo-tree-undo]                           (my/$-fake-key ?\C-z))
-    (define-key exwm-mode-map [remap undo-tree-redo]                           (my/$-fake-key ?\C-y))
+    (keymap-set exwm-mode-map "<remap> <undo>" (my/$-fake-key ?\C-z))
+    (keymap-set exwm-mode-map "<remap> <undo-tree-undo>" (my/$-fake-key ?\C-z))
+    (keymap-set exwm-mode-map "<remap> <undo-tree-redo>" (my/$-fake-key ?\C-y))
 
-    (define-key exwm-mode-map [remap xah-insert-space-before]                  (my/$-fake-key ?\s))
-    (define-key exwm-mode-map [remap xah-insert-space-after]                   (my/$-fake-key ?\s left))
+    (keymap-set exwm-mode-map "<remap> <xah-insert-space-before>" (my/$-fake-key ?\s))
+    (keymap-set exwm-mode-map "<remap> <xah-insert-space-after>" (my/$-fake-key ?\s left))
 
-    (define-key exwm-mode-map "\C-@"                                           (my/$-fake-key ?\C-@)))
+    (keymap-set exwm-mode-map "C-@" (my/$-fake-key ?\C-@)))
 
   ;;;; Visual Line
   (add-hook 'my/visual-line-ignore-modes #'$-mode)
@@ -1022,7 +1015,7 @@ See also Info node `(eshell)Top'."
   (setq ibuffer-use-other-window t)
 
   ;;;; Keybindings
-  (bind-key "C-x C-b" #'ibuffer))
+  (keymap-set global-map "C-x C-b" #'ibuffer))
 
 ;;; VC
 (p@ckage vc
@@ -1045,8 +1038,8 @@ See also Info node `(eshell)Top'."
 
   ;;;; Expand/contract
   (with-eval-after-load 'xah-fly-keys
-    (define-key xah-fly-command-map "8" @'er/$)
-    (define-key xah-fly-command-map "*" @'er/contract-region)))
+    (keymap-set xah-fly-command-map "8" @'er/$)
+    (keymap-set xah-fly-command-map "*" @'er/contract-region)))
 
 ;;; Multiple Cursors
 ;; TODO does not work with symb0l yet -- unread-command-events issue?
@@ -1061,7 +1054,7 @@ See also Info node `(eshell)Top'."
   ;;;; Rectangular region
   (p@ckage rectangular-region-mode
     ;;;;; Keybindings
-    (bind-key "C-x SPC" @'set-rectangular-region-anchor)))
+    (keymap-set global-map "C-x SPC" @'set-rectangular-region-anchor)))
 
 ;;; Ivy
 ;; TODO make fonts consistent (current match highlights whole line, commands shown in different color but not highlighted, count function keeps spacing consistent, orderless matches use normal fonts, match required font consistency, counsel-find-file uses dired fonts)
@@ -1080,14 +1073,14 @@ See also Info node `(eshell)Top'."
        (unless (member current ivy-marked-candidates)
          (push current ivy-marked-candidates)))
      (ivy-next-line))
-  (bind-key "C->" #'my/$-mark $-minibuffer-map)
+  (keymap-set $-minibuffer-map "C->" #'my/$-mark)
   ;;;;; Unmark
   !(defun my/$-unmark ()
      (interactive)
      (let ((current (ivy-state-current ivy-last)))
        (setq ivy-marked-candidates (delete current ivy-marked-candidates)))
      (ivy-next-line))
-  (bind-key "C-<" #'my/$-unmark $-minibuffer-map)
+  (keymap-set $-minibuffer-map "C-<" #'my/$-unmark)
   ;;;;; Unmark backward
   !(defun my/$-unmark-backward ()
      (interactive)
@@ -1095,7 +1088,7 @@ See also Info node `(eshell)Top'."
      (ivy--exhibit)
      (let ((current (ivy-state-current ivy-last)))
        (setq ivy-marked-candidates (delete current ivy-marked-candidates))))
-  (bind-key "<C-backspace>" #'my/$-unmark-backward $-minibuffer-map)
+  (keymap-set $-minibuffer-map "C-<backspace>" #'my/$-unmark-backward)
   ;;;;; Toggle marks
   !(defun my/$-toggle-marks ()
      (interactive)
@@ -1114,7 +1107,7 @@ See also Info node `(eshell)Top'."
          (unless found
            (push candidate (cdr new-candidates))))
        (setq ivy-marked-candidates (cdr new-candidates))))
-  (bind-key "C-M->" #'my/$-toggle-marks $-minibuffer-map)
+  (keymap-set $-minibuffer-map "C-M->" #'my/$-toggle-marks)
 
   ;;;; Count format
   (setq ivy-count-format "[%d/%d] ")
@@ -1129,7 +1122,7 @@ See also Info node `(eshell)Top'."
   (setq ivy-on-del-error-function #'ignore)
 
   ;;;; Done
-  (bind-key "M-RET" #'$-immediate-done $-minibuffer-map)
+  (keymap-set $-minibuffer-map "M-RET" #'$-immediate-done)
 
   ;;;; Enable
   ($-mode)
@@ -1155,14 +1148,14 @@ See also Info node `(eshell)Top'."
     (setq $-find-file-ignore-regexp "\\`\\.")
 
     ;;;;;; Keybindings
-    (bind-key "DEL" #'ivy-backward-delete-char $-find-file-map) ; Necessary for some reason.
+    (keymap-set $-find-file-map "DEL" #'ivy-backward-delete-char) ; Necessary for some reason.
 
     ;;;;; Enable
     ($-mode)
 
     ;;;;; Keybindings
-    (bind-key "C-c j" #'$-outline)
-    (bind-key "C-x b" @'$-switch-buffer))
+    (keymap-set global-map "C-c j" #'$-outline)
+    (keymap-set global-map "C-x b" @'$-switch-buffer))
 
   ;;;; Initial input
   ;; None:
@@ -1215,16 +1208,16 @@ See also Info node `(eshell)Top'."
   ($-global-strict-mode)
 
   ;;;; Keybindings
-  (bind-key "C-M-b" #'sp-backward-sexp      smartparens-mode-map)
-  (bind-key "C-M-a" #'sp-backward-down-sexp smartparens-mode-map)
-  (bind-key "C-M-u" #'sp-backward-up-sexp   smartparens-mode-map)
-  (bind-key "C-S-d" #'sp-beginning-of-sexp  smartparens-mode-map)
-  (bind-key "C-M-d" #'sp-down-sexp          smartparens-mode-map)
-  (bind-key "C-S-a" #'sp-end-of-sexp        smartparens-mode-map)
-  (bind-key "C-M-f" #'sp-forward-sexp       smartparens-mode-map)
-  (bind-key "C-M-n" #'sp-next-sexp          smartparens-mode-map)
-  (bind-key "C-M-p" #'sp-previous-sexp      smartparens-mode-map)
-  (bind-key "C-M-e" #'sp-up-sexp            smartparens-mode-map))
+  (keymap-set smartparens-mode-map "C-M-b" #'sp-backward-sexp)
+  (keymap-set smartparens-mode-map "C-M-a" #'sp-backward-down-sexp)
+  (keymap-set smartparens-mode-map "C-M-u" #'sp-backward-up-sexp)
+  (keymap-set smartparens-mode-map "C-S-d" #'sp-beginning-of-sexp)
+  (keymap-set smartparens-mode-map "C-M-d" #'sp-down-sexp)
+  (keymap-set smartparens-mode-map "C-S-a" #'sp-end-of-sexp)
+  (keymap-set smartparens-mode-map "C-M-f" #'sp-forward-sexp)
+  (keymap-set smartparens-mode-map "C-M-n" #'sp-next-sexp)
+  (keymap-set smartparens-mode-map "C-M-p" #'sp-previous-sexp)
+  (keymap-set smartparens-mode-map "C-M-e" #'sp-up-sexp))
 
 ;;; Eval Expression
 (p@ckage eval-expression
@@ -1288,10 +1281,10 @@ See also Info node `(eshell)Top'."
   ;;;; Insert
   ;;;;; Heading
   (setq $-insert-heading-respect-content t)
-  _(bind-key "<C-return>" @'$-meta-return $-mode-map)
+  _(keymap-set $-mode-map "C-<return>" @'$-meta-return)
 
   ;;;; Agenda
-  (bind-key "C-c a" @'org-agenda)
+  (keymap-set global-map "C-c a" @'org-agenda)
 
   ;;;; Faces
   (setq org-cycle-level-faces nil)
@@ -1439,8 +1432,8 @@ See also Info node `(eshell)Top'."
   (setq $-auto-save-history nil)
 
   ;;;; Keybindings
-  (bind-key [remap keyboard-quit] #'$-visualizer-abort $-visualizer-mode-map)
-  (bind-key "RET"                 #'$-visualizer-quit  $-visualizer-mode-map)
+  (keymap-set $-visualizer-mode-map "<remap> <keyboard-quit>" #'$-visualizer-abort)
+  (keymap-set $-visualizer-mode-map "RET" #'$-visualizer-quit)
 
   ;;;; Enable
   (global-$-mode))
@@ -1501,7 +1494,7 @@ See also Info node `(eshell)Top'."
         cfw:fchar-top-left-corner  ?╭
         cfw:fchar-top-right-corner ?╮)
 
-  (bind-key "C-c c C-m" @'cfw:open-calendar-buffer))
+  (keymap-set global-map "C-c c C-m" @'cfw:open-calendar-buffer))
 
 ;;; Chess
 (p@ckage chess
@@ -1589,7 +1582,7 @@ See also Info node `(eshell)Top'."
            (@magit-section-backward)
          (xah-beginning-of-line-or-block)))
     (with-eval-after-load 'magit
-      (bind-key [remap xah-beginning-of-line-or-block] #'my/$-beginning-of-line-or-section magit-mode-map))
+      (keymap-set magit-mode-map "<remap> <xah-beginning-of-line-or-block>" #'my/$-beginning-of-line-or-section))
 
     ;;;;; Forward
     !(defun my/$-end-of-line-or-section ()
@@ -1599,10 +1592,10 @@ See also Info node `(eshell)Top'."
            (@magit-section-forward)
          (xah-end-of-line-or-block)))
     (with-eval-after-load 'magit
-      (bind-key [remap xah-end-of-line-or-block] #'my/$-end-of-line-or-section magit-mode-map)))
+      (keymap-set magit-mode-map "<remap> <xah-end-of-line-or-block>" #'my/$-end-of-line-or-section)))
 
   ;;;; Status
-  (bind-key "C-c g" @'$-status)
+  (keymap-set global-map "C-c g" @'$-status)
 
   ;;;; Faces
   ;;;;; Fixed pitch
@@ -1671,7 +1664,7 @@ See also Info node `(eshell)Top'."
     ~^
 
     ;; Be consistent with Magit comment editing.
-    _(bind-key "C-c C-k" @'$-edit-contents-abort $-edit-contents-minor-mode-map))
+    _(keymap-set $-edit-contents-minor-mode-map "C-c C-k" @'$-edit-contents-abort))
 
   ;;;; Miscellaneous
   (p@ckage pdf-misc
@@ -1737,7 +1730,7 @@ See also Info node `(eshell)Top'."
   (setq $-allow-to-change-permissions t)
 
   ;;;; Remap toggle read-only
-  _(define-key $-mode-map [remap read-only-mode] @'$-exit) ; Was previously only bound directly to C-x C-q.
+  _(keymap-set $-mode-map "<remap> <read-only-mode>" @'$-exit) ; Was previously only bound directly to C-x C-q.
   )
 
 ;;; SQLUp
