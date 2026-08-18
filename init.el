@@ -72,11 +72,6 @@
 
   (defconst my/straight-build-dir (concat my/straight-dir (file-name-as-directory "build")))
 
-  ;;;; Build
-  ;;;;; Autoloads
-  ;;;;;; Disable
-  (setq straight-disable-autoloads t)
-
   ;;;;; Shallow clones
   (setq straight-vc-git-default-clone-depth 1))
 (eval-when-compile
