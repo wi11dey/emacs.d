@@ -103,6 +103,12 @@
         (eval-print-last-sexp)))
     (load bootstrap-file nil 'nomessage)))
 
+;;; Use-package
+(eval-when-compile
+  (straight-use-package 'use-package)
+  (require 'use-package)
+  (setq straight-use-package-by-default t))
+
 ;;; Paths
 (eval-and-compile
   ;;;; Site lisp
@@ -136,28 +142,24 @@
   (push '(require 'p@ckage) safe-local-eval-forms))
 
 ;;; Exec Path From Shell
-(p@ckage exec-path-from-shell
-  ;;;; Build
-  ~(straight-use-package '$)
-
-  ;;;; Enable
+(use-package exec-path-from-shell
+  :commands exec-path-from-shell-initialize
+  :init
   (when (memq window-system '(mac ns x))
-    (@$-initialize)))
+    (exec-path-from-shell-initialize)))
 
 ;;; Compat
-(p@ckage compat
-  ;;;; Build
-  ~(straight-use-package '$)
-  ~^)
+(use-package compat
+  :defer t
+  :preface
+  (eval-when-compile
+    (require 'compat)))
 
 ;;; No Littering
-(p@ckage no-littering
-  ;;;; Build
-  ~(straight-use-package '$)
-  !^
-
-  ;;;; Backups
-  ($-theme-backups))
+(use-package no-littering
+  :demand t
+  :config
+  (no-littering-theme-backups))
 
 ;; Bootstrapped.
 
@@ -209,31 +211,23 @@
   ($))
 
 ;;; Modus Themes
-(p@ckage modus-themes
-  ;;;; Build
-  ~(straight-use-package '$)
-
+(use-package modus-themes
+  :init
   (setq modus-themes-bold-constructs t)
-
-  ;;;; Load
-  !^
-
+  :config
   (load-theme 'modus-operandi-tinted :no-confirm))
 
 ;;; Symb0l
-(p@ckage symb0l
-  ;;;; Build
-  ~(straight-use-package '($ :type git :host github :repo "wi11dey/symb0l"))
-
-  ;;;; Load
-  !^
-
-  ;;;; Enable
-  ($-mode))
+(use-package symb0l
+  :straight (:type git :host github :repo "wi11dey/symb0l")
+  :config
+  (symb0l-mode))
 
 ;;; Novice
-(p@ckage novice
-  ;;;; Disable
+(use-package novice
+  :straight nil
+  :defer t
+  :init
   ;; Enable all commands:
   (setq disabled-command-function nil))
 
@@ -512,8 +506,9 @@
   (keymap-set global-map "C-x C-0" #'my/$-reset))
 
 ;;; Calculator
-(p@ckage calculator
-  (keymap-set global-map "<XF86Calculator>" #'calculator))
+(use-package calculator
+  :straight nil
+  :bind ("<XF86Calculator>" . calculator))
 
 ;;; Rainbow
 (p@ckage rainbow-mode
@@ -1186,7 +1181,9 @@ See also Info node `(eshell)Top'."
   ($-mode))
 
 ;;; Semantic
-(p@ckage semantic)
+(use-package semantic
+  :straight nil
+  :defer t)
 
 ;;; Smartparens
 ;; TODO set appropriate xah-fly-keys remappings and make it act like paredit
