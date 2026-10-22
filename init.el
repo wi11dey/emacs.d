@@ -1251,7 +1251,6 @@ See also Info node `(eshell)Top'."
   (setq org-edit-src-content-indentation 0)
   (setq org-src-window-setup 'split-window-below)
   (setq org-src-ask-before-returning-to-edit-buffer nil)
-  (setq org-src-fontify-natively t)
 
   ;;;; Refile
   (setq org-refile-targets '((nil . (:maxlevel 8))))
@@ -1280,7 +1279,6 @@ See also Info node `(eshell)Top'."
 
   ;;;; Faces
   (setq org-cycle-level-faces nil)
-  (setq org-n-level-faces 8)
 
   ;;;; Tangle
   ;;;;; Message
@@ -1325,8 +1323,7 @@ See also Info node `(eshell)Top'."
     ~(straight-use-package '$)
     ~^
 
-    (setq org-hide-emphasis-markers t
-          $-autolinks t)
+    (setq $-autolinks t)
 
     (add-hook 'org-mode-hook @'$-mode))
 
@@ -1745,12 +1742,8 @@ See also Info node `(eshell)Top'."
 (p@ckage ansi-color
   ~^
 
-  !(defun my/$-buffer ()
-     (interactive)
-     ($-apply-on-region (point-min) (point-max)))
-
   ;;;; Compile
-  (add-hook 'compilation-filter-hook #'my/$-buffer))
+  (add-hook 'compilation-filter-hook @'$-compilation-filter))
 
 ;;; Emacs Lisp
 (p@ckage emacs-lisp
@@ -2273,16 +2266,6 @@ See also Info node `(eshell)Top'."
 (p@ckage comp
   ;;;; Speed
   !(setq native-$-speed 3))
-
-;;; Lean
-(p@ckage lean-mode
-  ;;;; Build
-  ~(straight-use-package '$)
-  ~^
-
-  ;;;; Memory limit
-  ;; Use at most 2GiB of memory:
-  (setq lean-memory-limit 2048))
 
 ;;; Lean 4
 (p@ckage lean4-mode
