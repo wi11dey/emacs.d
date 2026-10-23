@@ -103,12 +103,6 @@
         (eval-print-last-sexp)))
     (load bootstrap-file nil 'nomessage)))
 
-;;; Use-package
-(eval-when-compile
-  (straight-use-package 'use-package)
-  (require 'use-package)
-  (setq straight-use-package-by-default t))
-
 ;;; Paths
 (eval-and-compile
   ;;;; Site lisp
@@ -142,24 +136,28 @@
   (push '(require 'p@ckage) safe-local-eval-forms))
 
 ;;; Exec Path From Shell
-(use-package exec-path-from-shell
-  :commands exec-path-from-shell-initialize
-  :init
+(p@ckage exec-path-from-shell
+  ;;;; Build
+  ~(straight-use-package '$)
+
+  ;;;; Enable
   (when (memq window-system '(mac ns x))
-    (exec-path-from-shell-initialize)))
+    (@$-initialize)))
 
 ;;; Compat
-(use-package compat
-  :defer t
-  :preface
-  (eval-when-compile
-    (require 'compat)))
+(p@ckage compat
+  ;;;; Build
+  ~(straight-use-package '$)
+  ~^)
 
 ;;; No Littering
-(use-package no-littering
-  :demand t
-  :config
-  (no-littering-theme-backups))
+(p@ckage no-littering
+  ;;;; Build
+  ~(straight-use-package '$)
+  !^
+
+  ;;;; Backups
+  ($-theme-backups))
 
 ;; Bootstrapped.
 
@@ -211,23 +209,38 @@
   ($))
 
 ;;; Modus Themes
-(use-package modus-themes
-  :init
+(p@ckage modus-themes
+  ;;;; Build
+  ~(straight-use-package '$)
+
   (setq modus-themes-bold-constructs t)
-  :config
-  (load-theme 'modus-vivendi-tinted :no-confirm))
+
+  ;;;; Load
+  !^
+  !(defun my/macos-dark-mode-p ()
+     "Return non-nil when macOS is using dark appearance."
+     (with-temp-buffer
+       (and (eq 0 (call-process "/usr/bin/defaults" nil '(t nil) nil
+                                "read" "-g" "AppleInterfaceStyle"))
+            (string= (string-trim (buffer-string)) "Dark"))))
+  (if (my/macos-dark-mode-p)
+      (load-theme 'modus-vivendi-tinted :no-confirm)
+    (load-theme 'modus-operandi-tinted :no-confirm)))
 
 ;;; Symb0l
-(use-package symb0l
-  :straight (:type git :host github :repo "wi11dey/symb0l")
-  :config
-  (symb0l-mode))
+(p@ckage symb0l
+  ;;;; Build
+  ~(straight-use-package '($ :type git :host github :repo "wi11dey/symb0l"))
+
+  ;;;; Load
+  !^
+
+  ;;;; Enable
+  ($-mode))
 
 ;;; Novice
-(use-package novice
-  :straight nil
-  :defer t
-  :init
+(p@ckage novice
+  ;;;; Disable
   ;; Enable all commands:
   (setq disabled-command-function nil))
 
@@ -507,9 +520,8 @@
   (keymap-set global-map "C-x C-0" #'my/$-reset))
 
 ;;; Calculator
-(use-package calculator
-  :straight nil
-  :bind ("<XF86Calculator>" . calculator))
+(p@ckage calculator
+  (keymap-set global-map "<XF86Calculator>" #'calculator))
 
 ;;; Rainbow
 (p@ckage rainbow-mode
@@ -1182,9 +1194,7 @@ See also Info node `(eshell)Top'."
   ($-mode))
 
 ;;; Semantic
-(use-package semantic
-  :straight nil
-  :defer t)
+(p@ckage semantic)
 
 ;;; Smartparens
 ;; TODO set appropriate xah-fly-keys remappings and make it act like paredit
