@@ -6,3 +6,4 @@
     (expand-file-name  "var/eln-cache/" user-emacs-directory))))
 (setq load-prefer-newer nil
       package-enable-at-startup nil)
+(add-to-list 'default-frame-alist '(fullscreen . fullboth))

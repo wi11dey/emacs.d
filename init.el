@@ -215,7 +215,7 @@
   :init
   (setq modus-themes-bold-constructs t)
   :config
-  (load-theme 'modus-operandi-tinted :no-confirm))
+  (load-theme 'modus-vivendi-tinted :no-confirm))
 
 ;;; Symb0l
 (use-package symb0l
@@ -375,7 +375,8 @@
   ~(require 'cus-edit)
 
   (setq $-file (concat user-emacs-directory "custom.el")
-        $-raised-buttons t))
+        $-raised-buttons t)
+  (load custom-file 'noerror))
 
 ;;; Tool Bar
 (p@ckage tool-bar
@@ -1650,8 +1651,6 @@ See also Info node `(eshell)Top'."
 
   ;;;; Annotations
   (p@ckage pdf-annot
-    ~^
-
     ;; Be consistent with Magit comment editing.
     _(keymap-set $-edit-contents-minor-mode-map "C-c C-k" @'$-edit-contents-abort))
 
@@ -2453,13 +2452,6 @@ See also Info node `(eshell)Top'."
 (p@ckage async
   ;;;; Build
   ~(straight-use-package '$)
-
-  ;;;; Dired
-  (p@ckage dired-$
-    !^
-
-    ;;;;; Enable
-    ($-mode))
 
   ;;;; Bytecomp
   (p@ckage $-bytecomp
