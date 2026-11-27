@@ -1754,6 +1754,12 @@ See also Info node `(eshell)Top'."
   ;;;; Compile
   (add-hook 'compilation-filter-hook @'$-compilation-filter))
 
+;;; Flycheck
+(p@ckage flycheck
+  ;;;; Build
+  ~(straight-use-package '$)
+  ~^)
+
 ;;; Emacs Lisp
 (p@ckage emacs-lisp
   ;;;; Indentation
