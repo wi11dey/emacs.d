@@ -1758,7 +1758,14 @@ See also Info node `(eshell)Top'."
 (p@ckage flycheck
   ;;;; Build
   ~(straight-use-package '$)
-  ~^)
+  !^
+
+  (setq $-checkers '(rust-cargo)
+        $-display-errors-delay 0.1
+        $-rust-check-tests nil)
+  (setq-default $-rust-crate-type nil)
+
+  (global-$-mode))
 
 ;;; Emacs Lisp
 (p@ckage emacs-lisp
