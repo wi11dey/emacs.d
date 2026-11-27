@@ -2141,7 +2141,20 @@ See also Info node `(eshell)Top'."
   ~(straight-use-package '$)
 
   ;;;; Auto mode
-  (add-to-list 'auto-mode-alist (cons (rx ".rs" string-end) @'$)))
+  (add-to-list 'auto-mode-alist (cons (rx ".rs" string-end) @'$))
+
+  ;;;; Format on save
+  !(defun my/rust-cargo-fmt ()
+     (call-process rust-cargo-bin nil "*cargo fmt*" nil "fmt")
+     (unless (verify-visited-file-modtime (current-buffer))
+       (revert-buffer-with-fine-grain t t)))
+
+  ;;;; Enable
+  !(defun my/rust-setup ()
+     (when (and buffer-file-name
+                (locate-dominating-file default-directory "Cargo.toml"))
+       (add-hook 'after-save-hook #'my/rust-cargo-fmt nil t)))
+  (add-hook '$-hook #'my/rust-setup))
 
 ;;; DjVu
 (p@ckage djvu
